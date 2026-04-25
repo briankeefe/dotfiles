@@ -32,7 +32,7 @@
 }
 
 #workspaces button.active {
-  color: #84cc16;
+  color: #0ea5e9;
 }
 
 #window {
@@ -40,7 +40,7 @@
 }
 
 #network {
-  color: #3b82f6;
+  color: #0ea5e9;
   margin-right: 8px;
 }
 
@@ -66,4 +66,9 @@
 
 #custom-powermenu {
   color: #f43f5e;
+}
+
+#custom-separator {
+  color: #fff;
+  opacity: 0.5;
 }

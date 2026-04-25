@@ -2,7 +2,7 @@
   "layer": "top",
   "position": "top",
   "margin-bottom": 0,
-  "modules-left": ["clock", "custom/separator", "hyprland/workspaces", "custom/separator", "tray"],
+  "modules-left": ["clock", "custom/separator", "hyprland/workspaces", "tray"],
   "modules-center": ["hyprland/window"],
   "modules-right": [
     "temperature",
@@ -22,9 +22,9 @@
     // 24 hour
     // "format": " {:%H:%M} ",
     // 12 hour
-    "format": " 󰸗 {:%I:%M %p} ",
+    "format": " {:%I:%M %p} ",
     "interval": 60,
-    "tooltip": true,
+    "tooltip": false,
     "tooltip-format": "{:%d %B %H:%M}"
   },
   "hyprland/workspaces": {
@@ -46,16 +46,16 @@
       "9": "9",
       "10": "10",
       // 11-10
-      "11": "1",
-      "12": "2",
-      "13": "3",
-      "14": "4",
-      "15": "5",
-      "16": "6",
-      "17": "7",
-      "18": "8",
-      "19": "9",
-      "110": "10"
+      // "11": "1",
+      // "12": "2",
+      // "13": "3",
+      // "14": "4",
+      // "15": "5",
+      // "16": "6",
+      // "17": "7",
+      // "18": "8",
+      // "19": "9",
+      // "110": "10"
 
       // // 1-10
       // "1": "一",
@@ -111,11 +111,16 @@
   },
   "battery": {
     "format": "{capacity}% {icon}",
-    "format-icons": ["", "", "", "", ""]
+    "format-icons": [" ", " ", " ", " ", " "]
   },
   "custom/powermenu": {
     "format": "  ",
     "tooltip": false,
     "on-click": "exec wlogout -p layer-shell"
+  },
+  "custom/separator": {
+    "format": "|",
+    "tooltip": false,
+    "interval": "once"
   }
 }
