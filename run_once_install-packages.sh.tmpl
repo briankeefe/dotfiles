@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+set -eu
+
+mkdir -p "$HOME/.secrets/opencode"
+chmod 700 "$HOME/.secrets" "$HOME/.secrets/opencode" 2>/dev/null || true
+
+printf '%s\n' "Bootstrap complete."
+printf '%s\n' "Next steps:"
+printf '%s\n' "  1. Add API keys under ~/.secrets/opencode/"
+printf '%s\n' "  2. Create ~/.config/chezmoi/chezmoi.toml"
+printf '%s\n' "  3. Run: exec zsh"

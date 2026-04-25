@@ -1,0 +1,10 @@
+README.md
+.git/
+**/.DS_Store
+**/*.swp
+**/*.tmp
+**/*~
+private_dot_secrets/**
+{{ if ne .chezmoi.os "linux" -}}
+private_dot_config/ghostty/**
+{{ end -}}

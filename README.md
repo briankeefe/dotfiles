@@ -1,116 +1,145 @@
 # dotfiles
 
-Linux desktop dotfiles for a fast, minimal setup.
+Portable terminal, shell, and OpenCode setup for Linux machines.
 
-![managed with stow](https://img.shields.io/badge/managed%20with-stow-8aadf4?style=flat-square)
-![shell-zsh](https://img.shields.io/badge/shell-zsh-a6da95?style=flat-square)
-![editor-neovim](https://img.shields.io/badge/editor-neovim-c6a0f6?style=flat-square)
-![platform-linux](https://img.shields.io/badge/platform-linux-f5a97f?style=flat-square)
+![dotfiles banner](docs/banner.svg)
 
-This repo holds the configs I actually use day to day: shell, editor, terminal, compositor, bar, launcher, and desktop theming.
+![managed with chezmoi](https://img.shields.io/badge/managed%20with-chezmoi-8aadf4?style=flat-square)
+![legacy stow](https://img.shields.io/badge/legacy-stow-a6da95?style=flat-square)
+![shell-zsh](https://img.shields.io/badge/shell-zsh-c6a0f6?style=flat-square)
+![terminal-ghostty](https://img.shields.io/badge/terminal-ghostty-f5a97f?style=flat-square)
 
-## ✦ Stack
+One repo. New machine in minutes. No rebuilding terminal + AI tooling from memory.
 
-- **Shell:** zsh, fish, bash
-- **Editor:** neovim
-- **Terminal:** kitty, alacritty
-- **WM / Desktop:** hyprland, waybar, wofi, wlogout
-- **Extras:** tmux, picom, gtk, xorg, spicetify
+## ✦ Active stack
+
+- **Terminal:** Ghostty
+- **Shell:** Zsh + Powerlevel10k
+- **System info:** Fastfetch
+- **AI tooling:** OpenCode + Context7 MCP
+- **Dotfiles manager:** chezmoi
 
 ## ⚡ Bootstrap
 
-Clone repo:
+Fresh machine:
 
 ```sh
-git clone git@github.com:briankeefe/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+sh -c "$(curl -fsLS https://get.chezmoi.io)" -- init --apply briankeefe
 ```
 
-Install GNU Stow:
+Then create local machine data:
 
 ```sh
-# Arch
-sudo pacman -S stow
-
-# Gentoo
-doas emerge -av app-admin/stow
+mkdir -p ~/.config/chezmoi ~/.secrets/opencode
+chmod 700 ~/.config/chezmoi ~/.secrets ~/.secrets/opencode
+$EDITOR ~/.config/chezmoi/chezmoi.toml
 ```
 
-Then symlink whichever configs you want:
+Minimal example:
+
+```toml
+[data]
+machine = "personal-laptop"
+email = "you@example.com"
+work = false
+uses_ghostty = true
+terminal_font = "FantasqueSansM Nerd Font Mono"
+opencode_model = "openai/gpt-5.4"
+```
+
+Then restart shell:
 
 ```sh
-stow alacritty fish kitty nvim picom tmux vscode xorg zsh
+exec zsh
 ```
 
-You can stow multiple packages in one command.
+## 🖥 Preview
+
+Current focus is clean local-dev ergonomics:
+
+- muted Ghostty palette
+- palette-sensitive p10k config
+- readable completion + directory colors
+- OpenCode global defaults in one place
+
+## 🧠 OpenCode
+
+Global defaults live here:
+
+```text
+private_dot_config/opencode/opencode.json.tmpl
+private_dot_config/opencode/tui.json
+```
+
+Project-specific behavior should stay with each project:
+
+```text
+opencode.json
+.opencode/agents/
+.opencode/commands/
+```
+
+## 🔐 Secrets
+
+Secrets never live in git.
+
+Use local files such as:
+
+```text
+~/.secrets/opencode/openai_api_key
+```
+
+OpenCode config can reference them with:
+
+```json
+"{file:~/.secrets/opencode/openai_api_key}"
+```
 
 ## ✦ Layout
 
 ```text
 dotfiles/
-├── alacritty/
-├── bash/
-├── fish/
-├── git/
-├── gtk-3.0/
-├── hypr/
-├── kitty/
-├── nvim/
-├── picom/
-├── spicetify/
-├── tmux/
-├── vscode/
-├── waybar/
-├── wlogout/
-├── wofi/
-├── xorg/
-└── zsh/
+├── .chezmoi.toml.tmpl
+├── .chezmoiignore
+├── dot_zshrc.tmpl
+├── dot_p10k.zsh
+├── private_dot_config/
+│   ├── fastfetch/
+│   ├── ghostty/
+│   └── opencode/
+├── private_dot_secrets/
+├── docs/
+└── run_once_install-packages.sh.tmpl
 ```
 
-## 🛠 Usage
+## 🔄 Daily workflow
 
-Stow single package:
+Update repo + apply changes:
 
 ```sh
-stow nvim
+chezmoi update
 ```
 
-Restow after changing files:
+Review changes:
 
 ```sh
-stow -R nvim zsh kitty
+chezmoi diff
 ```
 
-Remove package symlinks:
+Edit a managed file:
 
 ```sh
-stow -D tmux
+chezmoi edit ~/.zshrc
+chezmoi edit ~/.config/ghostty/theme.conf
+chezmoi edit ~/.config/opencode/opencode.json
 ```
 
-## ⚠ Notes
+## 🧱 Migration note
 
-Some configs are more machine-specific than others.
+This repo still contains older **stow-based** directories from the previous setup.
 
-I would **not** blindly stow everything on every machine. In particular:
+They are being kept during transition so older configs/history are not lost immediately. The active path forward is **chezmoi** for user-level config that should sync cleanly across machines.
 
-- `git` may contain personal machine/account assumptions
-- `xorg` may depend on monitor layout
-- `hypr` / `waybar` may assume local display hardware and paths
+## Why this repo exists
 
-Pick packages intentionally.
-
-## 📦 Packages
-
-Stow only manages symlinks. You still need the underlying applications installed.
-
-Install the tools you actually use first, then stow only the matching config directories.
-
-## 🖼 Wallpapers
-
-Wallpapers are intentionally not tracked here.
-
-## ✦ Why this repo exists
-
-Because rebuilding a terminal + editor + desktop setup from memory is garbage.
-
-This repo keeps the moving parts in one place and makes it easy to re-link the pieces I actually want on a machine.
+Because rebuilding terminal, prompt, AI tooling, and shell behavior by hand every year is nonsense.
