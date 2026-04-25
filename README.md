@@ -1,45 +1,116 @@
 # dotfiles
 
-> [!IMPORTANT] If you are looking for my old dotfiles (which do not use stow), you can find them [here](https://github.com/maxhu08/dotfiles-old)
+Linux desktop dotfiles for a fast, minimal setup.
 
-This repo contains all my configs I use.
+![managed with stow](https://img.shields.io/badge/managed%20with-stow-8aadf4?style=flat-square)
+![shell-zsh](https://img.shields.io/badge/shell-zsh-a6da95?style=flat-square)
+![editor-neovim](https://img.shields.io/badge/editor-neovim-c6a0f6?style=flat-square)
+![platform-linux](https://img.shields.io/badge/platform-linux-f5a97f?style=flat-square)
 
-## getting-started
+This repo holds the configs I actually use day to day: shell, editor, terminal, compositor, bar, launcher, and desktop theming.
 
-My dotfiles are managed with `stow`, which manages symlinks so that the files in this dotfiles repo are synced with the actual configs.
+## ✦ Stack
 
-To get started with using my dotfiles run these commmands:
+- **Shell:** zsh, fish, bash
+- **Editor:** neovim
+- **Terminal:** kitty, alacritty
+- **WM / Desktop:** hyprland, waybar, wofi, wlogout
+- **Extras:** tmux, picom, gtk, xorg, spicetify
 
-```shell
-# arch
+## ⚡ Bootstrap
+
+Clone repo:
+
+```sh
+git clone git@github.com:briankeefe/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+```
+
+Install GNU Stow:
+
+```sh
+# Arch
 sudo pacman -S stow
 
-# gentoo
+# Gentoo
 doas emerge -av app-admin/stow
-
-git clone https://github.com/maxhu08/dotfiles
-cd dotfiles
 ```
 
-After that, you just need to run the stow command to symlink the dotfiles you want.
+Then symlink whichever configs you want:
 
-> [!CAUTION] I would not recommend stowing stuff like `git` because that contains my .gitconfig or `xorg` because thats specific to my monitor setup
-
-```shell
-# you can stow multiple things in one command!
-stow alacritty fish kitty nvim picom tmux vscode xorg
+```sh
+stow alacritty fish kitty nvim picom tmux vscode xorg zsh
 ```
 
-## install-packages
+You can stow multiple packages in one command.
 
-Make sure to install the programs, stow just symlinks the configs. You still need to install the programs!
+## ✦ Layout
 
-To get all the packages, check out my [rebos-config](https://github.com/maxhu08/rebos-config-arch) for arch.
+```text
+dotfiles/
+├── alacritty/
+├── bash/
+├── fish/
+├── git/
+├── gtk-3.0/
+├── hypr/
+├── kitty/
+├── nvim/
+├── picom/
+├── spicetify/
+├── tmux/
+├── vscode/
+├── waybar/
+├── wlogout/
+├── wofi/
+├── xorg/
+└── zsh/
+```
 
-## wallpapers
+## 🛠 Usage
 
-My wallapers are not in this repo. To access all my of wallpapers, check out my [wallpapers](https://github.com/maxhu08/wallpapers) repo.
+Stow single package:
 
-## star-history
+```sh
+stow nvim
+```
 
-[![Star History Chart](https://api.star-history.com/svg?repos=maxhu08/dotfiles&type=Date)](https://star-history.com/#maxhu08/dotfiles&Date)
+Restow after changing files:
+
+```sh
+stow -R nvim zsh kitty
+```
+
+Remove package symlinks:
+
+```sh
+stow -D tmux
+```
+
+## ⚠ Notes
+
+Some configs are more machine-specific than others.
+
+I would **not** blindly stow everything on every machine. In particular:
+
+- `git` may contain personal machine/account assumptions
+- `xorg` may depend on monitor layout
+- `hypr` / `waybar` may assume local display hardware and paths
+
+Pick packages intentionally.
+
+## 📦 Packages
+
+Stow only manages symlinks. You still need the underlying applications installed.
+
+Install the tools you actually use first, then stow only the matching config directories.
+
+## 🖼 Wallpapers
+
+Wallpapers are intentionally not tracked here.
+
+## ✦ Why this repo exists
+
+Because rebuilding a terminal + editor + desktop setup from memory is garbage.
+
+This repo keeps the moving parts in one place and makes it easy to re-link the pieces I actually want on a machine.
