@@ -16,7 +16,7 @@ One repo. New machine in minutes. No rebuilding terminal + AI tooling from memor
 - **Terminal:** Ghostty
 - **Shell:** Zsh + Powerlevel10k
 - **System info:** Fastfetch
-- **AI tooling:** OpenCode + Context7 MCP
+- **AI tooling:** Oh My Pi (omp) + OpenCode + Context7 MCP
 - **Dotfiles manager:** chezmoi
 
 ## ⚡ Bootstrap
@@ -79,6 +79,30 @@ opencode.json
 .opencode/commands/
 ```
 
+## 🤖 Oh My Pi
+
+Global omp config lives under `~/.omp` and is tracked here:
+
+```text
+private_dot_omp/agent/config.yml          # model roles, theme, memory backend
+private_dot_omp/agent/mcp.json            # MCP server toggles
+private_dot_omp/agent/commands/           # custom slash commands
+private_dot_omp/agent/rules/              # always-apply rules
+private_dot_omp/agent/extensions/         # event extensions (ding.ts)
+private_dot_omp/agent/skills/             # custom skills (execute toolkit)
+private_dot_omp/plugins/                  # plugin manifest + lockfiles
+```
+
+Only durable, hand-authored config is tracked. Runtime state stays local and is
+never committed: `*.db*`, `blobs/`, `sessions/`, `terminal-sessions/`,
+`memories/` (mnemopi), `cache/`, `logs/`, and `plugins/node_modules/`.
+
+After cloning, restore plugins with:
+
+```sh
+cd ~/.omp/plugins && bun install
+```
+
 ## 🔐 Secrets
 
 Secrets never live in git.
@@ -107,6 +131,9 @@ dotfiles/
 │   ├── fastfetch/
 │   ├── ghostty/
 │   └── opencode/
+├── private_dot_omp/
+│   ├── agent/
+│   └── plugins/
 ├── private_dot_secrets/
 ├── docs/
 └── run_once_install-packages.sh.tmpl

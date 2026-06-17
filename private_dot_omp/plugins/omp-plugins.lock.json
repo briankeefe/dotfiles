@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "pi-lens": {
+      "version": "3.8.53",
+      "enabledFeatures": null,
+      "enabled": true
+    }
+  },
+  "settings": {}
+}

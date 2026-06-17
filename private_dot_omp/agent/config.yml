@@ -1,0 +1,24 @@
+symbolPreset: unicode
+theme: 
+  dark: titanium
+setupVersion: 1
+modelRoles: 
+  default: anthropic/claude-opus-4-8:medium
+  smol: anthropic/claude-haiku-4-5:minimal
+colorBlindMode: true
+tui: 
+  textSizing: true
+  hyperlinks: always
+statusLine: 
+  separator: none
+  sessionAccent: true
+  showHookStatus: false
+memory: 
+  backend: mnemopi
+mnemopi: 
+  scoping: per-project-tagged
+  llmMode: smol
+  autoRecall: true
+  autoRetain: true
+startup: 
+  quiet: false
