@@ -1,7 +1,4 @@
 {
   "name": "omp-plugins",
-  "private": true,
-  "dependencies": {
-    "pi-lens": "^3.8.53"
-  }
+  "private": true
 }

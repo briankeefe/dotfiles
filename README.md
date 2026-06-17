@@ -81,7 +81,28 @@ opencode.json
 
 ## 🤖 Oh My Pi
 
-Global omp config lives under `~/.omp` and is tracked here:
+Oh My Pi (`omp`) is the coding agent. It installs via Bun and stores global
+config in `~/.omp`.
+
+### Install
+
+Requires Bun `>= 1.3.14` (`curl -fsSL https://bun.sh/install | bash`).
+
+```sh
+bun install -g @oh-my-pi/pi-coding-agent
+```
+
+This puts the `omp` binary on your PATH (`~/.bun/bin/omp`). Verify:
+
+```sh
+omp --version
+```
+
+Upgrade later with `omp update`.
+
+### Apply configs
+
+`chezmoi apply` (or the bootstrap above) lays the tracked config into `~/.omp`:
 
 ```text
 private_dot_omp/agent/config.yml          # model roles, theme, memory backend
@@ -90,18 +111,26 @@ private_dot_omp/agent/commands/           # custom slash commands
 private_dot_omp/agent/rules/              # always-apply rules
 private_dot_omp/agent/extensions/         # event extensions (ding.ts)
 private_dot_omp/agent/skills/             # custom skills (execute toolkit)
-private_dot_omp/plugins/                  # plugin manifest + lockfiles
+private_dot_omp/plugins/                  # plugin manifest
 ```
 
 Only durable, hand-authored config is tracked. Runtime state stays local and is
 never committed: `*.db*`, `blobs/`, `sessions/`, `terminal-sessions/`,
 `memories/` (mnemopi), `cache/`, `logs/`, and `plugins/node_modules/`.
 
-After cloning, restore plugins with:
+### Plugins
+
+No plugins are installed by default. Manage them with the CLI:
 
 ```sh
-cd ~/.omp/plugins && bun install
+omp plugin list
+omp plugin install <package>
+omp plugin uninstall <package>
 ```
+
+The tracked `plugins/package.json` + `plugins/omp-plugins.lock.json` capture
+which plugins are enabled; run `omp plugin install` after cloning to restore any
+listed there.
 
 ## 🔐 Secrets
 
