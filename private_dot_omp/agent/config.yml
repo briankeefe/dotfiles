@@ -1,24 +1,24 @@
-symbolPreset: unicode
-theme: 
+symbolPreset: nerd
+theme:
   dark: titanium
 setupVersion: 1
-modelRoles: 
-  default: anthropic/claude-opus-4-8:medium
+modelRoles:
+  default: openai-codex/gpt-5.5
   smol: anthropic/claude-haiku-4-5:minimal
 colorBlindMode: true
-tui: 
+tui:
   textSizing: true
   hyperlinks: always
-statusLine: 
+statusLine:
   separator: none
   sessionAccent: true
   showHookStatus: false
-memory: 
+memory:
   backend: mnemopi
-mnemopi: 
+mnemopi:
   scoping: per-project-tagged
   llmMode: smol
   autoRecall: true
   autoRetain: true
-startup: 
+startup:
   quiet: false

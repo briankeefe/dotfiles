@@ -1,11 +1,38 @@
 #!/usr/bin/env sh
 set -eu
 
-mkdir -p "$HOME/.secrets/opencode"
+path_prepend() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
+
+path_prepend "$HOME/bin"
+path_prepend "$HOME/.local/bin"
+path_prepend "$HOME/.bun/bin"
+export PATH
+
+mkdir -p "$HOME/.secrets/opencode" "$HOME/.omp/agent" "$HOME/.omp/plugins"
 chmod 700 "$HOME/.secrets" "$HOME/.secrets/opencode" 2>/dev/null || true
+
+if [ -r /etc/arch-release ]; then
+  if ! command -v bun >/dev/null 2>&1; then
+    if command -v curl >/dev/null 2>&1; then
+      curl -fsSL https://bun.sh/install | bash
+      path_prepend "$HOME/.bun/bin"
+      export PATH
+    else
+      printf '%s\n' "curl missing; install Bun manually, then run: bun install -g @oh-my-pi/pi-coding-agent"
+    fi
+  fi
+
+  if command -v bun >/dev/null 2>&1 && ! command -v omp >/dev/null 2>&1; then
+    bun install -g @oh-my-pi/pi-coding-agent
+  fi
+fi
 
 printf '%s\n' "Bootstrap complete."
 printf '%s\n' "Next steps:"
 printf '%s\n' "  1. Add API keys under ~/.secrets/opencode/"
-printf '%s\n' "  2. Create ~/.config/chezmoi/chezmoi.toml"
-printf '%s\n' "  3. Run: exec zsh"
+printf '%s\n' "  2. Run: exec zsh"

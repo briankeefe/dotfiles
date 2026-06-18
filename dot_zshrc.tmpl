@@ -55,8 +55,7 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
 
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.opencode/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.opencode/bin:$PATH"
 
 {{- if .work }}
 export GIT_AUTHOR_EMAIL={{ .email | quote }}

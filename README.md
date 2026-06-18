@@ -27,13 +27,8 @@ Fresh machine:
 sh -c "$(curl -fsLS https://get.chezmoi.io)" -- init --apply briankeefe
 ```
 
-Then create local machine data:
-
-```sh
-mkdir -p ~/.config/chezmoi ~/.secrets/opencode
-chmod 700 ~/.config/chezmoi ~/.secrets ~/.secrets/opencode
-$EDITOR ~/.config/chezmoi/chezmoi.toml
-```
+Default Arch-safe machine data is included so first apply does not stop on
+missing template values. Override it when needed:
 
 Minimal example:
 
@@ -86,7 +81,8 @@ config in `~/.omp`.
 
 ### Install
 
-Requires Bun `>= 1.3.14` (`curl -fsSL https://bun.sh/install | bash`).
+On Arch Linux, bootstrap prepends `~/bin`, `~/.local/bin`, `~/.bun/bin`, and
+`~/.opencode/bin` to shell `PATH`, installs Bun when missing, then installs OMP:
 
 ```sh
 bun install -g @oh-my-pi/pi-coding-agent
