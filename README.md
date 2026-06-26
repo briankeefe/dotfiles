@@ -183,7 +183,7 @@ Edit a managed file:
 
 ```sh
 chezmoi edit ~/.zshrc
-chezmoi edit ~/.config/ghostty/theme.conf
+chezmoi edit ~/.config/ghostty/config
 chezmoi edit ~/.config/opencode/opencode.json
 ```
 
