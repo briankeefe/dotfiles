@@ -5,6 +5,9 @@ README.md
 **/*.tmp
 **/*~
 private_dot_secrets/**
+private_dot_config/herdr/*.log
+private_dot_config/herdr/*.sock
+private_dot_config/herdr/session.json
 {{ if ne .chezmoi.os "linux" -}}
 private_dot_config/ghostty/**
 {{ end -}}

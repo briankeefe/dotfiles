@@ -155,6 +155,7 @@ dotfiles/
 ├── private_dot_config/
 │   ├── fastfetch/
 │   ├── ghostty/
+│   ├── herdr/
 │   └── opencode/
 ├── private_dot_omp/
 │   ├── agent/

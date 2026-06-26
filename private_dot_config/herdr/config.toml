@@ -1,0 +1,13 @@
+[ui]
+agent_panel_sort = "priority"
+
+show_agent_labels_on_pane_borders = true
+[theme]
+name = "tokyo-night"
+auto_switch = false
+
+[ui.toast]
+delivery = "herdr"
+[keys]
+next_agent = "ctrl+alt+]"
+previous_agent = "ctrl+alt+["
