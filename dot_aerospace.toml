@@ -1,7 +1,8 @@
 config-version = 2
 
-# Start JankyBorders with AeroSpace (self-detects duplicates; won't double-launch)
-after-startup-command = ['exec-and-forget borders active_color=0xff00ffff inactive_color=0x00000000 width=6.0']
+# JankyBorders runs as a launchd service (`brew services start borders`), config
+# in ~/.config/borders/bordersrc. Not launched here so there's a single source of
+# truth and the border survives AeroSpace reloads/restarts.
 
 start-at-login = true
 enable-normalization-flatten-containers = true

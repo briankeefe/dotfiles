@@ -1,0 +1,9 @@
+#!/bin/bash
+# JankyBorders config — read by `borders` when launched with no args (brew service).
+# Cyan active border, no border on inactive windows, 6px.
+options=(
+	active_color=0xff00ffff
+	inactive_color=0x00000000
+	width=6.0
+)
+borders "${options[@]}"

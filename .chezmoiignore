@@ -10,4 +10,5 @@ private_dot_config/herdr/*.sock
 private_dot_config/herdr/session.json
 {{ if ne .chezmoi.os "darwin" -}}
 dot_aerospace.toml
+private_dot_config/borders/**
 {{ end -}}
