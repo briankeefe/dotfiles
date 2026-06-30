@@ -1,0 +1,71 @@
+config-version = 2
+
+# Start JankyBorders with AeroSpace (self-detects duplicates; won't double-launch)
+after-startup-command = ['exec-and-forget borders active_color=0xff00ffff inactive_color=0x00000000 width=6.0']
+
+start-at-login = true
+enable-normalization-flatten-containers = true
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+persistent-workspaces = ["1", "2"]
+
+[gaps]
+inner.horizontal = 8
+inner.vertical = 8
+outer.left = 8
+outer.right = 8
+outer.top = 8
+outer.bottom = 8
+
+[mode.main.binding]
+# Window nav on cmd-ctrl so it never collides with terminal/herdr/vim (which own bare alt-hjkl)
+cmd-ctrl-h = 'focus left'
+cmd-ctrl-j = 'focus down'
+cmd-ctrl-k = 'focus up'
+cmd-ctrl-l = 'focus right'
+cmd-ctrl-shift-h = 'move left'
+cmd-ctrl-shift-j = 'move down'
+cmd-ctrl-shift-k = 'move up'
+cmd-ctrl-shift-l = 'move right'
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-slash = 'layout tiles horizontal'
+alt-comma = 'layout accordion horizontal'
+cmd-ctrl-m = 'fullscreen'
+alt-shift-space = 'layout floating tiling'
+
+# Summon: pull an app onto the CURRENT workspace and focus it (no-ops if app has no window)
+cmd-ctrl-g = 'exec-and-forget wid=$(aerospace list-windows --monitor all --app-bundle-id com.mitchellh.ghostty --format "%{window-id}" | head -n1); [ -n "$wid" ] && aerospace move-node-to-workspace --window-id "$wid" --focus-follows-window "$(aerospace list-workspaces --focused)"'
+cmd-ctrl-c = 'exec-and-forget wid=$(aerospace list-windows --monitor all --app-bundle-id com.google.Chrome --format "%{window-id}" | head -n1); [ -n "$wid" ] && aerospace move-node-to-workspace --window-id "$wid" --focus-follows-window "$(aerospace list-workspaces --focused)"'
+cmd-ctrl-s = 'exec-and-forget wid=$(aerospace list-windows --monitor all --app-bundle-id com.tinyspeck.slackmacgap --format "%{window-id}" | head -n1); [ -n "$wid" ] && aerospace move-node-to-workspace --window-id "$wid" --focus-follows-window "$(aerospace list-workspaces --focused)"'
+cmd-ctrl-d = 'exec-and-forget wid=$(aerospace list-windows --monitor all --app-bundle-id com.jetbrains.datagrip --format "%{window-id}" | head -n1); [ -n "$wid" ] && aerospace move-node-to-workspace --window-id "$wid" --focus-follows-window "$(aerospace list-workspaces --focused)"'
+
+# Whole-desktop float / re-tile (temporary free-drag mode for the current workspace)
+cmd-ctrl-shift-f = 'exec-and-forget for wid in $(aerospace list-windows --workspace $(aerospace list-workspaces --focused) --format "%{window-id}"); do aerospace layout floating --window-id "$wid"; done'
+cmd-ctrl-shift-t = 'exec-and-forget for wid in $(aerospace list-windows --workspace $(aerospace list-workspaces --focused) --format "%{window-id}"); do aerospace layout tiling --window-id "$wid"; done'
+
+# Hard reset to halves: one Ghostty+Chrome on WS1, one DataGrip+Slack on WS2, sweep everything else (dupes + unknown apps) to WS3
+cmd-ctrl-r = 'exec-and-forget g1=$(aerospace list-windows --monitor all --app-bundle-id com.mitchellh.ghostty --format "%{window-id}" | head -n1); c1=$(aerospace list-windows --monitor all --app-bundle-id com.google.Chrome --format "%{window-id}" | head -n1); d1=$(aerospace list-windows --monitor all --app-bundle-id com.jetbrains.datagrip --format "%{window-id}" | head -n1); s1=$(aerospace list-windows --monitor all --app-bundle-id com.tinyspeck.slackmacgap --format "%{window-id}" | head -n1); [ -n "$g1" ] && aerospace move-node-to-workspace --window-id "$g1" 1 && aerospace layout tiling --window-id "$g1"; [ -n "$c1" ] && aerospace move-node-to-workspace --window-id "$c1" 1 && aerospace layout tiling --window-id "$c1"; [ -n "$d1" ] && aerospace move-node-to-workspace --window-id "$d1" 2 && aerospace layout tiling --window-id "$d1"; [ -n "$s1" ] && aerospace move-node-to-workspace --window-id "$s1" 2 && aerospace layout tiling --window-id "$s1"; keepers=" $g1 $c1 $d1 $s1 "; for w in $(aerospace list-windows --workspace 1 --format "%{window-id}") $(aerospace list-windows --workspace 2 --format "%{window-id}"); do case "$keepers" in *" $w "*) ;; *) aerospace move-node-to-workspace --window-id "$w" 3 ;; esac; done; aerospace balance-sizes --workspace 1; aerospace balance-sizes --workspace 2'
+
+[[on-window-detected]]
+if = 'test %{app-bundle-id} = com.mitchellh.ghostty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if = 'test %{app-bundle-id} = com.google.Chrome'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if = 'test %{app-bundle-id} = com.jetbrains.datagrip'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if = 'test %{app-bundle-id} = com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 2'

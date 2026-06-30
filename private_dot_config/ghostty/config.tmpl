@@ -1,3 +1,45 @@
+{{ if eq .chezmoi.os "darwin" -}}
+# ── macOS ─────────────────────────────────────────────────────────────────
+# Paired with AeroSpace (tiling WM) + herdr (multiplexer). Kept deliberately
+# minimal; herdr owns tab/agent switching, AeroSpace owns window layout.
+unfocused-split-opacity = 1
+theme = TokyoNight Night
+background = 08080f
+font-size = 16
+
+# Translate PageDown/PageUp into herdr's agent-cycle chord (ctrl+alt+] / ctrl+alt+[)
+keybind = page_down=text:\x1b[93;7u
+keybind = page_up=text:\x1b[91;7u
+
+# Disable native macOS tabs entirely: herdr is the multiplexer, and AeroSpace
+# tiles every native tab as a separate window. Unbind all tab keys so cmd-t /
+# ctrl-tab can never spawn or switch tab-windows. One Ghostty window, always.
+keybind = super+t=unbind
+keybind = ctrl+tab=unbind
+keybind = ctrl+shift+tab=unbind
+keybind = super+shift+bracket_left=unbind
+keybind = super+shift+bracket_right=unbind
+keybind = super+alt+w=unbind
+keybind = super+one=unbind
+keybind = super+two=unbind
+keybind = super+three=unbind
+keybind = super+four=unbind
+keybind = super+five=unbind
+keybind = super+six=unbind
+keybind = super+seven=unbind
+keybind = super+eight=unbind
+keybind = super+nine=unbind
+keybind = super+digit_1=unbind
+keybind = super+digit_2=unbind
+keybind = super+digit_3=unbind
+keybind = super+digit_4=unbind
+keybind = super+digit_5=unbind
+keybind = super+digit_6=unbind
+keybind = super+digit_7=unbind
+keybind = super+digit_8=unbind
+keybind = super+digit_9=unbind
+{{ else -}}
+# ── Linux (Hyprland) ──────────────────────────────────────────────────────
 adjust-cell-height = 10%
 background-blur-radius = 60
 background-opacity = 1.00
@@ -5,7 +47,7 @@ bold-is-bright = false
 confirm-close-surface = false
 cursor-style = bar
 font-family = {{ .terminal_font | quote }}
-{{ if eq .chezmoi.os "darwin" }}font-size = 16{{ else }}font-size = 12{{ end }}
+font-size = 12
 gtk-single-instance = true
 mouse-hide-while-typing = true
 quick-terminal-position = center
@@ -25,3 +67,4 @@ window-width = 110
 # Theme: builtin TokyoNight Night with a near-black background override.
 theme = TokyoNight Night
 background = 08080f
+{{ end -}}
