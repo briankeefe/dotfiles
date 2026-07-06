@@ -141,23 +141,23 @@
       </tr>
       <tr>
         <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>g</kbd></td>
-        <td class="desc">Summon <b>G</b>hostty to current workspace</td>
+        <td class="desc">Toggle <b>G</b>hostty <span style="color:var(--faint)">— summon here, or send home to WS1 if already here</span></td>
       </tr>
       <tr>
         <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>c</kbd></td>
-        <td class="desc">Summon <b>C</b>hrome</td>
+        <td class="desc">Toggle <b>C</b>hrome <span style="color:var(--faint)">— home WS4</span></td>
       </tr>
       <tr>
         <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>s</kbd></td>
-        <td class="desc">Summon <b>S</b>lack</td>
+        <td class="desc">Toggle <b>S</b>lack <span style="color:var(--faint)">— home WS2</span></td>
       </tr>
       <tr>
         <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>d</kbd></td>
-        <td class="desc">Summon <b>D</b>ataGrip</td>
+        <td class="desc">Toggle <b>D</b>ataGrip <span style="color:var(--faint)">— home WS3</span></td>
       </tr>
       <tr>
         <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>r</kbd></td>
-        <td class="desc"><b>Reset to halves</b> <span class="tag">panic button</span><br><span style="color:var(--faint)">Ghostty+Chrome→WS1, DataGrip+Slack→WS2, sweep extras→WS3</span></td>
+        <td class="desc"><b>Reset all apps home</b> <span class="tag">panic button</span><br><span style="color:var(--faint)">Ghostty→1, Slack→2, DataGrip→3, Chrome→4; sweep strays→WS5</span></td>
       </tr>
       <tr>
         <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>f</kbd></td>
@@ -182,6 +182,10 @@
         <tr>
           <td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><kbd>5</kbd></td>
           <td class="desc"><b>Banish</b> focused window to WS&nbsp;N</td>
+        </tr>
+        <tr>
+          <td class="keys" style="color:var(--faint);white-space:normal">homes</td>
+          <td class="desc" style="color:var(--faint)"><b class="m" style="color:var(--cyan-dim)">1</b> Ghostty · <b class="m" style="color:var(--cyan-dim)">2</b> Slack · <b class="m" style="color:var(--cyan-dim)">3</b> DataGrip · <b class="m" style="color:var(--cyan-dim)">4</b> Chrome · <b class="m" style="color:var(--cyan-dim)">5</b> junk drawer</td>
         </tr>
       </table>
     </div>
@@ -223,7 +227,7 @@
     <h2>Automatic <span class="accent">(no keys)</span></h2>
     <div class="auto">
       <div><span class="b">●</span><span><b style="color:var(--ink)">Cyan border</b> tracks the focused window.</span></div>
-      <div><span class="b">●</span><span>New <b style="color:var(--ink)">Ghostty / Chrome</b> → WS1 &nbsp;·&nbsp; new <b style="color:var(--ink)">DataGrip / Slack</b> → WS2.</span></div>
+      <div><span class="b">●</span><span>New windows auto-route home: <b style="color:var(--ink)">Ghostty→1, Slack→2, DataGrip→3, Chrome→4</b>. One app per workspace.</span></div>
       <div><span class="b">●</span><span><b style="color:var(--ink)">Free for terminal/herdr/vim:</b> all bare <kbd>alt-h/j/k/l</kbd>, <kbd>alt-f</kbd>, and every <code style="color:var(--dim)">cmd</code>-less letter.</span></div>
     </div>
   </section>
@@ -232,16 +236,16 @@
   <section>
     <h2>Daily 80%</h2>
     <div class="auto">
-      <div><span class="b">›</span><span><kbd class="mod">alt</kbd><span class="plus">+</span><kbd>1</kbd> <kbd>2</kbd> &nbsp;switch desktop</span></div>
-      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>h</kbd> <kbd>l</kbd> &nbsp;focus a half</span></div>
-      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>h</kbd> <kbd>l</kbd> &nbsp;swap the halves</span></div>
-      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>r</kbd> &nbsp;when a desktop drifts into thirds</span></div>
+      <div><span class="b">›</span><span><kbd class="mod">alt</kbd><span class="plus">+</span><kbd>1</kbd>…<kbd>5</kbd> &nbsp;jump to an app's workspace</span></div>
+      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>g</kbd> <kbd>c</kbd> <kbd>s</kbd> <kbd>d</kbd> &nbsp;pull an app here / send it home (toggle)</span></div>
+      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>h</kbd> <kbd>l</kbd> &nbsp;focus between windows (when an app has more than one)</span></div>
+      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>r</kbd> &nbsp;reset everything back to its home workspace</span></div>
     </div>
   </section>
 
   <footer>
     <span>Config: <code>~/.aerospace.toml</code> &nbsp;·&nbsp; Reload: <code>aerospace reload-config</code></span>
-    <span>4 apps · 2 home workspaces · cyan focus border</span>
+    <span>5 workspaces · 1 app each (Ghostty·Slack·DataGrip·Chrome) + junk drawer · cyan focus border</span>
   </footer>
 
 </div>
