@@ -32,6 +32,13 @@ if [ -r /etc/arch-release ]; then
   fi
 fi
 
+{{ if eq .chezmoi.os "darwin" -}}
+# macOS: free up Ctrl+Cmd+D (system "Look Up in Dictionary") so it stops
+# colliding with AeroSpace's cmd-ctrl-d DataGrip summon. Hotkey ID 70.
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>' || true
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true
+{{ end -}}
+
 printf '%s\n' "Bootstrap complete."
 printf '%s\n' "Next steps:"
 printf '%s\n' "  1. Add API keys under ~/.secrets/opencode/"
