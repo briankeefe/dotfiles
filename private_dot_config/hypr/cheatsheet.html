@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hyprland Cheat Sheet</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330;
+    --line:#2a3340; --ink:#e6edf3; --dim:#9aa7b4; --faint:#6b7884;
+    --cyan:#00ffff; --cyan-dim:#0bd; --warn:#ffb454; --good:#3fb950;
+    --kbd:#222b38; --kbd-edge:#39455a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:40px 24px 80px}
+  header{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:30px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  h1{font-size:30px;margin:0;letter-spacing:-.3px;display:flex;align-items:center;gap:12px}
+  h1 .dot{width:13px;height:13px;border-radius:3px;background:var(--cyan);box-shadow:0 0 14px var(--cyan);flex:none}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin:0 0 12px}
+  .sub{color:var(--dim);font-size:13.5px;max-width:460px}.sub code{color:var(--cyan-dim)}
+  .rule{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:8px;padding:13px 16px;margin:0 0 30px;font-size:14px;color:var(--dim)}
+  .rule b{color:var(--ink)}.rule .k{color:var(--cyan)}
+  section{margin-bottom:34px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  table{width:100%;border-collapse:collapse}tr+tr{border-top:1px solid rgba(42,51,64,.75)}td{padding:10px 0;vertical-align:top}.keys{width:42%;white-space:nowrap}.desc{color:var(--dim)}.desc b{color:var(--ink)}
+  kbd{display:inline-block;min-width:24px;text-align:center;padding:3px 7px;margin:0 2px;border-radius:6px;border:1px solid var(--kbd-edge);background:linear-gradient(#293241,#1e2633);color:var(--ink);font:12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;box-shadow:0 2px 0 #111722}.mod{color:var(--cyan)}.plus{color:var(--faint);margin:0 2px}
+  .tag{display:inline-block;margin-left:6px;padding:1px 6px;border:1px solid rgba(0,255,255,.25);border-radius:999px;color:var(--cyan-dim);font-size:11px}.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .notes{display:grid;gap:10px;color:var(--dim)}.notes div{display:flex;gap:10px}.b{color:var(--cyan);line-height:1.4}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan-dim)}
+  footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px;color:var(--faint);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1><span class="dot"></span>Hyprland Cheat Sheet</h1></div>
+    <div class="sub"><b style="color:var(--ink)">The rule:</b> <code>ctrl-super</code> = window manager. <code>alt</code> = workspace numbers. Same mental model as the AeroSpace config.</div>
+  </header>
+
+  <div class="rule"><b>Homes:</b> <span class="k">1</span> Ghostty · <span class="k">2</span> Slack · <span class="k">3</span> DataGrip · <span class="k">4</span> Chrome · <span class="k">5</span> junk drawer</div>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Summon / banish</h2>
+      <table>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>g</kbd></td><td class="desc"><b>Ghostty</b> <span class="tag">home 1</span></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>s</kbd></td><td class="desc"><b>Slack</b> <span class="tag">home 2</span></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>d</kbd></td><td class="desc"><b>DataGrip</b> <span class="tag">home 3</span></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>c</kbd></td><td class="desc"><b>Chrome</b> <span class="tag">home 4</span></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>r</kbd></td><td class="desc"><b>Reset apps home</b> <span class="tag">panic</span><br>Ghostty→1, Slack→2, DataGrip→3, Chrome→4; strays→5</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Workspaces</h2>
+      <table>
+        <tr><td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd>1-5</kbd></td><td class="desc"><b>Switch workspace</b></td></tr>
+        <tr><td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>1-5</kbd></td><td class="desc"><b>Move focused window</b> to workspace</td></tr>
+        <tr><td class="keys" style="color:var(--faint);white-space:normal">homes</td><td class="desc"><b class="m" style="color:var(--cyan-dim)">1</b> Ghostty · <b class="m" style="color:var(--cyan-dim)">2</b> Slack · <b class="m" style="color:var(--cyan-dim)">3</b> DataGrip · <b class="m" style="color:var(--cyan-dim)">4</b> Chrome · <b class="m" style="color:var(--cyan-dim)">5</b> junk</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Window control</h2>
+      <table>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>h/j/k/l</kbd></td><td class="desc"><b>Focus</b> left/down/up/right</td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>h/j/k/l</kbd></td><td class="desc"><b>Move</b> window left/down/up/right</td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>m</kbd></td><td class="desc"><b>Fullscreen</b></td></tr>
+        <tr><td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>space</kbd></td><td class="desc"><b>Toggle floating</b> focused window</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Workspace modes</h2>
+      <table>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>f</kbd></td><td class="desc"><b>Float current workspace</b></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>t</kbd></td><td class="desc"><b>Re-tile current workspace</b></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>return</kbd></td><td class="desc"><b>Open Ghostty</b></td></tr>
+        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>space</kbd></td><td class="desc"><b>Open app launcher</b></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Notes</h2>
+    <div class="notes">
+      <div><span class="b">●</span><span><b style="color:var(--ink)">Cyan border</b> tracks the focused window.</span></div>
+      <div><span class="b">●</span><span>New app windows auto-route home by class. Confirm classes with <code>hyprctl clients</code> if a new Linux install differs.</span></div>
+      <div><span class="b">●</span><span>Summon toggles are scripts under <code>~/.config/hypr/scripts/</code>; no giant inline shell in the config.</span></div>
+      <div><span class="b">●</span><span>Free for terminal/herdr/vim: bare <kbd>alt-h/j/k/l</kbd>, <kbd>alt-f</kbd>, and cmd-less letters.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Config: <code>~/.config/hypr/hyprland.conf</code> · Reload: <code>hyprctl reload</code></span>
+    <span>Linux-only via chezmoi · mirrors AeroSpace homes and summon behavior</span>
+  </footer>
+</div>
+</body>
+</html>

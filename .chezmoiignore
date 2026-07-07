@@ -13,3 +13,8 @@ dot_aerospace.toml
 private_dot_config/borders/**
 private_dot_config/aerospace/**
 {{ end -}}
+
+{{ if ne .chezmoi.os "linux" -}}
+.config/hypr/**
+private_dot_config/hypr/**
+{{ end -}}

@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""Float or tile every window on the current Hyprland workspace.
+
+Usage: workspace-floating float|tile
+"""
+
+import json
+import subprocess
+import sys
+from typing import Any
+
+
+def hypr_json(*args: str) -> Any:
+    output = subprocess.check_output(["hyprctl", *args], text=True)
+    return json.loads(output)
+
+
+def hypr(*args: str) -> None:
+    subprocess.run(["hyprctl", *args], check=False)
+
+
+def current_workspace_tokens() -> set[str]:
+    workspace = hypr_json("activeworkspace", "-j")
+    tokens = {str(workspace.get("id"))}
+    name = workspace.get("name")
+    if name:
+        tokens.add(str(name))
+    return tokens
+
+
+def client_workspace_token(client: dict[str, Any]) -> str:
+    workspace = client.get("workspace") or {}
+    name = workspace.get("name")
+    if name:
+        return str(name)
+    return str(workspace.get("id"))
+
+
+def main() -> int:
+    if len(sys.argv) != 2 or sys.argv[1] not in {"float", "tile"}:
+        print("usage: workspace-floating float|tile", file=sys.stderr)
+        return 2
+
+    should_float = sys.argv[1] == "float"
+    workspace_tokens = current_workspace_tokens()
+    clients = hypr_json("clients", "-j")
+
+    for client in clients:
+        address = client.get("address")
+        if not address or client_workspace_token(client) not in workspace_tokens:
+            continue
+        is_floating = bool(client.get("floating"))
+        if is_floating != should_float:
+            hypr("dispatch", "togglefloating", f"address:{address}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

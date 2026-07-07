@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Summon an app to the current Hyprland workspace, or banish it home.
+
+Usage: summon-app CLASS_REGEX HOME_WORKSPACE
+"""
+
+import json
+import re
+import subprocess
+import sys
+from typing import Any
+
+
+def hypr_json(*args: str) -> Any:
+    output = subprocess.check_output(["hyprctl", *args], text=True)
+    return json.loads(output)
+
+
+def hypr(*args: str) -> None:
+    subprocess.run(["hyprctl", *args], check=False)
+
+
+def workspace_token(workspace: dict[str, Any]) -> str:
+    name = workspace.get("name")
+    if name:
+        return str(name)
+    return str(workspace.get("id"))
+
+
+def is_current_workspace(client: dict[str, Any], current: dict[str, Any]) -> bool:
+    workspace = client.get("workspace") or {}
+    current_id = current.get("id")
+    current_name = current.get("name")
+    return workspace.get("id") == current_id or workspace.get("name") == current_name
+
+
+def focus_rank(client: dict[str, Any]) -> int:
+    focus_history_id = client.get("focusHistoryID")
+    if isinstance(focus_history_id, int) and focus_history_id >= 0:
+        return focus_history_id
+    return 1_000_000
+
+
+def main() -> int:
+    if len(sys.argv) != 3:
+        print("usage: summon-app CLASS_REGEX HOME_WORKSPACE", file=sys.stderr)
+        return 2
+
+    class_regex = re.compile(sys.argv[1])
+    home_workspace = sys.argv[2]
+    current = hypr_json("activeworkspace", "-j")
+    current_workspace = workspace_token(current)
+    clients = hypr_json("clients", "-j")
+
+    matches = [
+        client
+        for client in clients
+        if class_regex.search(str(client.get("class", "")))
+    ]
+
+    if not matches:
+        return 0
+
+    client = sorted(matches, key=focus_rank)[0]
+    address = client.get("address")
+    if not address:
+        return 0
+
+    target = home_workspace if is_current_workspace(client, current) else current_workspace
+    hypr("dispatch", "movetoworkspacesilent", f"{target},address:{address}")
+
+    if target == current_workspace:
+        hypr("dispatch", "focuswindow", f"address:{address}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

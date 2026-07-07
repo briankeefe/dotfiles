@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+"""Reset known apps to home workspaces and sweep strays to workspace 5."""
+
+import json
+import re
+import subprocess
+from typing import Any
+
+APP_HOMES: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"^(com\.mitchellh\.ghostty|ghostty|Ghostty)$"), "1"),
+    (re.compile(r"^(Slack|slack)$"), "2"),
+    (re.compile(r"^(jetbrains-datagrip|DataGrip|datagrip)$"), "3"),
+    (re.compile(r"^(google-chrome|Google-chrome|chromium|Chromium)$"), "4"),
+)
+PROTECTED_WORKSPACES = {"1", "2", "3", "4"}
+JUNK_WORKSPACE = "5"
+
+
+def hypr_json(*args: str) -> Any:
+    output = subprocess.check_output(["hyprctl", *args], text=True)
+    return json.loads(output)
+
+
+def hypr(*args: str) -> None:
+    subprocess.run(["hyprctl", *args], check=False)
+
+
+def workspace_token(client: dict[str, Any]) -> str:
+    workspace = client.get("workspace") or {}
+    name = workspace.get("name")
+    if name:
+        return str(name)
+    return str(workspace.get("id"))
+
+
+def home_for(client: dict[str, Any]) -> str | None:
+    class_name = str(client.get("class", ""))
+    for pattern, home in APP_HOMES:
+        if pattern.search(class_name):
+            return home
+    return None
+
+
+def move(address: str, workspace: str) -> None:
+    hypr("dispatch", "movetoworkspacesilent", f"{workspace},address:{address}")
+
+
+def main() -> int:
+    clients = hypr_json("clients", "-j")
+
+    for client in clients:
+        address = client.get("address")
+        home = home_for(client)
+        if address and home:
+            move(str(address), home)
+
+    for client in clients:
+        address = client.get("address")
+        if not address or home_for(client):
+            continue
+        if workspace_token(client) in PROTECTED_WORKSPACES:
+            move(str(address), JUNK_WORKSPACE)
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
