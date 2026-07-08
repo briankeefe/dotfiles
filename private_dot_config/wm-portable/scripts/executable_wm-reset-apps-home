@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Reset known apps to home desktops and sweep unknown windows from desktops 1-4 to 5.
+# KDE/GNOME X11 helper; desktop numbers here are 1-based for readability.
+set -euo pipefail
+
+command -v wmctrl >/dev/null 2>&1 || { echo "missing required command: wmctrl" >&2; exit 127; }
+
+# regex desktop_1_based
+apps=(
+  '^(com.mitchellh.ghostty|ghostty|Ghostty)$ 1'
+  '^(Slack|slack)$ 2'
+  '^(jetbrains-datagrip|DataGrip|datagrip)$ 3'
+  '^(google-chrome|Google-chrome|chromium|Chromium)$ 4'
+)
+
+home_for_class() {
+  local class=$1 entry regex home
+  for entry in "${apps[@]}"; do
+    regex=${entry% *}
+    home=${entry##* }
+    if [[ "$class" =~ $regex ]]; then
+      echo "$home"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# First, send known apps home.
+while read -r win_id desktop host class rest; do
+  [[ -n "${win_id:-}" && -n "${class:-}" ]] || continue
+  if home=$(home_for_class "$class"); then
+    wmctrl -ir "$win_id" -t "$((home - 1))"
+  fi
+done < <(wmctrl -lx)
+
+# Then sweep unknowns out of protected desktops 1-4 into desktop 5.
+while read -r win_id desktop host class rest; do
+  [[ -n "${win_id:-}" && -n "${class:-}" ]] || continue
+  if ! home_for_class "$class" >/dev/null && [[ "$desktop" =~ ^[0-3]$ ]]; then
+    wmctrl -ir "$win_id" -t 4
+  fi
+done < <(wmctrl -lx)

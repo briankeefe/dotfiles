@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Apply GNOME keyboard shortcuts that mirror the AeroSpace/Hyprland muscle memory.
+# Best effort: app summon/reset requires an X11 session because GNOME Wayland blocks wmctrl.
+set -euo pipefail
+
+base="$HOME/.config/wm-portable/scripts"
+
+# Keep workspaces stable like the AeroSpace/Hyprland setup.
+gsettings set org.gnome.mutter dynamic-workspaces false
+gsettings set org.gnome.desktop.wm.preferences num-workspaces 5
+
+# Workspace switching/moving.
+for n in 1 2 3 4 5; do
+  gsettings set org.gnome.desktop.wm.keybindings "switch-to-workspace-$n" "['<Alt>$n']"
+  gsettings set org.gnome.desktop.wm.keybindings "move-to-workspace-$n" "['<Alt><Shift>$n']"
+done
+
+# Lock screen: avoid Ctrl+Super+Shift+L because it conflicts with move-window-right muscle memory.
+gsettings set org.gnome.settings-daemon.plugins.media-keys screensaver "['<Control><Super><Shift>x']"
+
+# Custom command bindings.
+prefix='/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings'
+paths=(
+  "$prefix/wm-summon-ghostty/"
+  "$prefix/wm-summon-slack/"
+  "$prefix/wm-summon-datagrip/"
+  "$prefix/wm-summon-chrome/"
+  "$prefix/wm-reset-apps-home/"
+)
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['${paths[0]}', '${paths[1]}', '${paths[2]}', '${paths[3]}', '${paths[4]}']"
+
+set_binding() {
+  local path=$1 name=$2 binding=$3 command=$4
+  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$path" name "$name"
+  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$path" binding "$binding"
+  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$path" command "$command"
+}
+
+set_binding "${paths[0]}" 'Summon Ghostty' '<Control><Super>g' "$base/wm-summon-app '^(com.mitchellh.ghostty|ghostty|Ghostty)$' 1"
+set_binding "${paths[1]}" 'Summon Slack' '<Control><Super>s' "$base/wm-summon-app '^(Slack|slack)$' 2"
+set_binding "${paths[2]}" 'Summon DataGrip' '<Control><Super>d' "$base/wm-summon-app '^(jetbrains-datagrip|DataGrip|datagrip)$' 3"
+set_binding "${paths[3]}" 'Summon Chrome' '<Control><Super>c' "$base/wm-summon-app '^(google-chrome|Google-chrome|chromium|Chromium)$' 4"
+set_binding "${paths[4]}" 'Reset apps home' '<Control><Super>r' "$base/wm-reset-apps-home"
+
+echo 'GNOME keybindings applied. Note: summon/reset needs X11 + wmctrl.'

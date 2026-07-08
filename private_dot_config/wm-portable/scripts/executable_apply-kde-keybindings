@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+# Apply KDE Plasma custom shortcuts that mirror the AeroSpace/Hyprland app workflow.
+# Best effort: app summon/reset requires an X11 session because wmctrl cannot move Wayland windows.
+set -euo pipefail
+
+config_dir="$HOME/.config"
+base="$HOME/.config/wm-portable/scripts"
+mkdir -p "$config_dir"
+
+# This writes a KHotKeys-compatible custom shortcut file for Plasma installs that still ship khotkeys.
+# Plasma 6 systems without khotkeys may need importing these commands manually in System Settings.
+cat > "$config_dir/khotkeysrc.wm-portable-example" <<EOF
+[Data]
+DataCount=5
+
+[Data_1]
+Comment=Summon Ghostty
+Enabled=true
+Name=Summon Ghostty
+Type=COMMAND_URL
+
+[Data_1Actions]
+ActionsCount=1
+
+[Data_1Actions0]
+CommandURL=$base/wm-summon-app '^(com.mitchellh.ghostty|ghostty|Ghostty)$' 1
+Type=COMMAND_URL
+
+[Data_1Triggers]
+TriggersCount=1
+
+[Data_1Triggers0]
+Key=Ctrl+Meta+G
+Type=SHORTCUT
+
+[Data_2]
+Comment=Summon Slack
+Enabled=true
+Name=Summon Slack
+Type=COMMAND_URL
+
+[Data_2Actions]
+ActionsCount=1
+
+[Data_2Actions0]
+CommandURL=$base/wm-summon-app '^(Slack|slack)$' 2
+Type=COMMAND_URL
+
+[Data_2Triggers]
+TriggersCount=1
+
+[Data_2Triggers0]
+Key=Ctrl+Meta+S
+Type=SHORTCUT
+
+[Data_3]
+Comment=Summon DataGrip
+Enabled=true
+Name=Summon DataGrip
+Type=COMMAND_URL
+
+[Data_3Actions]
+ActionsCount=1
+
+[Data_3Actions0]
+CommandURL=$base/wm-summon-app '^(jetbrains-datagrip|DataGrip|datagrip)$' 3
+Type=COMMAND_URL
+
+[Data_3Triggers]
+TriggersCount=1
+
+[Data_3Triggers0]
+Key=Ctrl+Meta+D
+Type=SHORTCUT
+
+[Data_4]
+Comment=Summon Chrome
+Enabled=true
+Name=Summon Chrome
+Type=COMMAND_URL
+
+[Data_4Actions]
+ActionsCount=1
+
+[Data_4Actions0]
+CommandURL=$base/wm-summon-app '^(google-chrome|Google-chrome|chromium|Chromium)$' 4
+Type=COMMAND_URL
+
+[Data_4Triggers]
+TriggersCount=1
+
+[Data_4Triggers0]
+Key=Ctrl+Meta+C
+Type=SHORTCUT
+
+[Data_5]
+Comment=Reset apps home
+Enabled=true
+Name=Reset apps home
+Type=COMMAND_URL
+
+[Data_5Actions]
+ActionsCount=1
+
+[Data_5Actions0]
+CommandURL=$base/wm-reset-apps-home
+Type=COMMAND_URL
+
+[Data_5Triggers]
+TriggersCount=1
+
+[Data_5Triggers0]
+Key=Ctrl+Meta+R
+Type=SHORTCUT
+EOF
+
+# Workspace bindings are native KWin shortcuts. kwriteconfig is stable enough to stage them,
+# but applying live shortcuts varies by Plasma version, so this is intentionally conservative.
+kwriteconfig_cmd=$(command -v kwriteconfig6 || command -v kwriteconfig5 || true)
+if [[ -n "$kwriteconfig_cmd" ]]; then
+  for n in 1 2 3 4 5; do
+    "$kwriteconfig_cmd" --file kglobalshortcutsrc --group kwin --key "Switch to Desktop $n" "Alt+$n,none,Switch to Desktop $n"
+    "$kwriteconfig_cmd" --file kglobalshortcutsrc --group kwin --key "Window to Desktop $n" "Alt+Shift+$n,none,Window to Desktop $n"
+  done
+  "$kwriteconfig_cmd" --file kglobalshortcutsrc --group ksmserver --key 'Lock Session' 'Ctrl+Meta+Shift+X,Ctrl+Alt+L,Lock Session'
+fi
+
+echo 'Wrote ~/.config/khotkeysrc.wm-portable-example and staged KWin workspace shortcuts where kwriteconfig exists.'
+echo 'On Plasma 6, import/add the command shortcuts manually if khotkeys is unavailable.'

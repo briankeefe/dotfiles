@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Desktop-Environment-portable summon/banish helper for KDE/GNOME on X11.
+# Usage: wm-summon-app WM_CLASS_REGEX HOME_DESKTOP_1_BASED
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "usage: wm-summon-app WM_CLASS_REGEX HOME_DESKTOP_1_BASED" >&2
+  exit 2
+fi
+
+class_regex=$1
+home_one_based=$2
+home_zero_based=$((home_one_based - 1))
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "missing required command: $1" >&2
+    exit 127
+  }
+}
+
+require wmctrl
+require awk
+
+current_desktop=$(wmctrl -d | awk '$2 == "*" {print $1; exit}')
+if [[ -z "${current_desktop:-}" ]]; then
+  echo "could not determine current desktop" >&2
+  exit 1
+fi
+
+# wmctrl -lx columns: win-id desktop host wm-class title...
+match_line=$(wmctrl -lx | awk -v re="$class_regex" '$4 ~ re {print; exit}')
+[[ -n "${match_line:-}" ]] || exit 0
+
+win_id=$(awk '{print $1}' <<<"$match_line")
+win_desktop=$(awk '{print $2}' <<<"$match_line")
+
+if [[ "$win_desktop" == "$current_desktop" ]]; then
+  target=$home_zero_based
+else
+  target=$current_desktop
+fi
+
+wmctrl -ir "$win_id" -t "$target"
+if [[ "$target" == "$current_desktop" ]]; then
+  wmctrl -ia "$win_id"
+fi
