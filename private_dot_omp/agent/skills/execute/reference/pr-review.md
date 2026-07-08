@@ -245,10 +245,16 @@ Identify and mark comments as:
 - **Keep only** genuinely VALID concerns with accurate analysis
 - **Verify** each remaining comment by re-reading the actual diff if needed
 
+**Comment budget (enforce after self-challenge):**
+- **Hard cap: post at most 5 comments.** If more than 5 VALID comments survive, keep only the 5 highest-severity (CRITICAL > HIGH > MEDIUM > LOW) and drop the rest.
+- **Drop nitpicks by default.** Remove every `nitpick`/`polish` (LOW) comment unless the PR has zero higher-severity findings AND the nit is genuinely worth the author's time. Style/formatting nits that a linter would catch are always dropped.
+- **No filler comments.** A `question:` or `kudos:` counts against the budget; include one only if it earns its slot over a substantive finding.
+- Goal is signal: a review with 2 real issues and nothing else is better than one padded to 5.
+
 ### 8. Present Review to User
 Display the complete review (after validation):
 1. List all comments organized by priority
-2. Display blocking vs non-blocking counts
+2. Display blocking vs non-blocking counts. **These counts MUST be derived by counting the enumerated list you are about to post, never estimated.** The number in the summary line, the per-priority breakdown, and the comments actually enumerated MUST all match exactly. If they disagree, recount before showing anything.
 3. Highlight any critical security or bug issues
 
 Ask user:

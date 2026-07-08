@@ -793,6 +793,9 @@ Present concise summary:
 ```
 ## Ticket Complete: DRI-XXX
 
+### Linear Ticket
+https://linear.app/dripos/issue/DRI-XXX
+
 ### PR Link
 [Link to draft PR]
 
@@ -807,6 +810,8 @@ change and why it matters]
 - ~/code/Pictures/[project-name]/[ticket-number]-00.png
 - ~/code/Pictures/[project-name]/[ticket-number]-01.png
 ```
+
+**ALWAYS include the full Linear ticket URL (`https://linear.app/dripos/issue/DRI-XXX`) as the first line of the summary.** The user routinely needs to click straight through to the ticket; never make them ask for the link.
 
 ---
 
