@@ -34,29 +34,31 @@
 <div class="wrap">
   <header>
     <div><h1><span class="dot"></span>Hyprland Cheat Sheet</h1></div>
-    <div class="sub"><b style="color:var(--ink)">The rule:</b> <code>ctrl-super</code> = window manager. <code>alt</code> = workspace numbers. Same mental model as the AeroSpace config.</div>
+    <div class="sub"><b style="color:var(--ink)">Super</b> = Windows key. Shortcuts for the current Omarchy-derived session.</div>
   </header>
 
-  <div class="rule"><b>Homes:</b> <span class="k">1</span> Ghostty · <span class="k">2</span> Slack · <span class="k">3</span> DataGrip · <span class="k">4</span> Chrome · <span class="k">5</span> junk drawer</div>
+  <div class="rule"><b>Log out without shutting down:</b> <kbd>Super</kbd> + <kbd>Escape</kbd>, then choose <b>Log out</b>. This runs <code>uwsm stop</code>. Save your work first.</div>
 
   <section class="grid">
     <div class="card">
-      <h2>Summon / banish</h2>
+      <h2>Applications</h2>
       <table>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>g</kbd></td><td class="desc"><b>Ghostty</b> <span class="tag">home 1</span></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>s</kbd></td><td class="desc"><b>Slack</b> <span class="tag">home 2</span></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>d</kbd></td><td class="desc"><b>DataGrip</b> <span class="tag">home 3</span></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>c</kbd></td><td class="desc"><b>Chrome</b> <span class="tag">home 4</span></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>r</kbd></td><td class="desc"><b>Reset apps home</b> <span class="tag">panic</span><br>Ghostty→1, Slack→2, DataGrip→3, Chrome→4; strays→5</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Enter</kbd></td><td class="desc"><b>Terminal</b> · Ghostty</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Space</kbd></td><td class="desc"><b>Applications</b> · Fuzzel<br>Also Super + Alt + Space</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>E</kbd></td><td class="desc"><b>Files</b> · Dolphin</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>B</kbd></td><td class="desc"><b>Browser</b> · Chrome</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>T</kbd></td><td class="desc"><b>Theme switcher</b></td></tr>
       </table>
     </div>
 
     <div class="card">
       <h2>Workspaces</h2>
       <table>
-        <tr><td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd>1-5</kbd></td><td class="desc"><b>Switch workspace</b></td></tr>
-        <tr><td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>1-5</kbd></td><td class="desc"><b>Move focused window</b> to workspace</td></tr>
-        <tr><td class="keys" style="color:var(--faint);white-space:normal">homes</td><td class="desc"><b class="m" style="color:var(--cyan-dim)">1</b> Ghostty · <b class="m" style="color:var(--cyan-dim)">2</b> Slack · <b class="m" style="color:var(--cyan-dim)">3</b> DataGrip · <b class="m" style="color:var(--cyan-dim)">4</b> Chrome · <b class="m" style="color:var(--cyan-dim)">5</b> junk</td></tr>
+        <tr><td class="keys"><kbd>Alt</kbd> + <kbd>1–0</kbd></td><td class="desc"><b>Switch workspace</b> · 1–9, 0 for 10</td></tr>
+        <tr><td class="keys"><kbd>Alt Shift</kbd> + <kbd>1–0</kbd></td><td class="desc"><b>Send window to workspace</b> without following</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Tab</kbd></td><td class="desc"><b>Next workspace</b></td></tr>
+        <tr><td class="keys"><kbd>Super Shift</kbd> + <kbd>Tab</kbd></td><td class="desc"><b>Previous workspace</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>S</kbd></td><td class="desc"><b>Toggle scratchpad</b></td></tr>
       </table>
     </div>
   </section>
@@ -65,37 +67,63 @@
     <div class="card">
       <h2>Window control</h2>
       <table>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>h/j/k/l</kbd></td><td class="desc"><b>Focus</b> left/down/up/right</td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>h/j/k/l</kbd></td><td class="desc"><b>Move</b> window left/down/up/right</td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>m</kbd></td><td class="desc"><b>Fullscreen</b></td></tr>
-        <tr><td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>space</kbd></td><td class="desc"><b>Toggle floating</b> focused window</td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>H J K L</kbd></td><td class="desc"><b>Focus</b> left / down / up / right</td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl Shift</kbd> + <kbd>H L</kbd></td><td class="desc"><b>Move window horizontally</b>; at a tiled edge, cross to the configured adjacent monitor</td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl Shift</kbd> + <kbd>K J</kbd></td><td class="desc"><b>Move window up / down</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Q</kbd> / <kbd>W</kbd></td><td class="desc"><b>Quit application / close window</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>M</kbd></td><td class="desc"><b>Fullscreen</b></td></tr>
+        <tr><td class="keys"><kbd>Alt Shift</kbd> + <kbd>Space</kbd></td><td class="desc"><b>Toggle floating</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl Shift</kbd> + <kbd>F</kbd> / <kbd>T</kbd></td><td class="desc"><b>Float / tile every window on this workspace</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>G S D C</kbd></td><td class="desc"><b>Summon / banish</b> Ghostty / Slack / DataGrip / Chrome. Homes: 1 / 2 / 3 / 4.</td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>R</kbd></td><td class="desc"><b>Reset apps home</b>; unknown windows on 1–4 go to 5</td></tr>
+        <tr><td class="keys"><kbd>Super Alt</kbd> + <kbd>S</kbd></td><td class="desc"><b>Toggle split orientation</b></td></tr>
+        <tr><td class="keys"><kbd>Alt</kbd> + <kbd>Tab</kbd></td><td class="desc"><b>Next window</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Left drag</kbd></td><td class="desc"><b>Move window</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Right drag</kbd></td><td class="desc"><b>Resize window</b></td></tr>
       </table>
     </div>
 
     <div class="card">
-      <h2>Workspace modes</h2>
+      <h2>Session and desktop</h2>
       <table>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>f</kbd></td><td class="desc"><b>Float current workspace</b></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>t</kbd></td><td class="desc"><b>Re-tile current workspace</b></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>return</kbd></td><td class="desc"><b>Open Ghostty</b></td></tr>
-        <tr><td class="keys"><kbd class="mod">ctrl-super</kbd><span class="plus">+</span><kbd>space</kbd></td><td class="desc"><b>Open app launcher</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Escape</kbd></td><td class="desc"><b>System menu</b><br>Lock, Log out, Suspend, Reboot, Shut down</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>L</kbd></td><td class="desc"><b>Lock screen</b> · stays logged in</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Print</kbd></td><td class="desc"><b>Screenshot display</b></td></tr>
+        <tr><td class="keys"><kbd>Super Shift</kbd> + <kbd>S</kbd></td><td class="desc"><b>Screenshot region</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>E</kbd></td><td class="desc"><b>Emojis</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>A</kbd></td><td class="desc"><b>Audio panel</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>B</kbd></td><td class="desc"><b>Bluetooth panel</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>W</kbd></td><td class="desc"><b>Network panel</b></td></tr>
+        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>P</kbd></td><td class="desc"><b>Battery / power panel</b><br>Unavailable on this desktop: requires a detected battery. For logout or shutdown, use Super + Escape.</td></tr>
       </table>
     </div>
   </section>
 
   <section class="card">
+    <h2>Media and hardware keys</h2>
+    <table>
+      <tr><td class="keys"><kbd>Volume up / down</kbd></td><td class="desc">Adjust volume by 5%; up is capped at 150%</td></tr>
+      <tr><td class="keys"><kbd>Mute</kbd> / <kbd>Mic mute</kbd></td><td class="desc">Toggle output / microphone mute</td></tr>
+      <tr><td class="keys"><kbd>Play</kbd></td><td class="desc">Play / pause</td></tr>
+      <tr><td class="keys"><kbd>Next</kbd> / <kbd>Previous</kbd></td><td class="desc">Next / previous track</td></tr>
+      <tr><td class="keys"><kbd>Brightness up / down</kbd></td><td class="desc">Adjust brightness by 5%</td></tr>
+    </table>
+    <p class="desc">Dedicated hardware keys, no Super required. These bindings also work while locked.</p>
+  </section>
+
+  <section class="card">
     <h2>Notes</h2>
     <div class="notes">
-      <div><span class="b">●</span><span><b style="color:var(--ink)">Cyan border</b> tracks the focused window.</span></div>
-      <div><span class="b">●</span><span>New app windows auto-route home by class. Confirm classes with <code>hyprctl clients</code> if a new Linux install differs.</span></div>
-      <div><span class="b">●</span><span>Summon toggles are scripts under <code>~/.config/hypr/scripts/</code>; no giant inline shell in the config.</span></div>
-      <div><span class="b">●</span><span>Free for terminal/herdr/vim: bare <kbd>alt-h/j/k/l</kbd>, <kbd>alt-f</kbd>, and cmd-less letters.</span></div>
+      <div><span class="b">●</span><span>AeroSpace modifiers map directly: Command becomes Super, Option becomes Alt. Bare Alt+H/J/K/L stays available to terminal apps.</span></div>
+      <div><span class="b">●</span><span>Alt+/ and Alt+, are unbound. Hyprland's dwindle layout does not reproduce AeroSpace's horizontal tiles / accordion commands. Super+Alt+S still toggles split orientation.</span></div>
+      <div><span class="b">●</span><span>The Arch Lua config requires the existing Omarchy-derived installation at <code>~/.local/share/omarchy-derived/upstream</code> and its desktop helper commands. It does not install those dependencies.</span></div>
+      <div><span class="b">●</span><span>This is a static reference, not a live view. Inspect loaded shortcuts with <code>hyprctl binds</code>.</span></div>
     </div>
   </section>
 
   <footer>
-    <span>Config: <code>~/.config/hypr/hyprland.conf</code> · Reload: <code>hyprctl reload</code></span>
-    <span>Linux-only via chezmoi · mirrors AeroSpace homes and summon behavior</span>
+    <span>Config: <code>~/.config/hypr/hyprland.lua</code> · Reload: <code>hyprctl reload</code></span>
+    <span>Updated 2026-09-14 · AeroSpace key mapping</span>
   </footer>
 </div>
 </body>
