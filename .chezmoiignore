@@ -17,6 +17,11 @@ macos
 
 {{ if ne .chezmoi.os "linux" -}}
 .config/hypr/**
+{{ else if ne .chezmoi.osRelease.id "arch" -}}
+.config/hypr/hyprland.lua
+.config/hypr/quit-application.lua
+.config/hypr/hypridle.conf
+.config/hypr/hyprlock.conf
 {{ end -}}
 {{ if eq .chezmoi.os "darwin" -}}
 .config/wm-portable/**
