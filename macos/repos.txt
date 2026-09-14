@@ -1,0 +1,8 @@
+# Work repos (Frostbyte-Technologies GitHub org).
+# One OWNER/REPO per line. Each clones to ~/code/<basename>.
+Frostbyte-Technologies/Dripos
+Frostbyte-Technologies/Dripos-React-Partner
+Frostbyte-Technologies/Dripos-React-Order
+Frostbyte-Technologies/Dripos-POS-React-Native
+Frostbyte-Technologies/Grounds
+Frostbyte-Technologies/agent-skills

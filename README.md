@@ -23,6 +23,55 @@ One repo. New machine in minutes. No rebuilding terminal + AI tooling from memor
 
 ## ⚡ Bootstrap
 
+### Mac: first-run setup
+
+Install Apple's Command Line Tools (`xcode-select --install`) and authenticate
+GitHub to clone this private repo. If `gh` is not installed yet, install Homebrew
+from https://brew.sh and run `brew install gh`.
+
+```sh
+gh auth login
+gh auth setup-git
+mkdir -p ~/code
+gh repo clone briankeefe/dotfiles ~/code/dotfiles
+sh ~/code/dotfiles/macos/bootstrap.sh
+```
+
+After cloning, the final command is the entry point for repeat runs. It installs
+the package list and OMP/Herdr, offers work-repo cloning and shared agent skills,
+reviews configuration changes, and offers Git, shell and desktop preferences.
+Existing work repos are not pulled or reset. It does not install project
+dependencies, run migrations, or start application servers.
+
+Run the readiness checks separately:
+
+```sh
+sh ~/code/dotfiles/macos/bootstrap.sh --check
+bun ~/code/dotfiles/macos/doctor.ts --offline
+```
+
+The doctor reports missing tools, authentication, skills and per-project runtime
+requirements. Exit status `1` means missing or unverified prerequisites, not that
+the bootstrap rolled back. `--offline` skips network authentication checks and
+does not claim those credentials work. `--code-dir PATH` checks another project
+root without changing the default `~/code` layout.
+
+`macos/repos.txt` is the explicit clone list. Review it before running bootstrap;
+each non-comment line is a GitHub `owner/repo`. Shared skills come from
+`Frostbyte-Technologies/agent-skills`, not a second copy of that repo's content.
+
+### Git defaults
+
+```sh
+sh ~/code/dotfiles/macos/configure-git.sh
+```
+
+This asks for author identity, then confirms `init.defaultBranch=main`,
+`fetch.prune=true`, and `pull.ff=only`. Existing names/emails are offered first;
+Brian's identity is the fallback for a fresh machine. It does not rename existing
+branches, change repository-local settings, replace credential helpers, or force
+commit signing.
+
 ### Mac: restore the terminal and desktop setup
 
 Install [Homebrew](https://brew.sh/) first, then:
@@ -55,7 +104,7 @@ Preview and apply only the Mac desktop and OMP config. This leaves your shell,
 other tools, existing sessions, and credentials alone:
 
 ```sh
-chezmoi diff ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp
+chezmoi diff --recursive ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp
 chezmoi apply --parent-dirs --exclude scripts ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp
 bun install --cwd ~/.omp/plugins --frozen-lockfile --ignore-scripts
 herdr channel set preview
@@ -72,7 +121,9 @@ sh "$(chezmoi source-path)/macos/defaults.sh"
 
 This restores dark mode, Dock auto-hide and size, the three configured hot corners,
 natural scrolling, selected built-in trackpad gestures, and frees Cmd-Ctrl-D for
-DataGrip. Log out and back in afterward. It does not replace Dock app lists,
+DataGrip. It also shows filename extensions and Finder's path bar, searches the
+current Finder folder by default, and saves screenshots to `~/Pictures/Screenshots`.
+Log out and back in afterward. It does not replace Dock app lists,
 other keyboard shortcuts, or device-specific preferences, and does not run during
 `chezmoi apply`.
 
@@ -120,6 +171,38 @@ Node/Python versions and project dependencies are still installed per project.
 The Meslo fonts are installed, not forced into Ghostty: its current config leaves
 the font family at the terminal default. Local shell secrets belong in
 `~/.secrets/shell/env.zsh`, never in the tracked template.
+
+### First-run authentication and runtime checklist
+
+Credentials stay in each tool's normal local credential store or your password
+manager. Never copy OAuth databases, API tokens, AWS credential files, or browser
+profiles into this repository.
+
+| Service | First-run action |
+| --- | --- |
+| GitHub | `gh auth login`, then `gh auth setup-git`; confirm access to the private work repos |
+| Linear | Configure `LINEAR_API_KEY` through your local secret environment, run `linear config` in a work repo, then `linear team list` |
+| OMP | Start `command omp`, use `/login` for the configured providers, and send a harmless prompt to confirm model access |
+| Notion | Authorize the configured Notion MCP connection in OMP, then read a page you have permission to access |
+| Tailscale | Open Tailscale, sign in to the work tailnet, and confirm it is connected |
+| AWS | Configure your team's SSO profile, select it with `AWS_PROFILE`, run `aws sso login`, then `aws sts get-caller-identity` |
+| AeroSpace | Open AeroSpace and grant it Accessibility permission in System Settings; confirm it can focus a window |
+| Docker | Open Docker Desktop and finish its first-run setup before working on a repo that needs Compose |
+
+The doctor distinguishes verified checks from manual steps. A configured model
+or MCP URL is not proof of authentication; Notion authorization and model access
+may still require the interactive checks above. No readiness check queries an
+application database, deploys anything, or starts a project.
+
+Runtime versions belong to each repo. The doctor reads version files and package
+metadata, reports conflicts or missing declarations, and gives targeted next
+steps. In a Node repo with `.nvmrc`, use `nvm install` and `nvm use` from that repo.
+Honor its `packageManager` declaration rather than installing the latest Yarn
+globally. Python and Java requirements likewise come from project declarations;
+missing or unsupported declarations need review, not an invented version.
+Docker requirements are checked for repos with Compose files. Follow each
+project's local development instructions before installing dependencies or
+starting services.
 
 ### Linux / full configuration
 

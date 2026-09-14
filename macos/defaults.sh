@@ -2,9 +2,15 @@
 # Run explicitly on the destination Mac. No Dock app lists or device identifiers.
 set -eu
 [ "$(uname -s)" = Darwin ] || { echo 'macOS only' >&2; exit 1; }
+mkdir -p "$HOME/Pictures/Screenshots"
 
 defaults write NSGlobalDomain AppleInterfaceStyle -string Dark
 defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder FXDefaultSearchScope -string SCcf
+defaults write com.apple.screencapture location -string "$HOME/Pictures/Screenshots"
 
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock tilesize -int 60

@@ -1,14 +1,18 @@
 # Daily terminal/desktop apps and dependencies of the tracked Mac shell.
 # Herdr uses its direct installer to retain preview-channel updates.
+# Activate each repo's declared Node version with nvm before installing its package manager.
 tap "nikitabobko/tap"
 tap "felixkratz/formulae"
 tap "oven-sh/bun"
+tap "schpet/tap"
 
 brew "chezmoi"
 brew "gh"
 brew "git"
 brew "oven-sh/bun/bun"
 brew "felixkratz/formulae/borders"
+brew "schpet/tap/linear"
+brew "awscli"
 brew "ripgrep"
 brew "fd"
 brew "ffmpeg"
@@ -21,6 +25,7 @@ brew "zsh-syntax-highlighting"
 
 cask "ghostty"
 cask "nikitabobko/tap/aerospace"
+cask "docker-desktop"
 cask "google-chrome"
 cask "slack"
 cask "datagrip"

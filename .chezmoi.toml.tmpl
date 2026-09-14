@@ -1,4 +1,4 @@
-sourceDir = "{{ .chezmoi.homeDir }}/.local/share/chezmoi"
+sourceDir = {{ .chezmoi.sourceDir | quote }}
 
 [data]
     machine = "{{ if eq .chezmoi.os "darwin" }}mac{{ else }}arch{{ end }}"
