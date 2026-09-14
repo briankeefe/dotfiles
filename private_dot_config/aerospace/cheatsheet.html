@@ -112,27 +112,27 @@
       <h1><span class="dot"></span>AeroSpace Cheat Sheet</h1>
     </div>
     <div class="sub">
-      <b style="color:var(--ink)">The rule:</b> <code>cmd-ctrl</code> = window manager (everything).
-      <code>alt</code> + digit = workspaces.
+      <b style="color:var(--ink)">The rule:</b> <code>cmd</code> + arrows = focus; add Shift to move.
+      <code>cmd</code> + digit = workspaces. Command matches Arch's Super key.
     </div>
   </header>
 
   <div class="rule">
     <b>Mental model</b> &nbsp;·&nbsp;
-    <span class="k">cmd-ctrl-h/l</span> moves the cyan highlight between tiles (focus only).
+    <span class="k">cmd-left/right</span> moves the cyan highlight between tiles (focus only).
     Add <span class="k">shift</span> and the focused tile physically <b>trades places</b> with its neighbor.
   </div>
 
   <!-- WINDOWS -->
   <div class="card" style="margin-bottom:30px">
-    <div class="hd"><h2>Windows <span class="accent">→ cmd-ctrl</span></h2></div>
+    <div class="hd"><h2>Windows</h2></div>
     <table>
       <tr>
-        <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd></td>
+        <td class="keys"><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd>←</kbd><kbd>↓</kbd><kbd>↑</kbd><kbd>→</kbd></td>
         <td class="desc"><b>Focus</b> left / down / up / right <span style="color:var(--faint)">— moves the cyan highlight</span></td>
       </tr>
       <tr>
-        <td class="keys"><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd></td>
+        <td class="keys"><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>←</kbd><kbd>↓</kbd><kbd>↑</kbd><kbd>→</kbd></td>
         <td class="desc"><b>Move</b> focused window — <span class="m">swaps tiles</span></td>
       </tr>
       <tr>
@@ -173,15 +173,15 @@
   <div class="grid2">
     <!-- WORKSPACES -->
     <div class="card">
-      <div class="hd"><h2>Workspaces <span class="accent">→ alt + digit</span></h2></div>
+      <div class="hd"><h2>Workspaces <span class="accent">→ cmd + digit</span></h2></div>
       <table>
         <tr>
-          <td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><kbd>5</kbd></td>
-          <td class="desc">Switch to workspace N</td>
+          <td class="keys"><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd>1–9</kbd><kbd>0</kbd></td>
+          <td class="desc">Switch to workspace 1–10 (0 selects 10)</td>
         </tr>
         <tr>
-          <td class="keys"><kbd class="mod">alt</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><kbd>5</kbd></td>
-          <td class="desc"><b>Banish</b> focused window to WS&nbsp;N</td>
+          <td class="keys"><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>1–9</kbd><kbd>0</kbd></td>
+          <td class="desc">Send focused window to workspace 1–10 without following</td>
         </tr>
         <tr>
           <td class="keys" style="color:var(--faint);white-space:normal">homes</td>
@@ -214,9 +214,9 @@
   <div class="flow" style="margin-top:30px">
     <h2>Swap two tiles <span class="accent">— focus, then shift-move</span></h2>
     <div class="steps">
-      <div class="step"><span class="n">1</span>Focus the window to move — e.g. <kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>l</kbd> (focus right)</div>
+      <div class="step"><span class="n">1</span>Focus the window to move: <kbd class="mod">cmd</kbd><span class="plus">+</span><kbd>→</kbd> (focus right)</div>
       <span class="arrow">→</span>
-      <div class="step"><span class="n">2</span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>h</kbd> (move left)</div>
+      <div class="step"><span class="n">2</span><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd class="mod">shift</kbd><span class="plus">+</span><kbd>←</kbd> (move left)</div>
       <span class="arrow">→</span>
       <div class="step" style="color:var(--good); border-color:rgba(63,185,80,.3)">Tiles trade places. Two keystrokes.</div>
     </div>
@@ -236,9 +236,9 @@
   <section>
     <h2>Daily 80%</h2>
     <div class="auto">
-      <div><span class="b">›</span><span><kbd class="mod">alt</kbd><span class="plus">+</span><kbd>1</kbd>…<kbd>5</kbd> &nbsp;jump to an app's workspace</span></div>
+      <div><span class="b">›</span><span><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd>1–9</kbd><kbd>0</kbd> &nbsp;jump to a workspace</span></div>
       <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>g</kbd> <kbd>c</kbd> <kbd>s</kbd> <kbd>d</kbd> &nbsp;pull an app here / send it home (toggle)</span></div>
-      <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>h</kbd> <kbd>l</kbd> &nbsp;focus between windows (when an app has more than one)</span></div>
+      <div><span class="b">›</span><span><kbd class="mod">cmd</kbd><span class="plus">+</span><kbd>←</kbd><kbd>→</kbd> &nbsp;focus between windows (when an app has more than one)</span></div>
       <div><span class="b">›</span><span><kbd class="mod">cmd-ctrl</kbd><span class="plus">+</span><kbd>r</kbd> &nbsp;reset everything back to its home workspace</span></div>
     </div>
   </section>
