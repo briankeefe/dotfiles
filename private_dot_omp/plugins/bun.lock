@@ -1,0 +1,34 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "omp-plugins",
+      "dependencies": {
+        "@baylarsadigov/omp-undo-redo": "npm:@baylarsadigov/omp-undo-redo",
+        "@dietrichgebert/ponytail": "https://github.com/DietrichGebert/ponytail",
+        "pi-committer": "0.12.8",
+        "pi-rewind": "npm:pi-rewind",
+      },
+    },
+  },
+  "packages": {
+    "@baylarsadigov/omp-undo-redo": ["@baylarsadigov/omp-undo-redo@1.5.2", "", { "peerDependencies": { "@oh-my-pi/pi-coding-agent": ">=16.5.2" }, "optionalPeers": ["@oh-my-pi/pi-coding-agent"] }, "sha512-R1psJbLRhS2E57PTD/aD43DEE/rB8PBpw8BQ7C2DRPq4xrCnLN+FFA1VnOxkbL2pfTOpJv8K7xya9QAVb9gRRA=="],
+
+    "@dietrichgebert/ponytail": ["@dietrichgebert/ponytail@github:DietrichGebert/ponytail#2ed6c52", {}, "DietrichGebert-ponytail-2ed6c52", "sha512-oLxhpyBiVHCavNr2XjZ8QZP2PpvxUEkg+IU6qveqMeywHaebedOghnIfVobyFyeSchHKRKRf784Bg9FleVcNjw=="],
+
+    "@earendil-works/pi-tui": ["@earendil-works/pi-tui@0.74.2", "", { "dependencies": { "get-east-asian-width": "^1.3.0", "marked": "^15.0.12" }, "optionalDependencies": { "koffi": "^2.9.0" } }, "sha512-valQPz74qbdydRqII6t9rJ46YANMOOJeDhKm25a1ZrWvWwdjAaAEu6s3ur/LWz84Wkkwcbub2ZkVjzCZi8gFGA=="],
+
+    "get-east-asian-width": ["get-east-asian-width@1.6.0", "", {}, "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="],
+
+    "koffi": ["koffi@2.16.3", "", {}, "sha512-E9y1AsgYGlaxMhcZzHr8y96QF2U5XzA12GGVAfbWqIubTwPNMXQarfBzePNXHe0xtIEtNd6ifAv3GAKYGUeBAQ=="],
+
+    "marked": ["marked@15.0.12", "", { "bin": { "marked": "bin/marked.js" } }, "sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA=="],
+
+    "pi-committer": ["pi-committer@0.12.8", "", { "dependencies": { "@earendil-works/pi-tui": "^0.74.0", "smol-toml": "^1.3.0" } }, "sha512-LNv0VZ7MARHWSMyda/jJYSHBFAG8Zr6HaqfyYCTzHLHiytj50lGxkoH1wwMwDtFn6rXg+xJzk0iaXZ15l1k+HA=="],
+
+    "pi-rewind": ["pi-rewind@0.5.0", "", {}, "sha512-nW6HVg3II7+DhMZAsUX7EJPT2/IgPGXWGDntppS1cyYLfNaVgeBU5bRW7e1acHk1LW18EWdMh6475CRh0PAnGQ=="],
+
+    "smol-toml": ["smol-toml@1.8.0", "", {}, "sha512-kCZr2V3ch9i00x8zXRhjUNVcjG9ijES5dDudkXvUVCT5QlJNQWElSJdZqyPemffHoLNUYwOcou0Fy+ojN0uHSQ=="],
+  }
+}

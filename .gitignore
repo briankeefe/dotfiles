@@ -5,3 +5,21 @@ vscode/*
 !vscode/.config/Code/User/settings.json
 !vscode/.config/Code/User/keybindings.json
 
+# Credentials and runtime state are never dotfiles, even in a private repo.
+**/.DS_Store
+**/node_modules/
+**/*.db
+**/*.db-*
+**/*.log
+**/*.sock
+**/auth.json
+**/.env
+private_dot_secrets/**
+private_dot_omp/agent/sessions/
+private_dot_omp/agent/terminal-sessions/
+private_dot_omp/agent/memories/
+private_dot_omp/agent/blobs/
+private_dot_omp/agent/cache/
+private_dot_omp/logs/
+private_dot_omp/run/
+private_dot_config/herdr/session.json

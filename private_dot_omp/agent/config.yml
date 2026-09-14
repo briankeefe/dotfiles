@@ -1,18 +1,20 @@
 symbolPreset: nerd
 theme:
   dark: titanium
-setupVersion: 1
+setupVersion: 2
 modelRoles:
-  default: openai-codex/gpt-5.5
   smol: anthropic/claude-haiku-4-5:minimal
+  advisor: anthropic/claude-opus-4-6:medium
+  default: openai-codex/gpt-6-astra:medium
 colorBlindMode: true
 tui:
   textSizing: true
   hyperlinks: always
 statusLine:
-  separator: none
+  separator: powerline
   sessionAccent: true
   showHookStatus: false
+  preset: compact
 memory:
   backend: mnemopi
 mnemopi:
@@ -22,3 +24,21 @@ mnemopi:
   autoRetain: true
 startup:
   quiet: false
+steeringMode: one-at-a-time
+followUpMode: one-at-a-time
+interruptMode: immediate
+hideThinkingBlock: false
+task:
+  agentModelOverrides:
+    task: anthropic/claude-opus-4-6
+    sonic: anthropic/claude-sonnet-4-5
+dev:
+  autoqaConsent: granted
+read:
+  toolResultPreview: true
+composer:
+  shape: field
+browser:
+  relay: true
+defaultThinkingLevel: medium
+proseOnlyThinking: true

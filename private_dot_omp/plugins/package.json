@@ -1,4 +1,10 @@
 {
   "name": "omp-plugins",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@baylarsadigov/omp-undo-redo": "npm:@baylarsadigov/omp-undo-redo",
+    "@dietrichgebert/ponytail": "https://github.com/DietrichGebert/ponytail",
+    "pi-committer": "0.12.8",
+    "pi-rewind": "npm:pi-rewind"
+  }
 }

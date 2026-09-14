@@ -1,7 +1,7 @@
 sourceDir = "{{ .chezmoi.homeDir }}/.local/share/chezmoi"
 
 [data]
-    machine = "arch"
+    machine = "{{ if eq .chezmoi.os "darwin" }}mac{{ else }}arch{{ end }}"
     email = ""
     work = false
     uses_ghostty = true

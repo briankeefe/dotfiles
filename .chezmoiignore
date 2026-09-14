@@ -4,17 +4,38 @@ README.md
 **/*.swp
 **/*.tmp
 **/*~
-private_dot_secrets/**
-private_dot_config/herdr/*.log
-private_dot_config/herdr/*.sock
-private_dot_config/herdr/session.json
+.secrets/**
+.config/herdr/*.log
+.config/herdr/*.sock
+.config/herdr/session.json
 {{ if ne .chezmoi.os "darwin" -}}
-dot_aerospace.toml
-private_dot_config/borders/**
-private_dot_config/aerospace/**
+.aerospace.toml
+.config/borders/**
+.config/aerospace/**
 {{ end -}}
 
 {{ if ne .chezmoi.os "linux" -}}
 .config/hypr/**
-private_dot_config/hypr/**
+{{ end -}}
+{{ if eq .chezmoi.os "darwin" -}}
+.config/wm-portable/**
+docs
+alacritty
+bash
+custom-scripts
+fish
+git
+gtk-3.0
+hypr
+kitty
+nvim
+picom
+spicetify
+tmux
+vscode
+waybar
+wlogout
+wofi
+xorg
+zsh
 {{ end -}}
