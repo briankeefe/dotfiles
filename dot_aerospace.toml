@@ -53,7 +53,7 @@ alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-0 = 'move-node-to-workspace 10'
 alt-slash = 'layout tiles horizontal'
 alt-comma = 'layout accordion horizontal'
-cmd-f = 'fullscreen'
+cmd-ctrl-f = 'fullscreen'
 alt-shift-space = 'layout floating tiling'
 
 # Summon TOGGLE: if the app is NOT on the current workspace, pull it here + focus it.
