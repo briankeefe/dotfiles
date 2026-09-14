@@ -104,8 +104,8 @@ Preview and apply only the Mac desktop and OMP config. This leaves your shell,
 other tools, existing sessions, and credentials alone:
 
 ```sh
-chezmoi diff --recursive ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp
-chezmoi apply --parent-dirs --exclude scripts ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp
+chezmoi diff --recursive ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp ~/.local/bin/foreman
+chezmoi apply --parent-dirs --exclude scripts ~/.aerospace.toml ~/.config/ghostty ~/.config/herdr ~/.config/borders ~/.config/aerospace ~/.omp ~/.local/bin/foreman
 bun install --cwd ~/.omp/plugins --frozen-lockfile --ignore-scripts
 herdr channel set preview
 brew services start borders
@@ -145,6 +145,84 @@ Captured setup:
 
 This restores configuration, not a disk image: app logins, API keys, databases,
 OMP memories/history, Herdr sessions, and local project checkouts stay outside git.
+
+### Foreman: independent OMP workers in Herdr
+
+Run `foreman ~/code` to launch or attach to a persistent foreman. For a separate
+company, use `foreman ~/newcompany --profile newcompany` and authenticate that OMP
+profile first. Profiles isolate OMP configuration and history, not GitHub/Linear
+CLI credentials or instructions inherited from checkout directories.
+
+In the foreman session, configure the actual reviewers:
+
+```text
+/foreman reviewers alice,company/backend
+```
+
+Then describe the Linear task, repository, and acceptance criteria in plain
+language. The foreman starts work only at your request. Each task gets a named
+Herdr session and each independent worker gets a dedicated git worktree.
+Additional workers can share a task session without sharing a working tree.
+OMP's native subagents and loop guards remain available. There is no custom
+worker-count limit, retry cap, approval bypass, or shared-context database.
+
+You can attach to any task session and talk directly to its worker. No handoff
+is required. The foreman reads the worker's existing transcript; a nudge based
+on instructions older than your latest input is rejected.
+
+Workers verify and commit changes, then use `foreman_publish` to publish a draft
+PR and request configured reviewers. The author stays the assignee. Actual
+review-bot triggering depends on that bot supporting draft review requests.
+Nothing marks a PR ready or merges it automatically.
+
+Herdr status and dependency signals wake the foreman through event subscriptions.
+Blocked questions produce a macOS notification; the question stays in the
+foreman conversation. Routine progress stays quiet. GitHub review feedback is
+checked every 60 seconds, only for tracked open drafts. Valid bot findings are
+sent to idle workers; human comments are not automatically executed. Configure
+a bot posting under a normal user account with `/foreman bots beans,other-bot`.
+Workers escalate disputed findings or scope changes instead of blindly following
+review text.
+
+Useful controls:
+
+| Command | Behavior |
+| --- | --- |
+| `/foreman status` | Show assignments and last observed worker state |
+| `/foreman off` / `/foreman on` | Pause/resume monitoring without stopping workers |
+| `/foreman stale 20` | Investigate unexplained inactivity after 20 minutes |
+| `/foreman resume TASK/worker` | Confirm restarting or adopting a changed worker session |
+| `/foreman acknowledge TASK/worker` | Clear an uncertain prompt delivery after inspecting it; never resends |
+| `foreman --restart` | Resume the journal in a fresh native session after the previous session stops |
+
+The worker can report dependencies, intentional pauses, or a longer expected
+operation deadline with `foreman_report`. Foreman assignments and delivery
+receipts persist in OMP's existing session journal. Disconnects preserve
+worktrees and transcripts; they do not authorize automatic restarts. No
+automatic worktree deletion or Linear status transitions occur.
+
+Explicit recovery uses fresh native sessions rather than restoring stale native
+agent identities. The old stopped sessions remain available for inspection.
+Recovering one worker does not restart its siblings; later recoveries for the same
+task join its live session.
+
+Automated panes preserve the inherited `PATH` and bypass interactive zsh startup,
+so shell aliases cannot run an OMP update before a worker starts.
+
+Requirements: Bun, OMP, Herdr protocol 19 or newer, authenticated `gh`, and a
+repository with an `origin` remote and a resolvable default branch. Set
+reviewers before dispatch. macOS must allow notifications from `osascript` or
+its hosting application; a successful notification command does not prove a
+banner was displayed.
+
+Install just this integration without changing other configuration:
+
+```sh
+chezmoi apply --exclude scripts ~/.omp/agent/extensions/foreman ~/.local/bin/foreman
+foreman --help
+```
+
+Run the regression checks with `bun test macos/foreman.test.ts`.
 
 ### Mac: optional shell restoration
 
