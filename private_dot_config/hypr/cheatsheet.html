@@ -54,8 +54,8 @@
     <div class="card">
       <h2>Workspaces</h2>
       <table>
-        <tr><td class="keys"><kbd>Alt</kbd> + <kbd>1–0</kbd></td><td class="desc"><b>Switch workspace</b> · 1–9, 0 for 10</td></tr>
-        <tr><td class="keys"><kbd>Alt Shift</kbd> + <kbd>1–0</kbd></td><td class="desc"><b>Send window to workspace</b> without following</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>1–0</kbd></td><td class="desc"><b>Switch workspace</b> · 1–9, 0 for 10*</td></tr>
+        <tr><td class="keys"><kbd>Super Shift</kbd> + <kbd>1–0</kbd></td><td class="desc"><b>Move window to workspace</b>*</td></tr>
         <tr><td class="keys"><kbd>Super</kbd> + <kbd>Tab</kbd></td><td class="desc"><b>Next workspace</b></td></tr>
         <tr><td class="keys"><kbd>Super Shift</kbd> + <kbd>Tab</kbd></td><td class="desc"><b>Previous workspace</b></td></tr>
         <tr><td class="keys"><kbd>Super</kbd> + <kbd>S</kbd></td><td class="desc"><b>Toggle scratchpad</b></td></tr>
@@ -67,15 +67,11 @@
     <div class="card">
       <h2>Window control</h2>
       <table>
-        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>H J K L</kbd></td><td class="desc"><b>Focus</b> left / down / up / right</td></tr>
-        <tr><td class="keys"><kbd>Super Ctrl Shift</kbd> + <kbd>H L</kbd></td><td class="desc"><b>Move window horizontally</b>; at a tiled edge, cross to the configured adjacent monitor</td></tr>
-        <tr><td class="keys"><kbd>Super Ctrl Shift</kbd> + <kbd>K J</kbd></td><td class="desc"><b>Move window up / down</b></td></tr>
-        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Q</kbd> / <kbd>W</kbd></td><td class="desc"><b>Quit application / close window</b></td></tr>
-        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>M</kbd></td><td class="desc"><b>Fullscreen</b></td></tr>
-        <tr><td class="keys"><kbd>Alt Shift</kbd> + <kbd>Space</kbd></td><td class="desc"><b>Toggle floating</b></td></tr>
-        <tr><td class="keys"><kbd>Super Ctrl Shift</kbd> + <kbd>F</kbd> / <kbd>T</kbd></td><td class="desc"><b>Float / tile every window on this workspace</b></td></tr>
-        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>G S D C</kbd></td><td class="desc"><b>Summon / banish</b> Ghostty / Slack / DataGrip / Chrome. Homes: 1 / 2 / 3 / 4.</td></tr>
-        <tr><td class="keys"><kbd>Super Ctrl</kbd> + <kbd>R</kbd></td><td class="desc"><b>Reset apps home</b>; unknown windows on 1–4 go to 5</td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>← ↓ ↑ →</kbd></td><td class="desc"><b>Focus</b> in arrow direction</td></tr>
+        <tr><td class="keys"><kbd>Super Shift</kbd> + <kbd>← →</kbd></td><td class="desc"><b>Move window horizontally</b>; at a tiled edge, cross to the configured adjacent monitor</td></tr>
+        <tr><td class="keys"><kbd>Super Shift</kbd> + <kbd>↑ ↓</kbd></td><td class="desc"><b>Move window up / down</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>Q</kbd> / <kbd>W</kbd></td><td class="desc"><b>Close window</b></td></tr>
+        <tr><td class="keys"><kbd>Super</kbd> + <kbd>F</kbd></td><td class="desc"><b>Fullscreen</b></td></tr>
         <tr><td class="keys"><kbd>Super Alt</kbd> + <kbd>S</kbd></td><td class="desc"><b>Toggle split orientation</b></td></tr>
         <tr><td class="keys"><kbd>Alt</kbd> + <kbd>Tab</kbd></td><td class="desc"><b>Next window</b></td></tr>
         <tr><td class="keys"><kbd>Super</kbd> + <kbd>Left drag</kbd></td><td class="desc"><b>Move window</b></td></tr>
@@ -114,16 +110,16 @@
   <section class="card">
     <h2>Notes</h2>
     <div class="notes">
-      <div><span class="b">●</span><span>AeroSpace modifiers map directly: Command becomes Super, Option becomes Alt. Bare Alt+H/J/K/L stays available to terminal apps.</span></div>
-      <div><span class="b">●</span><span>Alt+/ and Alt+, are unbound. Hyprland's dwindle layout does not reproduce AeroSpace's horizontal tiles / accordion commands. Super+Alt+S still toggles split orientation.</span></div>
-      <div><span class="b">●</span><span>The Arch Lua config requires the existing Omarchy-derived installation at <code>~/.local/share/omarchy-derived/upstream</code> and its desktop helper commands. It does not install those dependencies.</span></div>
+      <div><span class="b">●</span><span>*Number-row shortcuts are configured using physical keycodes, but the live binding list currently reports empty keys for these entries. Treat them as configured, not verified working.</span></div>
+      <div><span class="b">●</span><span><kbd>Super</kbd> + <kbd>M</kbd> has no binding. Use the system menu to log out.</span></div>
+      <div><span class="b">●</span><span>The older Ctrl+Super summon shortcuts, Alt+number workspaces, and float/re-tile workspace shortcuts are not active in this session.</span></div>
       <div><span class="b">●</span><span>This is a static reference, not a live view. Inspect loaded shortcuts with <code>hyprctl binds</code>.</span></div>
     </div>
   </section>
 
   <footer>
     <span>Config: <code>~/.config/hypr/hyprland.lua</code> · Reload: <code>hyprctl reload</code></span>
-    <span>Updated 2026-09-14 · AeroSpace key mapping</span>
+    <span>Updated 2026-09-07 · checked against loaded bindings</span>
   </footer>
 </div>
 </body>

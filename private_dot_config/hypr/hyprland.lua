@@ -65,24 +65,14 @@ o.bind("SUPER + CTRL + P", "Power panel", "quickshell ipc -p " .. o.shell_quote(
 o.bind("SUPER + SLASH", "Keybindings", home .. "/.local/bin/omarchy-derived-keybindings")
 o.bind("SUPER + L", "Lock", "hyprlock")
 
--- AeroSpace muscle memory: Command -> Super, Option -> Alt.
--- Alt+/ and Alt+, are intentionally unbound: dwindle has no equivalent
--- to AeroSpace's horizontal tiles / accordion layout commands.
+-- Window management.
 o.bind("SUPER + Q", "Quit application", require("hypr.quit-application"), { release = true })
 o.bind("SUPER + W", "Close window", hl.dsp.window.close())
-o.bind("SUPER + CTRL + M", "Fullscreen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
-o.bind("SUPER + CTRL + H", "Focus left", hl.dsp.focus({ direction = "l" }))
-o.bind("SUPER + CTRL + L", "Focus right", hl.dsp.focus({ direction = "r" }))
-o.bind("SUPER + CTRL + K", "Focus up", hl.dsp.focus({ direction = "u" }))
-o.bind("SUPER + CTRL + J", "Focus down", hl.dsp.focus({ direction = "d" }))
-o.bind("ALT + SHIFT + SPACE", "Toggle floating", hl.dsp.window.float())
-o.bind("SUPER + CTRL + SHIFT + F", "Float workspace", home .. "/.config/hypr/scripts/workspace-floating float")
-o.bind("SUPER + CTRL + SHIFT + T", "Tile workspace", home .. "/.config/hypr/scripts/workspace-floating tile")
-o.bind("SUPER + CTRL + G", "Summon or banish Ghostty", home .. '/.config/hypr/scripts/summon-app "^(com\\.mitchellh\\.ghostty|ghostty|Ghostty)$" 1')
-o.bind("SUPER + CTRL + S", "Summon or banish Slack", home .. '/.config/hypr/scripts/summon-app "^(Slack|slack)$" 2')
-o.bind("SUPER + CTRL + D", "Summon or banish DataGrip", home .. '/.config/hypr/scripts/summon-app "^(jetbrains-datagrip|DataGrip|datagrip)$" 3')
-o.bind("SUPER + CTRL + C", "Summon or banish Chrome", home .. '/.config/hypr/scripts/summon-app "^(google-chrome|Google-chrome|chromium|Chromium)$" 4')
-o.bind("SUPER + CTRL + R", "Reset apps home", home .. "/.config/hypr/scripts/reset-apps-home")
+o.bind("SUPER + F", "Fullscreen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
+o.bind("SUPER + LEFT", "Focus left", hl.dsp.focus({ direction = "l" }))
+o.bind("SUPER + RIGHT", "Focus right", hl.dsp.focus({ direction = "r" }))
+o.bind("SUPER + UP", "Focus up", hl.dsp.focus({ direction = "u" }))
+o.bind("SUPER + DOWN", "Focus down", hl.dsp.focus({ direction = "d" }))
 local function has_tiled_window(window, direction)
   local center = window.at.x + window.size.x / 2
   for _, other in ipairs(hl.get_workspace_windows(window.workspace)) do
@@ -120,19 +110,19 @@ local function move_window_horizontally(targets, direction)
   end
 end
 
-o.bind("SUPER + CTRL + SHIFT + H", "Move window left", move_window_horizontally({ ["DP-3"] = "DP-2", ["HDMI-A-1"] = "DP-3" }, "l"))
-o.bind("SUPER + CTRL + SHIFT + L", "Move window right", move_window_horizontally({ ["DP-2"] = "DP-3", ["DP-3"] = "HDMI-A-1" }, "r"))
-o.bind("SUPER + CTRL + SHIFT + K", "Move window up", hl.dsp.window.move({ direction = "u" }))
-o.bind("SUPER + CTRL + SHIFT + J", "Move window down", hl.dsp.window.move({ direction = "d" }))
+o.bind("SUPER + SHIFT + LEFT", "Move window left", move_window_horizontally({ ["DP-3"] = "DP-2", ["HDMI-A-1"] = "DP-3" }, "l"))
+o.bind("SUPER + SHIFT + RIGHT", "Move window right", move_window_horizontally({ ["DP-2"] = "DP-3", ["DP-3"] = "HDMI-A-1" }, "r"))
+o.bind("SUPER + SHIFT + UP", "Move window up", hl.dsp.window.move({ direction = "u" }))
+o.bind("SUPER + SHIFT + DOWN", "Move window down", hl.dsp.window.move({ direction = "d" }))
 o.bind("SUPER + ALT + S", "Toggle split orientation", hl.dsp.layout("togglesplit"))
 o.bind("ALT + TAB", "Next window", hl.dsp.window.cycle_next())
 o.bind("SUPER + mouse:272", "Move window", hl.dsp.window.drag(), { mouse = true })
 o.bind("SUPER + mouse:273", "Resize window", hl.dsp.window.resize(), { mouse = true })
 
 for workspace = 1, 10 do
-  local key = tostring(workspace % 10)
-  o.bind("ALT + " .. key, "Workspace " .. workspace, hl.dsp.focus({ workspace = tostring(workspace) }))
-  o.bind("ALT + SHIFT + " .. key, "Move to workspace " .. workspace, hl.dsp.window.move({ workspace = tostring(workspace), follow = false }))
+  local key = "code:" .. tostring(workspace + 9)
+  o.bind("SUPER + " .. key, "Workspace " .. workspace, hl.dsp.focus({ workspace = tostring(workspace) }))
+  o.bind("SUPER + SHIFT + " .. key, "Move to workspace " .. workspace, hl.dsp.window.move({ workspace = tostring(workspace) }))
 end
 
 o.bind("SUPER + TAB", "Next workspace", hl.dsp.focus({ workspace = "e+1" }))
