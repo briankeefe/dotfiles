@@ -28,15 +28,25 @@ One repo. New machine in minutes. No rebuilding terminal + AI tooling from memor
 Install [Homebrew](https://brew.sh/) first, then:
 
 ```sh
-brew install chezmoi gh oven-sh/bun/bun felixkratz/formulae/borders
-brew install --cask ghostty nikitabobko/tap/aerospace
-curl -fsSL https://herdr.dev/install.sh | sh
-export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
-bun install -g @oh-my-pi/pi-coding-agent
+brew install chezmoi gh
 gh auth login
 gh auth setup-git
 chezmoi init https://github.com/briankeefe/dotfiles.git
+brew bundle install --no-upgrade --file "$(chezmoi source-path)/macos/Brewfile"
+curl -fsSL https://herdr.dev/install.sh | sh
+export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
+bun install -g @oh-my-pi/pi-coding-agent
 ```
+
+The Brewfile covers daily apps, terminal tools, and the tracked shell's Homebrew
+dependencies, including the four **MesloLGS NF** font faces via
+`font-meslo-for-powerlevel10k`. It intentionally omits database servers, ML stacks,
+alternate browsers, and overlapping menu-bar utilities. Herdr stays on its direct
+installer because Homebrew installs do not support preview-channel updates.
+Review the Brewfile before installing; already-installed apps outside Homebrew
+may need to be omitted locally if Homebrew reports an existing application.
+This is a package list, not a version lock. `--no-upgrade` avoids upgrading
+already-installed packages.
 
 Keep `~/.local/bin` and `~/.bun/bin` on your shell's PATH. The repo's Zsh
 template already includes them, but restoring your shell is optional.
@@ -53,10 +63,18 @@ brew services start borders
 open -a AeroSpace
 ```
 
-Grant AeroSpace Accessibility permission when prompted. Disable macOS's
-Control-Command-D dictionary shortcut in System Settings if it intercepts the
-DataGrip summon shortcut. The repo's full bootstrap also disables that shortcut,
-but the selective apply above intentionally skips bootstrap scripts.
+Grant AeroSpace Accessibility permission when prompted. macOS preferences are
+separate and opt-in:
+
+```sh
+sh "$(chezmoi source-path)/macos/defaults.sh"
+```
+
+This restores dark mode, Dock auto-hide and size, the three configured hot corners,
+natural scrolling, selected built-in trackpad gestures, and frees Cmd-Ctrl-D for
+DataGrip. Log out and back in afterward. It does not replace Dock app lists,
+other keyboard shortcuts, or device-specific preferences, and does not run during
+`chezmoi apply`.
 
 Open Ghostty, run `herdr`, then run `omp` inside a Herdr pane. Authenticate OMP
 providers and MCP services on the new machine; credentials are not stored here.
@@ -76,8 +94,32 @@ Captured setup:
 
 This restores configuration, not a disk image: app logins, API keys, databases,
 OMP memories/history, Herdr sessions, and local project checkouts stay outside git.
-The existing shell template is a separate opt-in and assumes Oh My Zsh,
-Powerlevel10k and development tools are already installed.
+
+### Mac: optional shell restoration
+
+The Mac shell template targets Apple Silicon Homebrew (`/opt/homebrew`), matching
+the source machine. After installing the Brewfile, install Oh My Zsh and its
+Powerlevel10k theme if those directories don't already exist:
+
+```sh
+test -d ~/.oh-my-zsh || git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+test -d ~/.oh-my-zsh/custom/themes/powerlevel10k || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
+mkdir -p ~/.nvm
+chezmoi diff ~/.zshrc ~/.p10k.zsh
+chezmoi apply --exclude scripts ~/.zshrc ~/.p10k.zsh
+exec zsh
+```
+
+Keep the Homebrew installer's `brew shellenv` initialization in `~/.zprofile`.
+The tracked shell preserves Powerlevel10k, autosuggestions, syntax highlighting,
+autojump, nvm, pyenv, Java 17, local binary paths, and the OpenCode wrapper.
+It also matches the live Mac's `omp` alias: update first, launch only if the
+update succeeds. Use `command omp` to skip that update when offline.
+Node/Python versions and project dependencies are still installed per project.
+
+The Meslo fonts are installed, not forced into Ghostty: its current config leaves
+the font family at the terminal default. Local shell secrets belong in
+`~/.secrets/shell/env.zsh`, never in the tracked template.
 
 ### Linux / full configuration
 

@@ -104,6 +104,9 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+# Match the live Mac shell: update OMP before each launch.
+alias omp="omp update && omp"
+
 # AgentNotch - AI coding assistant telemetry
 export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318"
 export OMO_DISABLE_POSTHOG=1
