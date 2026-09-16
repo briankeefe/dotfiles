@@ -1,0 +1,2 @@
+#!/bin/sh
+exec bun "$HOME/.omp/agent/extensions/foreman/launch.ts" "$@"
