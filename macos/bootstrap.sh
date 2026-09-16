@@ -89,7 +89,7 @@ if [ "$configured" = false ]; then
   chezmoi --source "$SOURCE_DIR" init
 fi
 set -- "$HOME/.aerospace.toml" "$HOME/.config/ghostty" "$HOME/.config/herdr" \
-  "$HOME/.config/borders" "$HOME/.config/aerospace" "$HOME/.omp"
+  "$HOME/.config/borders" "$HOME/.config/aerospace" "$HOME/.omp" "$HOME/.local/bin/foreman"
 chezmoi --source "$SOURCE_DIR" diff --recursive "$@"
 if ask 'Apply these core configs? ChezMoi will ask about conflicting files.'; then
   chezmoi --source "$SOURCE_DIR" apply --interactive --parent-dirs --exclude scripts "$@"

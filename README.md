@@ -303,6 +303,15 @@ Only durable, hand-authored config is tracked. Runtime state stays local and is
 never committed: `*.db*`, `blobs/`, `sessions/`, `terminal-sessions/`,
 `memories/` (mnemopi), `cache/`, `logs/`, and `plugins/node_modules/`.
 
+### Foreman
+
+Launch or attach with `foreman ~/code` from a terminal outside Herdr. Foreman
+coordinates explicitly assigned tasks through independent OMP workers and Git
+worktrees, with draft-only PR publication and review-bot feedback.
+
+See the [Foreman cheat sheet](docs/foreman.md) for first use, session names,
+reviewer setup, a non-publishing worker trial, daily controls, and recovery.
+
 ### Plugins
 
 Enabled: `@baylarsadigov/omp-undo-redo`, `@dietrichgebert/ponytail`, and
