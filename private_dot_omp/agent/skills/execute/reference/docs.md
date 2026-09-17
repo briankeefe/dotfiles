@@ -1,13 +1,13 @@
 # Execute Docs
 
-`execute docs` identifies worthwhile internal documentation and drafts it after topic approval. Follow the shared defaults in `skill://execute`.
+`execute docs` identifies worthwhile internal documentation and drafts selected topics. Follow `skill://execute`.
 
-## Select topics, then stop for approval
+## Select topics
 
 1. Resolve the repositories, code host, intended audience and documentation destination from the request, repository instructions and existing docs. Prefer improving an existing document over creating another. Ask if the destination remains unclear; do not assume an external publishing platform or local export directory.
 2. Unless the user supplied a narrower scope, inspect the current user's merged PRs from the last three months across the relevant repositories. Use the configured integration and installed CLI help; handle pagination and report any coverage limits.
 3. Rank up to five useful topics by support impact, onboarding value, non-obvious knowledge and cross-team relevance. Favor architectural decisions, cross-system behavior, operational procedures and complex business rules. Skip obvious fixes, formatting, routine dependency bumps and code already adequately documented.
-4. Present each proposed topic with its PR/source links, audience, reason to document and proposed destination. **Wait for the user to approve the selections before researching and writing the full drafts.** If nothing merits documentation, say so instead of manufacturing work.
+4. Present proposed topics with source links, audience, rationale and destination. If the user has not selected a topic, wait for that decision before full drafting; an explicitly requested topic needs no repeat approval. If nothing merits documentation, say so.
 
 ## Research approved topics
 
@@ -33,6 +33,6 @@ Add a diagram only when it clarifies real structure or flow, using the destinati
 
 Check the draft against its sources, audience, links and destination conventions; verify any diagram remains readable. Clearly separate verified facts from open questions. Do not claim to have exercised a runbook unless it was actually run in an authorized safe environment.
 
-Write approved drafts in the established local documentation location. If only a remote publishing destination exists, present the draft for review without posting it. Return draft paths/content, a brief summary and unresolved questions.
+Write drafts in the established documentation location. Return paths/content, a brief summary and unresolved questions.
 
-Stop before publishing or posting externally until the user approves the content and publication. Do not change tracker state, open a PR, merge or mark anything ready as a side effect of this command.
+Drafting does not authorize external publication. Publish only when the user's authorization covers the content and destination.

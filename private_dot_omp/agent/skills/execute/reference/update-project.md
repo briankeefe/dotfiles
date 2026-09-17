@@ -24,4 +24,4 @@ This command authorizes refreshing the existing project document, not changing t
 
 Return the document path, number of tasks checked/changed, material status changes, new PR links, progress counts, remaining blockers and next available tasks. Include unknown/stale evidence and planning decisions needing attention.
 
-Do not transition, assign or edit tickets, start tasks, post comments, publish, merge PRs or change draft/ready status. Any proposed ticket changes require a separate approved plan.
+This command refreshes documentation only; it does not start tasks or change tracker/PR state.

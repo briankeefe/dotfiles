@@ -16,13 +16,13 @@ If requirements or the intended scope cannot be established from available conte
 - Identify unnecessary features, abstractions, dependencies, refactors, or unrelated edits. Do not revert user work or silently expand the approved scope.
 - Separate in-scope defects from pre-existing issues. Ground findings in affected files and explain the observable impact; give calibrated confidence for diagnoses rather than presenting guesses as facts.
 
-Do this inline unless independent review slices justify bounded delegation under the shared defaults. A checklist or reviewer opinion is not runtime evidence.
+A checklist or reviewer opinion is not runtime evidence.
 
 ## 3. Assess verification
 
 Reuse current, applicable results without repeating checks just to reconfirm reported observations. If evidence is missing or invalidated by later edits, run the smallest relevant check in a safe, isolated environment and report the exact outcome. Use documented project commands and installed CLI help, not assumed package managers or test runners.
 
-For bug fixes, look for reproduction/regression evidence that the original failure is prevented. For changed UI, inspect the actual surface and real screenshots of relevant states; passing logic tests alone do not prove appearance or interaction. Web inspection uses `functions.eval` with `browser.open`, then `tab.observe()` and direct tab helpers. Native and terminal surfaces need their own runtime evidence. Start needed services via `hub` (`op: "start"`) and observe readiness. Never use production data or live external side effects.
+For bug fixes, check that the original failure is prevented. For UI changes, inspect the actual surface and relevant screenshots; passing logic tests alone do not prove appearance or interaction.
 
 Do not force a browser, E2E test generation, or a new test suite for changes they cannot meaningfully verify. Report unavailable runtime access or missing required CI-equivalent checks as gaps, not passes.
 
@@ -34,6 +34,4 @@ Lead with **PASS**, **WARNING**, or **FAIL**, followed by only material findings
 - **WARNING:** non-blocking concerns or explicit verification gaps remain; name what is not established.
 - **FAIL:** required behavior is missing, a blocking defect exists, or required verification failed or is blocked.
 
-List each finding with its file/location or evidence, impact, and smallest recommended action. Include exact checks performed and any criteria not verified. A pass is not approval to commit, push, create/update a PR, post a review, mark ready, merge, or update the tracker.
-
-If fixes are requested or already authorized, stay within the approved plan and rerun affected verification afterward. Substantial changes require renewed plan approval. External review posting and PR publication retain their separate approval gates; authorized PR creation follows the draft lifecycle. Never automatically transition tickets or perform production writes.
+List each finding with its location/evidence, impact and smallest recommended action. Include exact checks and unverified criteria. This command reports findings; apply fixes only when requested or already authorized.

@@ -10,4 +10,4 @@
 
 For each candidate show its repository, PR number/title, draft status, URL, reviewer, linked exact feedback excerpt, affected `path:line` (or general discussion), current disposition with evidence, and next action. Distinguish historical inline locations from current-head locations. Offer `execute update-pr <URL>` for the selected PR; do not start it automatically.
 
-If none qualify, report that within the inspected scope, with any access/pagination gaps. Do not claim there is no actionable feedback when collection was incomplete. Never edit code, reply, resolve threads, request reviews, push, merge or change draft/ready state.
+If none qualify, report that within the inspected scope, with access/pagination gaps. Incomplete collection is not proof of no actionable feedback.

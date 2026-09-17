@@ -10,8 +10,6 @@
 
 ## Order the work
 
-Analyze inline; no agent is required.
-
 - Distinguish explicit blocking relationships from inferred technical dependencies. A related-task link is not itself a blocker. Label assumptions and unresolved scope.
 - Order unfinished tasks after their prerequisites. Use project priorities and existing recommendations to break ties, then consider which task unlocks more work. Do not invent foundation phases without a real dependency.
 - Check for cycles, missing dependencies, external blockers and on-hold tasks. List the affected tasks and the decision needed to unblock them; do not force them into a runnable sequence.
@@ -34,4 +32,4 @@ Keep tracker status and implementation/PR status distinct. A merged PR is not au
 
 Return the document path, short execution summary, next available tasks and outstanding blockers or questions. Suggest `execute update project <project>` for later refreshes.
 
-Do not create/edit tickets, change tracker state, start implementation or publish anything. Proposed ticket changes require a separate approved plan; publishing requires authorization.
+This command writes the project plan only; it does not start tasks or change tracker state.

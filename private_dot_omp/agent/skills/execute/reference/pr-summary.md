@@ -20,4 +20,4 @@
 
 Show the scope, total and a compact entry per PR: repository, number/title, URL, review state, feedback needing action, CI, mergeability and reviewers. Sort needs-action items first (blocking feedback, failed checks, conflicts), then approved/passing, then awaiting review; use oldest first within each group. Keep counts mutually exclusive and consistent with entries.
 
-Say “No open non-draft PRs found” only after complete discovery. Never edit code, post comments, request reviews, push, merge or change draft/ready state from this command.
+Say “No open non-draft PRs found” only after complete discovery.

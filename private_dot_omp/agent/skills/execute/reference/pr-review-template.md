@@ -1,6 +1,6 @@
 # PR Review Template
 
-Use with `skill://execute/reference/pr-review.md`. This is a local draft until the user approves the exact review and publication event.
+Use with `skill://execute/reference/pr-review.md`; its publication boundary applies.
 
 ```text
 # Review: <repository> #<number> - <title>

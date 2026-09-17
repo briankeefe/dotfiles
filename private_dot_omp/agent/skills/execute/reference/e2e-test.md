@@ -8,18 +8,18 @@ Read the user's request, relevant acceptance criteria, repository instructions, 
 
 Use the repository's existing runner, language, selectors, and test conventions. Discover execution syntax from project scripts and installed CLI help. If there is no suitable runner or access to the actual surface, report the missing prerequisite and obtain direction rather than installing a framework or fabricating selectors. Browser-only tests are not a substitute for native application coverage.
 
-The command authorizes the requested test files, not product changes, new infrastructure, publication, or tracker updates. Follow any existing ticket plan approval gate. Stop for approval if the work requires a substantial scope change.
+The command authorizes test generation, not product changes or new infrastructure. Raise material scope changes before proceeding.
 
 ## 2. Prepare a safe environment
 
-- Reuse an assigned worktree and existing local environment. Start required services through `hub` (`op: "start"`) and observe readiness.
+- Reuse the assigned worktree and local environment; confirm service readiness.
 - Use an isolated development/test database or tenant with deterministic fixtures and task-owned records. Never run the flow against production, shared customer data, or live payment/email/SMS integrations.
 - Reuse documented test authentication and secrets handling. Do not hardcode credentials, commit session state, invent tokens, or bypass authorization. Missing safe authentication is a blocker for the affected flow.
 - Ensure each test can run independently, including parallel runs supported by the repository. Follow existing setup/teardown helpers; cleanup must affect only data created by the test.
 
 ## 3. Observe and exercise the actual surface
 
-For web flows, use `functions.eval` to open a named tab via `browser.open({ name, url })`, then inspect it with `tab.observe()`. Use direct tab helpers for interactions and `tab.run` only when custom page execution is needed. Observe again after navigation or re-render before acting on IDs/refs; they are not persistent test selectors. Use `tab.select` for native select elements.
+Observe the actual surface before interacting; transient browser element IDs are not persistent test selectors.
 
 Walk the specified flow, checking expected outcomes and relevant failure states. Ask the user about genuinely unspecified choices, not for permission at every already-authorized click. Derive selectors from observed elements and confirm they uniquely identify the intended controls. Prefer accessible roles/names, labels, or existing stable test IDs using the runner's supported APIs. Avoid generated CSS chains, positional selectors, guessed text, and fallback selectors that conceal a changed UI.
 
@@ -35,4 +35,4 @@ Cover all requested scenarios with assertions on observable outcomes, including 
 
 Run the generated tests through the existing runner in the isolated environment. Diagnose whether a failure is in the product, test, auth, or environment; fix only authorized test issues. Never weaken assertions, skip a case, or replace an observed selector merely to get green. For a regression test, establish that it detects the original failure and passes after the fix when practicable; disclose any missing pre-fix proof.
 
-Report test paths, covered scenarios, the exact run command and result, relevant screenshots, and any blocked or unverified criteria. Do not claim success until the generated tests have actually passed. Close owned browser tabs when finished, but retain an environment needed for an agreed user review; clean up only owned resources. No commit, push, PR publication, external review posting, or tracker update is implied by this command.
+Report test paths, covered scenarios, exact run command/result, screenshots and unverified criteria. Keep an environment needed for user review; clean up only task-owned resources.
