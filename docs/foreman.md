@@ -56,6 +56,8 @@ reviewers; do not paste example identities or choose your own login as a PR revi
 Use one login, a comma-separated list, or an organization/team slug. This replaces
 the configured list; it does not itself create a PR or request a GitHub review.
 Actual publication requests those reviewers and can trigger their review bots.
+Bot logins such as `cursor[bot]` are accepted too. GitHub still decides whether a
+review request is supported; a failed request is reported with the preserved draft PR.
 
 ## First worker trial
 

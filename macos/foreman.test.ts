@@ -670,6 +670,19 @@ test("publishes a draft, recovers a lost create response, and requests reviewers
   expect(result.fixture.pushed).toBe(true);
 });
 
+test("publishes with bot reviewers while rejecting malformed bracketed logins", async () => {
+  const result = await fixtureRun({ pr },
+    `publishDraft({cwd:process.cwd(),title:'Verified change',body:'Checks passed',base:'main',reviewers:['cursor[bot]']})`);
+  expect(result.error).toBeUndefined();
+  expect(result.result.draft).toBe(true);
+  expect(result.fixture.reviewers).toEqual(["cursor[bot]"]);
+  expect(result.fixture.pushed).toBe(true);
+  const malformed = await fixtureRun({ pr },
+    `publishDraft({cwd:process.cwd(),title:'Verified change',body:'Checks passed',base:'main',reviewers:['cursor[bot]/team']})`);
+  expect(typeof malformed.error).toBe("string");
+  expect(malformed.fixture.pushed).toBeUndefined();
+});
+
 test("team requests are distinct from same-named users and deleted reviewers", async () => {
   const result = await fixtureRun(
     {

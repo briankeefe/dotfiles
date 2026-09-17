@@ -85,13 +85,13 @@ export async function publishDraft(options: {
     !reviewers.length ||
     reviewers.some(
       (login) =>
-        !/^[A-Za-z0-9][A-Za-z0-9_.-]*(?:\/[A-Za-z0-9][A-Za-z0-9_.-]*)?$/.test(
+        !/^[A-Za-z0-9][A-Za-z0-9_.-]*(?:\[bot\]|\/[A-Za-z0-9][A-Za-z0-9_.-]*)?$/.test(
           login,
         ),
     )
   )
     throw new Error(
-      "Configure valid reviewer user/team logins before publishing",
+      "Configure valid reviewer user, bot, or team logins before publishing",
     );
   if (!title.trim() || !body.trim())
     throw new Error("PR title and verification summary are required");
