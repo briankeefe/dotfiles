@@ -1,76 +1,24 @@
-> Ported from /Users/brian/code/PR_REVIEW_TEMPLATE.md for the Oh My Pi `execute` toolkit. See `skill://execute` for tool conventions.
-
 # PR Review Template
 
-Use this template for all PR reviews in the Dripos ecosystem.
+Use with `skill://execute/reference/pr-review.md`. This is a local draft until the user approves the exact review and publication event.
 
-## Template Structure
+```text
+# Review: <repository> #<number> - <title>
+<PR URL>
+Reviewed head: <SHA>
+Recommendation: <request changes | approve | comment>
+Findings: <N> (<B> blocking, <U> non-blocking)
 
-```markdown
-# Code Review: PR #[NUMBER] - [TITLE]
-
-**Status:** [✅ APPROVED | ⚠️ APPROVED with suggestions | ❌ REQUEST CHANGES]
-
-## Issues
-
-### HIGH Priority
-[Critical issues that must be fixed before merge. Use Conventional Comments format]
-
-**[label]:** `[file:line]` - [description]
-```[language]
-[code example if needed]
+## <HIGH | MEDIUM | LOW>
+1. issue (blocking): <specific defect>
+   <path>:<line or range> [<head/base SHA>, <RIGHT/LEFT>]
+   Evidence: <short exact excerpt and triggering condition>
+   Impact: <observable consequence>; confidence: <calibrated %>.
+   Fix: <smallest concrete correction>
 ```
 
-### MEDIUM Priority
-[Important but non-blocking issues]
+Omit empty severity groups. Use HIGH for serious correctness/security/data-loss risks, MEDIUM for meaningful lower-impact defects, LOW only for worthwhile non-blocking improvements. Severity and blocking status are separate judgments.
 
-1. **[label]:** `[file:line]` - [description]
+Conventional Comments labels: `issue`, `suggestion`, `question`, `nitpick`, `thought`, `praise`; decorate with `blocking`, `non-blocking`, `security` or `performance` when useful. Do not inflate questions into defects. Every finding needs exact verified location and evidence, not a guessed line or generic checklist. A finding outside an inline-addressable diff hunk stays in the review body with its real location.
 
-### LOW Priority
-[Nice-to-haves, nitpicks, future improvements]
-
-- `[file:line]` - [description]
-```
-
-## Conventional Comment Labels
-
-Use these labels consistently:
-
-- **issue:** Problems that need to be fixed
-- **suggestion:** Improvements or better approaches
-- **nitpick:** Minor style/formatting issues
-- **question:** Asking for clarification
-- **thought:** General observation
-
-## Guidelines
-
-1. **Be Concise:** Keep reviews short and actionable
-2. **Prioritize:** Use HIGH/MEDIUM/LOW to indicate urgency
-3. **Include file:line:** Always reference specific locations
-4. **Code Examples:** Show, don't just tell (when helpful)
-5. **Status Clarity:** Use clear emoji indicators for status
-6. **No Fluff:** Skip summary, praise, and preamble - get straight to the issues
-
-## Example
-
-```markdown
-# Code Review: PR #1443 - POS Tips on Reader
-
-**Status:** ⚠️ APPROVED with suggestions
-
-## Issues
-
-### HIGH Priority
-*None*
-
-### MEDIUM Priority
-
-1. **issue:** `src/screens/checkout/steps/payment-step.js:74` - `sendDisplay("cart")` in `componentDidMount` may execute before state is ready. Consider moving to `componentDidUpdate` with guards.
-
-2. **nitpick:** `src/screens/checkout/steps/payment-step.js:739` - `display` added to redux connection but never used in component.
-
-### LOW Priority
-
-- `src/redux/checkout.js:1599` - Extract `"receipt"` string to constant
-- `src/redux/display.js:242` - Add error handling for `dispatch(fetchAllTipObjects())`
-```
+Keep only actionable, in-scope findings. No filler, linter nits, speculative abstractions or forced praise. State “No actionable findings” when appropriate, without implying tests ran or the change is proven safe. Record review coverage or verification limits briefly. Counts must match the actual enumerated comments; follow the review workflow's posting limit and approval gate.

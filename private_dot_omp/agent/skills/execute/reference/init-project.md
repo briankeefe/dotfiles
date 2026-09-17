@@ -1,256 +1,37 @@
-> Ported from /Users/brian/code/EXECUTE_INIT_PROJECT.md for the Oh My Pi `execute` toolkit. See `skill://execute` for tool conventions.
-
 # Execute Init Project
 
-## Command
-`execute init project [ProjectName]`
+`execute init project <project>` creates a dependency-aware execution plan, not tickets or implementation work. Follow the shared defaults in `skill://execute`.
 
-## Purpose
-Creates a comprehensive project execution plan by analyzing all Linear tasks in a project, mapping dependencies, and determining an intelligent task execution order.
+## Gather context
 
-## Workflow
+1. Resolve the project, tracker, repositories and documentation location from the request, repository instructions and existing project docs. Ask only if the project or destination remains ambiguous; do not invent a project directory.
+2. Use the configured tracker integration to fetch the full project task list, including completed and canceled tasks, descriptions, acceptance criteria, statuses, priorities, assignees and dependency links. Check installed CLI help for supported commands and pagination.
+3. Read any existing project plan before changing it. Preserve useful decisions and user-authored notes. If a source is inaccessible or incomplete, identify the missing coverage rather than presenting the plan as complete.
 
-### Step 1: Gather Project Information
-1. Prompt user for project name if not provided
-2. Use Linear CLI to list all projects and find matching project ID
-3. Fetch all issues/tasks associated with the project
+## Order the work
 
-### Step 2: Map Tasks and Dependencies
-1. For each task, extract:
-   - Task ID (e.g., DRI-XXX)
-   - Task title
-   - Task description
-   - Current status
-   - Labels/tags
-   - Related issues (blocking/blocked by)
-   - Assignees
-   - Priority
+Analyze inline; no agent is required.
 
-2. Build dependency graph:
-   - Identify which tasks block which other tasks
-   - Note tasks that can be parallelized
-   - Flag tasks that need clarification
-   - Identify tasks on hold or blocked by external factors
+- Distinguish explicit blocking relationships from inferred technical dependencies. A related-task link is not itself a blocker. Label assumptions and unresolved scope.
+- Order unfinished tasks after their prerequisites. Use project priorities and existing recommendations to break ties, then consider which task unlocks more work. Do not invent foundation phases without a real dependency.
+- Check for cycles, missing dependencies, external blockers and on-hold tasks. List the affected tasks and the decision needed to unblock them; do not force them into a runnable sequence.
+- Identify independent tasks that could proceed in parallel, accounting for shared files, data migrations and API contracts. This is a planning option, not authorization to launch workers.
+- Note material risks and the repository-appropriate verification each track needs. Reconsider the ordering and assumptions before saving.
 
-### Step 3: Intelligent Task Ordering with Deep Analysis
-Spawn an `analyst` subagent (via the `task` tool, synchronously — wait for it to finish) to produce a dependency-aware execution order. Pass the full prompt below verbatim, substituting the project name and the gathered task list:
+## Write the plan
 
-- Architecture: Which tasks affect core structure?
-- Database: Which tasks modify schemas or data models?
-- API: Which tasks change interfaces or contracts?
-- UI/UX: Which tasks are purely frontend?
-- Testing: What verification is needed for each task?
-- Risk assessment for each task ordering decision
-- Opportunities for parallel development
+This command authorizes the project document, using the established location and format. Keep it as small as the project permits:
 
-Subagent prompt:
+- Project name, source links, goals and refresh date.
+- Task table with ID/link, title, observed status, dependencies, priority and associated PR links when known.
+- Recommended execution order with brief dependency reasoning and any independent tracks.
+- Clarifications, cycles, blocked/on-hold work and material engineering risks.
+- Current progress and tasks available now, with evidence for satisfied prerequisites.
 
-```
-You are a senior engineering collaborator and systems architect. Analyze the following project tasks and produce an intelligent, dependency-aware execution order.
+Keep tracker status and implementation/PR status distinct. A merged PR is not automatically proof that all acceptance criteria or deployment requirements are complete. Use the project's completion rules; mark unknowns explicitly.
 
-ANALYSIS AREAS:
-- Architecture: Which tasks affect core structure?
-- Database: Which tasks modify schemas or data models?
-- API: Which tasks change interfaces or contracts?
-- UI/UX: Which tasks are purely frontend?
-- Testing: What verification is needed for each task?
+## Report and stop
 
-For each ordering decision:
-- Explain the dependency reasoning
-- Flag parallelization opportunities
-- Identify risks in the proposed order
-- Note any assumptions that should be validated
+Return the document path, short execution summary, next available tasks and outstanding blockers or questions. Suggest `execute update project <project>` for later refreshes.
 
----
-
-Project: [ProjectName]
-Tasks:
-[paste full task list with descriptions, statuses, and known dependencies]
-```
-
-**Analysis Areas:**
-- Architecture: Which tasks affect core structure?
-- Database: Which tasks modify schemas or data models?
-- API: Which tasks change interfaces or contracts?
-- UI/UX: Which tasks are purely frontend?
-- Testing: What verification is needed for each task?
-
-### Step 4: Create Project Document
-Generate a markdown file in `ProjectInfo/[ProjectName].md` following the PAYOUTS.md template:
-
-**Template Structure:**
-```markdown
-# [Project Name] - Task Execution Order
-
-## Project: [project-id] ([Project Name])
-
-[Brief project description and goals]
-
----
-
-## ⚠️ NEEDS CLARIFICATION
-[Tasks with missing info or unclear scope]
-
----
-
-## Phase 1: Foundation & Infrastructure
-[Tasks that establish core structure]
-
-## Phase 2: [Feature Category] (Parallel Tracks)
-[Tasks grouped by feature area with parallelization opportunities]
-
-### Track A: [Category Name]
-[Related tasks that form a sequential track]
-
-### Track B: [Category Name]
-[Parallel track of related tasks]
-
----
-
-## Phase N: [Final Category]
-[Final polish and comprehensive updates]
-
----
-
-## Execution Summary
-
-### Recommended Sequential Order (with parallel opportunities):
-[High-level execution plan]
-
----
-
-## Parallelization Opportunities
-
-### Maximum Parallelization Strategy:
-[How multiple developers can work simultaneously]
-
-### Timeline Impact:
-[Sequential vs parallel approach comparison]
-
----
-
-## Key Dependencies Map
-
-```
-[Visual dependency graph using ASCII art]
-```
-
----
-
-## Engineering Notes from Tickets
-[Technical considerations extracted from ticket descriptions]
-
----
-
-## Risk Assessment
-
-### High Risk:
-[Tasks or decisions with high risk]
-
-### Medium Risk:
-[Tasks or decisions with medium risk]
-
-### Low Risk:
-[Tasks or decisions with low risk]
-
----
-
-## Validation Notes
-
-### Step 5: Validate with Self-Challenge
-**Validation Method:** Critic subagent deep analysis + native self-challenge
-
-**Key Insights:**
-[Important discoveries from the analysis]
-
----
-
-## Current Status Summary
-
-| Ticket | Status | PR | Notes |
-|--------|--------|----|----|
-| [TASK-ID] | [STATUS] | [PR#] | [Notes] |
-
-### Next Available Tasks:
-[Tasks that can be started immediately]
-
-### Progress Summary:
-- ✅ **Complete**: X/Y tickets (Z%)
-- 🔄 **In Review**: X/Y tickets (Z%)
-- ⏸️ **Blocked**: X/Y tickets (Z%)
-- ❌ **Not Started**: X/Y tickets (Z%)
-- 🚫 **On Hold**: X/Y tickets (Z%)
-
----
-
-*Last Updated: [Date]*
-```
-
-### Step 5: Validate with Self-Challenge
-Spawn a `critic` subagent (via the `task` tool, synchronously — wait for it to finish) to critically evaluate the ordering plan. Pass the full prompt below verbatim:
-
-```
-CRITICAL REASSESSMENT – Do not automatically agree with your own analysis.
-
-Critically evaluate this project execution plan:
-1. The dependency ordering — are there better sequences?
-2. The parallelization strategy — can we do more in parallel?
-3. The risk assessment — are risks properly identified?
-4. The phase grouping — do these logical groupings make sense?
-5. Any assumptions that might be incorrect?
-6. Are there circular dependencies that were missed?
-7. Are foundation tasks truly foundational, or could they be deferred?
-
-Be brutally honest. Update the plan with any corrections before presenting to user.
-```
-
-### Step 6: Present Results
-1. Display the project file location
-2. Show high-level execution summary
-3. Highlight any clarification needs
-4. List next available tasks to start
-5. Note any tasks on hold or blocked
-
-## Linear CLI Commands Used
-
-```bash
-# List all projects
-linear project list
-
-# Find project by name/partial match
-linear project list | grep -i "[ProjectName]"
-
-# List all issues in a project
-linear issue list --project "[project-id]" --all-states
-
-# Get detailed issue information
-linear issue view [TICKET-ID] --no-comments --no-pager
-
-# Get issue relationships
-linear issue view [TICKET-ID] | grep -E "(Blocks|Blocked by|Related to)"
-```
-
-## Example Usage
-
-```bash
-# Initialize a new project plan
-execute init project PAYOUTS
-
-# Initialize with exact project name
-execute init project "Payouts Page Rework"
-```
-
-## Output
-- Creates `ProjectInfo/[ProjectName].md` with comprehensive execution plan
-- Shows validation results from the self-challenge step
-- Lists immediate next steps
-
-## Notes
-- The analysis uses deep reasoning to understand task relationships
-- Manual review of the generated plan is recommended
-- Update the plan as tasks are completed or new information emerges
-- Use `execute update project [ProjectName]` to refresh status later
-
----
-
-*This command combines Linear API integration, dependency analysis, AI-powered reasoning, and critical validation to create robust project execution plans.*
+Do not create/edit tickets, change tracker state, start implementation or publish anything. Proposed ticket changes require a separate approved plan; publishing requires authorization.
