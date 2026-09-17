@@ -120,11 +120,7 @@ export function attention(
     return "blocked";
   if (["waiting", "paused", "ready"].includes(tokens.foreman_status))
     return undefined;
-  if (
-    ["idle", "done"].includes(agent.agent_status) &&
-    !["starting", "working"].includes(tokens.foreman_status)
-  )
-    return "idle";
+  if (["idle", "done"].includes(agent.agent_status)) return undefined;
   const progress = Date.parse(tokens.foreman_progress_at ?? "");
   const deadline = Date.parse(tokens.foreman_deadline ?? "");
   if (Number.isFinite(deadline) && at < deadline) return undefined;
