@@ -1,72 +1,73 @@
 ---
 name: execute
-description: Dripos development command toolkit. Use when the user types `execute <command>` (e.g. `execute DRI-123`, `execute pr summary`, `execute pr review <url>`, `execute update-pr`, `execute e2e test`, `execute sanity check`, `execute init project NAME`, `execute next task NAME`, `execute update project NAME`, `execute actionable pr`, `execute release-check`, `execute local-repro`, `execute ops`, `execute docs`, `execute help`). Also use when asked whether a ticket/PR/commit is in a release branch, which merged PRs are missing from a release, how to test/reproduce a ticket or PR locally, or about PostHog keys/logging architecture and POS staging OTA deploy and version-bump rules. Drives Linear ticket execution, PR triage/review/update, release-branch membership checks, local reproduction setup, E2E test generation, project planning, and documentation against the Dripos/Frostbyte ecosystem using the Linear CLI, gh CLI, and the Oh My Pi task/browser tools.
+description: Project-neutral development workflows for `execute <command>`: tickets, PR summaries/reviews/updates, E2E tests, sanity checks, project planning, documentation, release membership and local reproduction. Also use for questions about whether an issue/PR/commit is in a release, how to reproduce a change locally, or project operations. Discover the repository, issue provider and tools from current context rather than assuming an organization or stack.
 ---
 
-# Execute Toolkit (Oh My Pi port)
+# Execute Toolkit
 
-User-invoked command toolkit for Dripos development. Triggered by `execute <command>`
-(via the `/execute` slash command, or recognized in free text). Each command maps to a
-detailed workflow doc in this skill's `reference/` directory — **read the matching doc and
-follow it exactly**, including every MUST/STOP/approval gate.
+Use the matching workflow with active harness/repository rules and the user's current authorization.
 
-## Dispatch table
+## Dispatch
 
-Parse the command words after `execute`, match the longest prefix, then
-`read skill://execute/reference/<doc>` and execute that workflow with the remaining
-arguments.
+Match the longest named command prefix below before interpreting a ticket. Pass remaining
+arguments unchanged. Empty input or `help` shows this table without starting work.
+A bare PR URL routes to `pr-review.md`; a bare issue URL, provider-recognized ID (for example
+`ENG-2612`, not a required prefix), or resolvable ticket name routes to `ticket.md`.
+Resolve names using the configured tracker; ambiguous names require clarification before
+work starts. Unknown commands or unrecognized URLs show help rather than inventing a ticket.
+An explicit command wins: `local-repro <PR_URL>` reproduces, it does not post a review.
 
 | Invocation | Reference doc | Purpose |
 |---|---|---|
-| `execute help` | (this file) | List available commands |
-| `execute DRI-XXX` / `execute <ticket-name>` | `reference/ticket.md` | Full ticket workflow: fetch → plan → implement → test → review → PR |
-| `execute pr summary` | `reference/pr-summary.md` | Status of all your open PRs across the Dripos ecosystem |
-| `execute pr review <PR_URL>` | `reference/pr-review.md` | Comprehensive code review using Conventional Comments |
-| `execute update-pr [PR_URL]` | `reference/update-pr.md` | Address open reviewer feedback (auto-detects PR from branch) |
-| `execute actionable pr` | `reference/actionable-pr.md` | Find one PR with unaddressed actionable feedback |
-| `execute e2e test` | `reference/e2e-test.md` | Walk a flow with the browser tool, generate a Playwright test |
-| `execute sanity check` | `reference/sanity-check.md` | Sanity-check recently completed work against requirements |
-| `execute init project NAME` | `reference/init-project.md` | Build a dependency-aware project execution plan |
-| `execute next task NAME` | `reference/next-task.md` | Output the next available task from a project |
-| `execute update project NAME` | `reference/update-project.md` | Refresh project docs from Linear + GitHub |
-| `execute docs` | `reference/docs.md` | Documentation workflow |
-| `execute release-check <DRI/PR/sha> [release-NN]` | `reference/release-check.md` | Is a ticket/PR/commit in a release branch; which merged PRs are missing; merge master into a release branch |
-| `execute local-repro <ticket/PR>` | `reference/local-repro.md` | Stand up backend/FE/mobile + auth to reproduce or verify a change locally |
-| `execute ops` (posthog / logging / deploy questions) | `reference/ops-facts.md` | PostHog keys & logging architecture, POS staging OTA deploy & version-bump rules |
+| `execute help` | (this file) | Show commands |
+| `execute <ticket-ID/name/issue-URL>` | `reference/ticket.md` | Fetch, plan, implement, verify, review, PR |
+| `execute pr summary [scope]` | `reference/pr-summary.md` | Summarize your open PRs |
+| `execute pr review <PR_URL>` | `reference/pr-review.md` | Review with Conventional Comments |
+| `execute update-pr [PR_URL]` | `reference/update-pr.md` | Address actionable reviewer feedback |
+| `execute actionable pr [scope]` | `reference/actionable-pr.md` | Find PRs with unaddressed feedback |
+| `execute e2e test [flow]` | `reference/e2e-test.md` | Exercise a flow and generate a test |
+| `execute sanity check` | `reference/sanity-check.md` | Check completed work against requirements |
+| `execute init project NAME` | `reference/init-project.md` | Plan project dependencies and execution |
+| `execute next task NAME` | `reference/next-task.md` | Identify the next available task, do not start it |
+| `execute update project NAME` | `reference/update-project.md` | Refresh project documentation |
+| `execute docs [topic]` | `reference/docs.md` | Draft project documentation |
+| `execute release-check <ticket/PR/sha> [target]` | `reference/release-check.md` | Check release membership or missing changes |
+| `execute local-repro <ticket/PR>` | `reference/local-repro.md` | Bring up the relevant local stack and verify |
+| `execute ops [question]` | `reference/ops-facts.md` | Consult project-local operational guidance |
 
-If no command matches, show this table.
+Reference paths resolve as `skill://execute/reference/<doc>`.
 
-## Environment
+## Discover once, reuse
 
-- `linear` CLI — configured and authenticated. Ticket IDs look like `DRI-XXX`.
-- `gh` CLI — authenticated (account `briankeefe`). Used for PR status, diffs, comments, creation.
-- Working tree root: `/Users/brian/code`. Project docs in `/Users/brian/code/ProjectInfo/`.
-- Worktrees: `/Users/brian/code/<repo>-dri-XXX`, branches `briankeefe/dri-<n>-<desc>`.
-- Agent lock coordination for parallel runs: `/Users/brian/code/.agent-locks.json`
-  (`yarn_install`, `playwright`) per `/Users/brian/code/AGENT_LOCKS.md`.
+- Read applicable repository instructions and the relevant project docs before editing.
+  Resolve repository/host from an explicit URL, assigned worktree, remotes and ticket links.
+  Do not silently substitute the current repo for a different repo named by a URL.
+- Resolve the issue provider/workspace and ID format from the URL and local configuration.
+  Use available authenticated integrations or CLIs. Inspect installed `--help` before unfamiliar
+  commands; for example `linear issue view --help` only when Linear is the actual provider.
+  Never assume authentication, flags, JSON fields or a database integration exists.
+- Reuse the assigned branch/worktree. Otherwise discover the default base from repository
+  metadata and any documented project branch; never assume `master`, `main` or a release name.
+  Verify remotes before network writes. If release timing changes the strategy and is unstated,
+  ask whether this targets the normal next release or something faster.
+- Derive runtime/package manager from repo instructions, manifests, lockfiles and pinned versions.
+  Reuse existing install, dev, test, lint and CI commands; do not install a runner merely to fit
+  this toolkit. Resolve documentation locations from the repository, not a global personal path.
+- Missing context: exhaust repo/tool evidence, then ask one focused question. Report unavailable
+  credentials or services without guessing values or exposing secrets.
 
-## Oh My Pi tool conventions (how this toolkit maps from its Claude Code origin)
+## Scope and authorization
 
-These reference docs were ported from a Claude Code toolkit. When a doc describes a step,
-use the Oh My Pi equivalent:
+`execute <ticket>` requests implementation, not another mandatory plan-approval round.
+Plan proportionately and proceed when authorized. Ask only for unresolved requirements,
+material scope/risk decisions or sensitive actions not already authorized.
 
-- **Subagents** — use the `task` tool. Map roles to agent types:
-  - planning / decomposition → `agent: "planner"`
-  - critical analysis, gap/risk identification, plan validation → `agent: "critic"`
-  - code review (quality, patterns) → `agent: "code-reviewer"`; security-specific → `agent: "security-reviewer"`
-  - dependency-aware ordering / data analysis → `agent: "analyst"` (or `scientist`)
-  - heavy open-ended reasoning / second opinion → `agent: "oracle"`
-  - read-only investigation → `agent: "explore"`
-  Spawn synchronously and wait for the result. There is no `category=`, `load_skills=`,
-  or `mcp_skill(...)` — those Claude Code primitives do not exist here.
-- **Browser / UI verification & E2E** — use the `browser` tool (`open`, then `run` with
-  `tab.observe`, `tab.click`, `tab.fill`, `tab.screenshot`, etc.), not Playwright MCP.
-  Generated test files still use the `@playwright/test` framework run via `yarn`/`npx playwright`.
-- **DB access (OTP retrieval, schema inspection)** — use a configured MySQL MCP if present.
-  If none is configured in this session, surface that as a blocker for the DB-dependent step
-  rather than fabricating values.
-- **Reading skill/reference content** — `read skill://execute/reference/<doc>`.
-- **Self-challenge / scope check** — do it yourself; no external tool needed.
+Use active harness tool/delegation rules, inline first. Native task subagents are not independent
+Foreman workers; retain an assigned worker's worktree/session rather than creating a replacement.
 
-Everything else (Linear CLI, gh CLI, git, yarn, file paths, approval gates, templates)
-ports verbatim.
+Read-only commands do not start implementation or publish. Tracker updates are never automatic.
+Publishing needs authorization, not repeated confirmation when already granted. Create draft PRs,
+keep the author assigned, and follow the assigned publication mechanism unless explicitly overridden.
+Reviewer identities/triggers are repository-local: report missing optional reviewers and proceed
+with authorized publication, never borrow another project's configuration. Distinguish a posted
+trigger, recorded request and completed review. Do not merge or mark ready as part of this toolkit.

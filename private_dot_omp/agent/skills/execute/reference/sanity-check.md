@@ -1,87 +1,37 @@
-> Ported from /Users/brian/code/EXECUTE_SANITY_CHECK.md for the Oh My Pi `execute` toolkit. See `skill://execute` for tool conventions.
-
 # Execute Sanity Check
 
-## Command
-```bash
-execute sanity check
-```
+Use for `execute sanity check [scope]` to assess completed work against its requirements. Apply shared defaults from `skill://execute`. This is a review, not automatic authorization to edit or publish.
 
-## Purpose
-Performs a comprehensive sanity check on recently completed work to ensure quality, adherence to requirements, and best practices compliance.
+## 1. Establish what is being checked
 
-## What It Does
-Runs a native self-challenge to critically evaluate:
-1. **Requirement Fulfillment**: Verify we accomplished exactly what was requested
-2. **Scope Adherence**: Confirm no scope creep occurred (no unrequested features or changes)
-3. **Best Practices Compliance**: Validate code follows established patterns and guidelines
+Read the original request/ticket, approved plan and subsequent decisions, relevant repository instructions, the complete in-scope change, and available verification evidence. Derive the comparison base and files from the current assignment or PR; do not assume the last commit is the whole change.
 
-## When to Use
-- After completing a ticket or feature implementation
-- Before creating a pull request
-- After making significant changes to ensure quality
-- When you want a critical review of recent work
+If requirements or the intended scope cannot be established from available context, **STOP** and ask for the specific missing information. Do not invent acceptance criteria or report a pass based only on code style.
 
-## Workflow
+## 2. Check requirements, correctness, and scope
 
-### Step 1: Gather Context
-Collect information about what was just completed:
-- Original requirements or ticket description
-- Files that were modified
-- Changes that were made
-- Any commit messages or PR descriptions
+- Account for **every acceptance criterion** as satisfied, missing, or unverified, with a source location or observed evidence. Distinguish implementation inspection from runtime proof.
+- Check relevant happy paths, boundaries, failures, and preserved behavior. Review security and authorization boundaries, state ownership, data integrity, and performance-sensitive paths where affected.
+- Compare with existing repository patterns and instructions, not universal preferences about languages, frameworks, mutation, component styles, or syntax. Separate genuine defects from stylistic suggestions.
+- Identify unnecessary features, abstractions, dependencies, refactors, or unrelated edits. Do not revert user work or silently expand the approved scope.
+- Separate in-scope defects from pre-existing issues. Ground findings in affected files and explain the observable impact; give calibrated confidence for diagnoses rather than presenting guesses as facts.
 
-### Step 2: Self-Challenge
-Apply a native self-challenge rubric to the completed work. No external tool needed — do this yourself:
+A checklist or reviewer opinion is not runtime evidence.
 
-```
-CRITICAL REASSESSMENT – Do not automatically agree with your own work.
+## 3. Assess verification
 
-ORIGINAL REQUIREMENTS:
-[Insert the original ticket description, user request, or requirements]
+Reuse current, applicable results without repeating checks just to reconfirm reported observations. If evidence is missing or invalidated by later edits, run the smallest relevant check in a safe, isolated environment and report the exact outcome. Use documented project commands and installed CLI help, not assumed package managers or test runners.
 
-CHANGES MADE:
-[List all files modified and summarize the changes]
+For bug fixes, check that the original failure is prevented. For UI changes, inspect the actual surface and relevant screenshots; passing logic tests alone do not prove appearance or interaction.
 
-EVALUATION CRITERIA:
+Do not force a browser, E2E test generation, or a new test suite for changes they cannot meaningfully verify. Report unavailable runtime access or missing required CI-equivalent checks as gaps, not passes.
 
-1. Did we accomplish exactly what was requested?
-   - For EACH requirement, answer: done ✓ or missing ✗?
+## 4. Give the verdict
 
-2. Did we avoid scope creep?
-   - Any features added that weren’t requested?
-   - Any refactors that weren’t necessary?
-   - Did we follow the minimal diff philosophy?
+Lead with **PASS**, **WARNING**, or **FAIL**, followed by only material findings:
 
-3. Does the implementation follow established best practices?
-   - Functional components with hooks (no class components)
-   - No inline conditionals in JSX/TSX
-   - No mutable array operations (push/unshift/pop/shift/splice)
-   - Proper error handling
-   - Consistent code formatting
-   - No let/var with reassignment (use const + ternary)
+- **PASS:** all requirements have evidence, relevant checks passed, and no blocking correctness or scope issue was found within the inspected scope.
+- **WARNING:** non-blocking concerns or explicit verification gaps remain; name what is not established.
+- **FAIL:** required behavior is missing, a blocking defect exists, or required verification failed or is blocked.
 
-FINDINGS:
-- What was done well:
-- Any scope creep concerns:
-- Any best practice violations:
-- Recommended fixes before PR:
-```
-
-### Step 3: Review Results
-Analyze the self-challenge findings:
-- ✅ **PASS**: If all criteria are met, work is ready for PR
-- ⚠️ **WARNING**: If minor issues exist, document them and consider fixing
-- ❌ **FAIL**: If critical issues exist, address them before proceeding
-
-### Step 4: Take Action
-Based on the results:
-- **No issues**: Proceed with confidence to PR creation
-- **Minor issues**: Document in PR description or fix if time permits
-- **Critical issues**: Fix immediately before creating PR
-
-## Example Usage
-
-### Example 1: After Ticket Completion
-```
-User: execute sanity check
+List each finding with its location/evidence, impact and smallest recommended action. Include exact checks and unverified criteria. This command reports findings; apply fixes only when requested or already authorized.

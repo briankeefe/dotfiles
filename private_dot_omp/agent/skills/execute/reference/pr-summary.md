@@ -1,191 +1,23 @@
-> Ported from /Users/brian/code/PR_SUMMARY.md for the Oh My Pi `execute` toolkit. See `skill://execute` for tool conventions.
+# PR Summary
 
-# PR Summary Instructions
+`execute pr summary` reports the current user's open, non-draft PRs. This is read-only. Follow `skill://execute` for shared defaults.
 
-When the user types `execute pr summary`, follow these steps:
+## Gather
 
-## Step 1: Fetch All Open PRs
+1. Derive the host, authenticated user and repository scope from supplied URLs, current repository and project docs. Use an explicitly requested multi-repository scope; otherwise use the current repository. Ask only if scope cannot be determined. Do not search unrelated organizations by default.
+2. Use the host's installed CLI/API, checking its help for supported commands and fields. Fetch every page of open PRs authored by that user; a fixed result limit is not evidence of completeness. Exclude drafts unless the user requests them.
+3. For each PR, fetch its URL, title, creation time, current head, review decisions and requests, checks and mergeability. Collect reviews, comments and thread state using **Collect feedback** in `skill://execute/reference/update-pr.md`, without entering its edit workflow. Include human and bot feedback by substance.
+4. Report inaccessible repositories or truncated results as incomplete coverage, not as empty results.
 
-Run `gh pr list` for each Dripos ecosystem repo to get full status fields (search doesn't support all of them):
+## Interpret
 
-```bash
-gh pr list --repo Frostbyte-Technologies/Dripos \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
+- **Review:** show the host's current decision, outstanding requests and any unresolved actionable feedback separately. A re-request means review was requested again, not that earlier concerns were fixed. New commits, timestamps or the author's last reply alone never establish resolution.
+- **Reviewers:** deduplicate people/teams, retaining their latest formal state and pending requests. Include substantive commenters not otherwise listed; author replies are context, not peer reviews.
+- **Checks:** distinguish failing/error/cancelled/timed-out, pending/running, passing, skipped/neutral and missing/unknown. Do not count skipped or absent checks as passing. Identify required-check status when available.
+- **Mergeability:** report clean, conflicting or unknown as returned by the host. Approval plus green checks does not prove all branch policies are satisfied or authorize merging.
 
-gh pr list --repo Frostbyte-Technologies/Dripos-React-Partner \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
+## Present
 
-gh pr list --repo Frostbyte-Technologies/Dripos-POS-React-Native \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
+Show the scope, total and a compact entry per PR: repository, number/title, URL, review state, feedback needing action, CI, mergeability and reviewers. Sort needs-action items first (blocking feedback, failed checks, conflicts), then approved/passing, then awaiting review; use oldest first within each group. Keep counts mutually exclusive and consistent with entries.
 
-gh pr list --repo Frostbyte-Technologies/Dripos-Dashboard-React-Native \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
-
-gh pr list --repo Frostbyte-Technologies/Dripos-React-Native \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
-
-gh pr list --repo Frostbyte-Technologies/Dripos-React-Order \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
-
-gh pr list --repo Frostbyte-Technologies/Lets-Go-Reader \
-  --author @me --state open --limit 100 \
-  --json number,title,url,isDraft,reviewDecision,latestReviews,reviewRequests,mergeable,statusCheckRollup,createdAt,comments
-```
-
-Run all 7 in parallel.
-
----
-
-## Step 2: Filter Out Drafts
-
-After fetching, **exclude all PRs where `isDraft: true`**. Do not show draft PRs anywhere in the output.
-
----
-
-## Step 3: Compute Status for Each PR
-
-For each PR, derive the following display values:
-
-### Review Status
-| `reviewDecision` value | Condition | Display |
-|------------------------|-----------|---------|
-| `"APPROVED"` | — | ✅ Approved |
-| `"CHANGES_REQUESTED"` | Reviewer is back in `reviewRequests` (re-requested after pushing updates) | ⏳ Awaiting re-review |
-| `"CHANGES_REQUESTED"` | Reviewer is NOT in `reviewRequests` | ❌ Changes requested |
-| `"REVIEW_REQUIRED"` or `null` | — | ⏳ Awaiting review |
-
-**Stale review detection**: When a PR author pushes new commits after receiving "changes requested", GitHub moves the reviewer back into `reviewRequests`. This means the feedback has been addressed and the PR is awaiting re-review — treat it the same as "Awaiting review" for sorting purposes (not "Needs attention").
-
-### CI Status
-Aggregate the `statusCheckRollup` array:
-- All `"SUCCESS"` → ✅ passing
-- Any `"FAILURE"` or `"ERROR"` → ❌ failing
-- Any `"PENDING"` or `"IN_PROGRESS"`, none failing → ⏳ pending
-- Empty / no checks → — (no CI)
-
-### Merge Status
-| `mergeable` value | Display |
-|-------------------|---------|
-| `"MERGEABLE"` | ✅ clean |
-| `"CONFLICTING"` | ⚠️ conflicts |
-| `"UNKNOWN"` | — |
-
-### Reviewer Names
-Build a combined list of people who have interacted with the PR:
-
-**From `latestReviews`** (formal review actions):
-- `@username (approved)` if state is `APPROVED`
-- `@username (changes requested)` if state is `CHANGES_REQUESTED`
-- `@username (commented)` if state is `COMMENTED`
-
-**From `reviewRequests`** (requested but haven't reviewed yet):
-- `@username (requested)`
-
-**From `comments`** (standalone PR comments, not formal reviews):
-- For each comment where `author.login` is not already in the above lists, add `@username (commented)`
-- Deduplicate — only show each person once, preferring their formal review state if they have both
-- Skip comments authored by yourself (the PR author)
-
----
-
-## Step 4: Sort PRs by Priority
-
-Sort the full list so the most urgent PRs appear first:
-
-1. **❌ Changes requested** (not stale) — needs your action
-2. **CI failing** — needs your action (regardless of review state)
-3. **⚠️ Merge conflicts** — needs your action
-4. **✅ Approved + CI green** — ready to merge
-5. **⏳ Awaiting review / Awaiting re-review** — waiting on reviewers
-
-Within each group, sort oldest first (by `createdAt`).
-
----
-
-## Step 5: Format Output
-
-### Header summary (counts by status):
-```
-Your open PRs — {TOTAL} total
-
-🔴 Needs attention:  {N}  (changes requested / CI failing / conflicts)
-✅ Ready to merge:   {N}  (approved + CI passing)
-⏳ Awaiting review:  {N}
-```
-
-### Per-PR block:
-
-```
-{n}. {REPO-SHORTNAME} — {PR title} (#{number}){DRAFT badge if applicable}
-   URL:
-   {pr_url}
-   Review: {review status emoji + label}  |  CI: {ci emoji + label}  |  Merge: {merge emoji + label}
-   Reviewers: {reviewer list, or "(none yet)" if empty}
-```
-
-**Repo short names:**
-- `Dripos`
-- `Dripos-React-Partner`
-- `Dripos-POS`
-- `Dripos-Dashboard`
-- `Dripos-Customer`
-- `Dripos-Order-Web`
-- `Lets-Go-Reader`
-
-**CRITICAL**: Always put URLs on their own line with a `URL:` label above, to prevent hyperlink bleeding in the Claude Code UI.
-
----
-
-## Example Output
-
-```
-Your open PRs — 4 total
-
-🔴 Needs attention:  2  (changes requested / CI failing / conflicts)
-✅ Ready to merge:   1  (approved + CI passing)
-⏳ Awaiting review:  1
-
-─────────────────────────────────────────────────────────────────
-
-1. Dripos-React-Partner — fix: null prices syncing to locations (#2166)
-   URL:
-   https://github.com/Frostbyte-Technologies/Dripos-React-Partner/pull/2166
-   Review: ❌ Changes requested  |  CI: ✅ passing  |  Merge: ✅ clean
-   Reviewers: @john (changes requested)
-
-2. Dripos — feat: add withholding fields to payout API (#3688)
-   URL:
-   https://github.com/Frostbyte-Technologies/Dripos/pull/3688
-   Review: ⏳ Awaiting review  |  CI: ❌ failing  |  Merge: ✅ clean
-   Reviewers: @sarah (requested)
-
-3. Dripos — feat: add withholding fields to legacy payout API (#3701)
-   URL:
-   https://github.com/Frostbyte-Technologies/Dripos/pull/3701
-   Review: ✅ Approved  |  CI: ✅ passing  |  Merge: ✅ clean
-   Reviewers: @sarah (approved)
-
-4. Dripos-React-Partner — fix: overtime calculation (#2155)
-   URL:
-   https://github.com/Frostbyte-Technologies/Dripos-React-Partner/pull/2155
-   Review: ⏳ Awaiting review  |  CI: ⏳ pending  |  Merge: ✅ clean
-   Reviewers: (none yet)
-
-─────────────────────────────────────────────────────────────────
-```
-
----
-
-## Edge Cases
-
-- **Repo returns empty list**: Skip it silently (don't show the repo at all)
-- **All repos return empty**: Output "No open PRs found."
-- **`mergeable` is `UNKNOWN`**: GitHub hasn't computed it yet — show `— (unknown)` and note it may resolve on refresh
-- **CI field is empty array**: Show `— no CI`
-- **Multiple reviews from same reviewer**: Use only their latest review state
+Say “No open non-draft PRs found” only after complete discovery.
