@@ -617,7 +617,7 @@ const page = (connection: string, nodes: unknown[]) => ({
   data: { repository: { pullRequest: { [connection]: { nodes } } } },
 });
 
-test("waiting and deliberate pauses are not stalls; a real block still needs attention", () => {
+test("idle and done stay quiet while stale and blocked workers need attention", () => {
   const time = Date.parse("2026-01-01T12:00:00Z");
   const agent = {
     pane_id: "w1:p1",
@@ -625,6 +625,8 @@ test("waiting and deliberate pauses are not stalls; a real block still needs att
     tokens: { foreman_progress_at: "2026-01-01T10:00:00Z" },
   };
   expect(attention(agent, 15, time)).toBe("stale");
+  for (const agent_status of ["idle", "done"])
+    expect(attention({ ...agent, agent_status }, 15, time)).toBeUndefined();
   expect(
     attention(
       { ...agent, tokens: { ...agent.tokens, foreman_status: "waiting" } },
