@@ -56,6 +56,22 @@ Reference paths resolve as `skill://execute/reference/<doc>`.
 - Missing context: exhaust repo/tool evidence, then ask one focused question. Report unavailable
   credentials or services without guessing values or exposing secrets.
 
+## Red/green TDD
+
+Every behavior-changing implementation workflow MUST use red/green TDD:
+
+1. **Red:** Before editing production code, add or update the smallest behavior-level test or
+   throwaway executable check. Run it against the current code and verify it fails for the intended
+   reason. A user-reported failure is ground truth; encode it without repeating the manual
+   reproduction merely to confirm it.
+2. **Green:** Make the minimum source change, then rerun the exact red check and verify it passes.
+3. **Refactor:** Clean up only after green, then rerun the affected check.
+
+Keep the regression test only when it meets the repository's test-value bar; otherwise remove the
+throwaway check after verification. Documentation-only, metadata-only and purely mechanical changes
+are exempt. Behavior-preserving refactors use a passing characterization check before and after
+instead of fabricating a failure.
+
 ## Scope and authorization
 
 `execute <ticket>` requests implementation, not another mandatory plan-approval round.

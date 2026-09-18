@@ -11,8 +11,12 @@
 
 ## Implement, verify and review
 
+- Follow the red/green TDD contract in `skill://execute`: capture the failing behavior before
+  production edits, make the minimum fix, then prove the same check passes.
 - Make the smallest complete change following existing patterns; fix the root cause and migrate affected callers.
-- For bugs, confirm the reported reproduction no longer fails. Keep a useful regression test when practical; otherwise report the smoke check and its limitations. Do not repeat a user-reported failure merely to confirm it.
+- For bugs, confirm the reported reproduction no longer fails after green. Keep a useful regression
+  test when practical; otherwise remove the throwaway check and report the smoke check and its
+  limitations. Do not repeat a user-reported failure manually merely to confirm it.
 - Update affected tests and exercise the actual changed surface. Capture real UI evidence when relevant; do not impose browser work or a new runner on unrelated changes.
 - Map every acceptance criterion to evidence and run applicable repository CI checks after edits settle. Report exact commands, outcomes and gaps rather than claiming unverified success.
 - Review correctness and scope against the request; fix blocking findings and repeat affected verification. Keep an environment needed for the user's visual review.
