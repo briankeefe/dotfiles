@@ -55,6 +55,7 @@ alt-slash = 'layout tiles horizontal'
 alt-comma = 'layout accordion horizontal'
 cmd-ctrl-f = 'fullscreen'
 alt-shift-space = 'layout floating tiling'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # Summon TOGGLE: if the app is NOT on the current workspace, pull it here + focus it.
 # If it IS already here, banish it back to its home workspace. Same key both ways.
