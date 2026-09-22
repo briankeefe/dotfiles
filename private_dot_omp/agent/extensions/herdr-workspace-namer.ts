@@ -3,7 +3,7 @@
 // Naming rules:
 //   - reviewing someone else's work  -> "[review: DRI-1234]" / "[review: PR-1773]" / "[review: <slug>]"
 //   - developing a ticket            -> "DRI-1234"
-//   - ad-hoc                         -> OMP's generated title (prompt slug until ready)
+//   - ad-hoc                         -> compact slug from OMP's generated title
 //
 // This is a hand-written companion to herdr-omp-agent-state.ts. Herdr does NOT
 // manage this file, so the integration installer/updater will not overwrite it.
@@ -121,7 +121,7 @@ function firstLine(text: string): string {
 }
 
 /** Lowercase kebab slug. Splits CamelCase (OMP session titles) and drops filler. */
-function slugify(text: string, maxWords = 5, maxLen = 36): string {
+function slugify(text: string, maxWords = 3, maxLen = 20): string {
 	const spaced = text
 		.replace(/([a-z0-9])([A-Z])/g, "$1 $2")
 		.replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2");
@@ -170,11 +170,8 @@ export function classify(prompt: string, sessionName: string | undefined): Class
 		return { label: dri, lock: "dri" };
 	}
 
-	const named = sessionName?.trim();
-	return {
-		label: named && named.length > 0 ? named : slugify(prompt),
-		lock: "adhoc",
-	};
+	const base = sessionName?.trim() || prompt;
+	return { label: slugify(base), lock: "adhoc" };
 }
 
 // --- extension ---------------------------------------------------------------
@@ -211,8 +208,8 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("agent_end", async (_event, ctx) => {
 		if (!rootSession || ctx.hasUI !== true || lock !== "adhoc") return;
-		const generated = pi.getSessionName()?.trim();
-		if (generated) await apply(generated);
+		const generated = pi.getSessionName();
+		if (generated) await apply(slugify(generated));
 	});
 
 	pi.registerCommand("herdr-name", {
