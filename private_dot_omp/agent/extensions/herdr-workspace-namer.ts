@@ -3,7 +3,7 @@
 // Naming rules:
 //   - reviewing someone else's work  -> "[review: DRI-1234]" / "[review: PR-1773]" / "[review: <slug>]"
 //   - developing a ticket            -> "DRI-1234"
-//   - ad-hoc                         -> short kebab slug ("fix-checkout-regression")
+//   - ad-hoc                         -> OMP's generated title (prompt slug until ready)
 //
 // This is a hand-written companion to herdr-omp-agent-state.ts. Herdr does NOT
 // manage this file, so the integration installer/updater will not overwrite it.
@@ -152,7 +152,7 @@ interface Classification {
 }
 
 /** Decide the workspace label for a prompt. sessionName is OMP's auto title, if any. */
-function classify(prompt: string, sessionName: string | undefined): Classification {
+export function classify(prompt: string, sessionName: string | undefined): Classification {
 	const driMatch = prompt.match(DRI_RE);
 	const dri = driMatch ? `DRI-${driMatch[1]}` : undefined;
 
@@ -171,8 +171,10 @@ function classify(prompt: string, sessionName: string | undefined): Classificati
 	}
 
 	const named = sessionName?.trim();
-	const base = named && named.length > 0 ? named : prompt;
-	return { label: slugify(base), lock: "adhoc" };
+	return {
+		label: named && named.length > 0 ? named : slugify(prompt),
+		lock: "adhoc",
+	};
 }
 
 // --- extension ---------------------------------------------------------------
@@ -205,6 +207,12 @@ export default function (pi: ExtensionAPI) {
 		const result = classify(event.prompt ?? "", pi.getSessionName());
 		lock = result.lock;
 		await apply(result.label);
+	});
+
+	pi.on("agent_end", async (_event, ctx) => {
+		if (!rootSession || ctx.hasUI !== true || lock !== "adhoc") return;
+		const generated = pi.getSessionName()?.trim();
+		if (generated) await apply(generated);
 	});
 
 	pi.registerCommand("herdr-name", {
