@@ -1,6 +1,6 @@
 # PR Review Loop
 
-`execute shepherd-pr [PR_URL]` owns a draft pull request from its first Cursor review trigger through approval. Ticket delivery enters this workflow automatically after publishing a draft PR.
+`execute shepherd-pr [PR_URL]` owns a draft pull request from its first Cursor review trigger through approval or two thermo-nuclear review rounds, whichever comes first. Ticket delivery enters this workflow automatically after publishing a draft PR.
 
 ## Standing authorization
 
@@ -10,7 +10,7 @@ The user has authorized this workflow to:
 - wait for and inspect Cursor reviews;
 - make, verify, commit and push minimal in-scope fixes;
 - reply with evidence when feedback is invalid or already addressed;
-- repeat those actions until approval; and
+- repeat those actions for at most two completed thermo-nuclear review rounds; and
 - mark the draft ready for review after the approval gate passes.
 
 Do not ask for confirmation for those actions. This authorization does not permit merging, force-pushing, changing the PR base, resolving unrelated feedback, broadening ticket scope, or ignoring repository publication rules.
@@ -20,6 +20,8 @@ Do not ask for confirmation for those actions. This authorization does not permi
 1. Resolve the PR from the URL or current branch. Confirm it is open and that the assigned worktree matches its head branch. Preserve unrelated user changes.
 2. Confirm the repository supports the `/check` trigger and identify the repository's two Cursor review actions from actual check and review metadata. For Kubera Health these are the risk analysis and the thermo-nuclear code quality review; they may appear as separate actions under the same Cursor account.
 3. Confirm the current commit is pushed, then post a PR comment containing exactly `/check`. Verify the comment exists. Record the head SHA and comment timestamp for this cycle so stale reviews cannot satisfy the gate.
+4. Start a thermo-nuclear round counter at zero. Increment it only when the thermo-nuclear action
+   triggered by this invocation's latest `/check` produces a completed review.
 
 ## Wait and inspect
 
@@ -30,6 +32,9 @@ A successful check run proves only that the automation executed. Approval must c
 Before acting, verify the PR head is still the recorded SHA. If another authorized actor pushed, restart the cycle against the new head without overwriting their work.
 
 ## Triage and respond
+Before changing code, read `skill://ponytail` and apply its full ladder. Reviewer feedback identifies
+a concern, not the implementation: use the least-complex fix that preserves correctness, prefer
+deletion/reuse over new abstraction, and push back on requested complexity when a simpler fix works.
 
 Classify every new substantive finding against the current code:
 
@@ -37,9 +42,17 @@ Classify every new substantive finding against the current code:
 - **Invalid or already addressed:** reply at the finding with concise code or test evidence. Do not change code merely to appease a mistaken review.
 - **Ambiguous or conflicting:** investigate repository and ticket evidence first. Notify the user only when a product decision or unavailable prerequisite truly prevents an informed choice.
 
-Reply to every substantive finding with its disposition. Never claim verification that was not run. After all fixes and replies are published, confirm the new head is remote and comment exactly `/check` again. Record the new head and trigger timestamp, then return to **Wait and inspect**.
+Reply to every substantive finding with its disposition. Never claim verification that was not run.
+After all fixes and replies are published, confirm the new head is remote. If fewer than two
+thermo-nuclear rounds have completed, comment exactly `/check` again, record the new head and trigger
+timestamp, then return to **Wait and inspect**. After the second completed thermo-nuclear round, do
+not post another `/check`.
 
 If an action fails without producing a substantive review, inspect the failure. Fix an in-scope cause; otherwise retrigger once. Repeated infrastructure failure, missing authentication, an unavailable reviewer action, or the same unsupported finding recurring without new evidence is a blocker: preserve the draft and notify the user with links and the exact reason.
+Two thermo-nuclear rounds are a hard cap even when the risk analysis has not approved or the second
+round caused another code change. If the approval gate does not hold after processing round two,
+leave the PR as a draft and hand it to the user with the PR URL, both review results, unresolved
+findings, fixes and pushbacks already made, current head, and verification performed.
 
 ## Approval gate
 

@@ -30,6 +30,6 @@ defaults write com.apple.AppleMultitouchTrackpad TrackpadRotate -bool true
 defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerDoubleTapGesture -int 1
 defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 3
 
-# Free Cmd-Ctrl-D for AeroSpace's DataGrip summon without replacing other shortcuts.
+# Free Cmd-Ctrl-D for AeroSpace's DBeaver summon without replacing other shortcuts.
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
 printf '%s\n' 'Preferences saved. Log out and back in to activate all changes.'

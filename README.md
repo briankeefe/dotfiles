@@ -121,7 +121,7 @@ sh "$(chezmoi source-path)/macos/defaults.sh"
 
 This restores dark mode, Dock auto-hide and size, the three configured hot corners,
 natural scrolling, selected built-in trackpad gestures, and frees Cmd-Ctrl-D for
-DataGrip. It also shows filename extensions and Finder's path bar, searches the
+DBeaver. It also shows filename extensions and Finder's path bar, searches the
 current Finder folder by default, and saves screenshots to `~/Pictures/Screenshots`.
 Log out and back in afterward. It does not replace Dock app lists,
 other keyboard shortcuts, or device-specific preferences, and does not run during
@@ -139,8 +139,8 @@ Captured setup:
 | Ghostty | TokyoNight Night, `08080f` background, 16pt font, native tab shortcuts disabled |
 | Herdr | Tokyo Night, spaces ordering, pane labels, Kitty graphics, preview updates |
 | Agent cycling | PageUp/PageDown in Ghostty sends Herdr's Ctrl-Alt-`[` / `]` |
-| AeroSpace | 8px gaps; Ghostty=1, Slack=2, DataGrip=3, Chrome=4, strays=5 |
-| Window controls | Cmd-Ctrl-H/J/K/L focus; Cmd-Ctrl-G/S/D/C summon; Cmd-Ctrl-R reset |
+| AeroSpace | 8px gaps; Ghostty=1, Slack=2, DBeaver=3, Zen=4, strays=5 |
+| Window controls | Cmd-arrow focus; Cmd-Ctrl-G/S/D/Z summon; Cmd-Ctrl-R reset |
 | OMP | Current model roles, Titanium theme, compact status line, Mnemopi preferences, Herdr extensions |
 
 This restores configuration, not a disk image: app logins, API keys, databases,

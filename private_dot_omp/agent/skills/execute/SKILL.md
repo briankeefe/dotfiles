@@ -81,7 +81,6 @@ material scope/risk decisions or sensitive actions not already authorized.
 
 Use active harness tool/delegation rules, inline first. Native task subagents are not independent
 Foreman workers; retain an assigned worker's worktree/session rather than creating a replacement.
-
 Read-only commands do not start implementation or publish. Tracker updates are never automatic.
 Publishing needs authorization, not repeated confirmation when already granted. Create draft PRs,
 keep the author assigned, and follow the assigned publication mechanism unless explicitly overridden.
