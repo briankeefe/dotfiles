@@ -11,8 +11,12 @@
 
 ## Implement, verify and review
 
+- Follow the red/green TDD contract in `skill://execute`: capture the failing behavior before
+  production edits, make the minimum fix, then prove the same check passes.
 - Make the smallest complete change following existing patterns; fix the root cause and migrate affected callers.
-- For bugs, confirm the reported reproduction no longer fails. Keep a useful regression test when practical; otherwise report the smoke check and its limitations. Do not repeat a user-reported failure merely to confirm it.
+- For bugs, confirm the reported reproduction no longer fails after green. Keep a useful regression
+  test when practical; otherwise remove the throwaway check and report the smoke check and its
+  limitations. Do not repeat a user-reported failure manually merely to confirm it.
 - Update affected tests and exercise the actual changed surface. Capture real UI evidence when relevant; do not impose browser work or a new runner on unrelated changes.
 - Map every acceptance criterion to evidence and run applicable repository CI checks after edits settle. Report exact commands, outcomes and gaps rather than claiming unverified success.
 - Review correctness and scope against the request; fix blocking findings and repeat affected verification. Keep an environment needed for the user's visual review.
@@ -21,4 +25,8 @@
 
 Update existing documentation when the contract requires it. Follow the publication authorization in `skill://execute`; an existing instruction to commit/push/publish needs no repeat confirmation.
 
-Include the ticket link, concise result, verification, relevant UI evidence and limitations in the draft PR and final response. Missing optional reviewers do not block authorized publication. Subsequent feedback uses `skill://execute/reference/update-pr.md`.
+Include the ticket link, concise result, verification, relevant UI evidence and limitations in the
+draft PR. After publishing the draft, immediately run `skill://execute/reference/review-loop.md`;
+do not return merely because the PR exists. Notify the user when the review gate completes or when
+that workflow reaches a blocker it cannot resolve. Missing optional reviewers do not block
+authorized publication.

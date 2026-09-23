@@ -24,6 +24,7 @@ An explicit command wins: `local-repro <PR_URL>` reproduces, it does not post a 
 | `execute pr summary [scope]` | `reference/pr-summary.md` | Summarize your open PRs |
 | `execute pr review <PR_URL>` | `reference/pr-review.md` | Review with Conventional Comments |
 | `execute update-pr [PR_URL]` | `reference/update-pr.md` | Address actionable reviewer feedback |
+| `execute shepherd-pr [PR_URL]` | `reference/review-loop.md` | Run Cursor review/fix cycles, then mark the PR ready |
 | `execute actionable pr [scope]` | `reference/actionable-pr.md` | Find PRs with unaddressed feedback |
 | `execute e2e test [flow]` | `reference/e2e-test.md` | Exercise a flow and generate a test |
 | `execute sanity check` | `reference/sanity-check.md` | Check completed work against requirements |
@@ -56,6 +57,22 @@ Reference paths resolve as `skill://execute/reference/<doc>`.
 - Missing context: exhaust repo/tool evidence, then ask one focused question. Report unavailable
   credentials or services without guessing values or exposing secrets.
 
+## Red/green TDD
+
+Every behavior-changing implementation workflow MUST use red/green TDD:
+
+1. **Red:** Before editing production code, add or update the smallest behavior-level test or
+   throwaway executable check. Run it against the current code and verify it fails for the intended
+   reason. A user-reported failure is ground truth; encode it without repeating the manual
+   reproduction merely to confirm it.
+2. **Green:** Make the minimum source change, then rerun the exact red check and verify it passes.
+3. **Refactor:** Clean up only after green, then rerun the affected check.
+
+Keep the regression test only when it meets the repository's test-value bar; otherwise remove the
+throwaway check after verification. Documentation-only, metadata-only and purely mechanical changes
+are exempt. Behavior-preserving refactors use a passing characterization check before and after
+instead of fabricating a failure.
+
 ## Scope and authorization
 
 `execute <ticket>` requests implementation, not another mandatory plan-approval round.
@@ -64,10 +81,11 @@ material scope/risk decisions or sensitive actions not already authorized.
 
 Use active harness tool/delegation rules, inline first. Native task subagents are not independent
 Foreman workers; retain an assigned worker's worktree/session rather than creating a replacement.
-
 Read-only commands do not start implementation or publish. Tracker updates are never automatic.
 Publishing needs authorization, not repeated confirmation when already granted. Create draft PRs,
 keep the author assigned, and follow the assigned publication mechanism unless explicitly overridden.
 Reviewer identities/triggers are repository-local: report missing optional reviewers and proceed
 with authorized publication, never borrow another project's configuration. Distinguish a posted
-trigger, recorded request and completed review. Do not merge or mark ready as part of this toolkit.
+trigger, recorded request and completed review. Do not merge. The standing authorization in
+`reference/review-loop.md` permits its exact review comments, fixes, pushes, replies and final
+draft-to-ready transition only after both required approvals.
