@@ -2,7 +2,7 @@
 //
 // Naming rules:
 //   - reviewing someone else's work  -> "[review: DRI-1234]" / "[review: PR-1773]" / "[review: <slug>]"
-//   - developing a ticket            -> "DRI-1234"
+//   - developing a ticket            -> short task slug from the issue URL
 //   - ad-hoc                         -> compact slug from OMP's generated title
 //
 // This is a hand-written companion to herdr-omp-agent-state.ts. Herdr does NOT
@@ -95,6 +95,9 @@ async function resolveWorkspaceId(): Promise<string | undefined> {
 // --- classification ----------------------------------------------------------
 
 const DRI_RE = /\bDRI[-\s]?(\d{1,6})\b/i;
+const TICKET_RE = /\b([A-Z][A-Z0-9]{1,9}-\d{1,6})\b/i;
+const ISSUE_URL_RE = /\/issue\/[^/\s]+\/([a-z0-9-]+)/i;
+const ACTION_RE = /(?:^|-)(?:add|enable|fix|support|implement|allow|create|update|remove|improve)-/g;
 const PR_URL_RE = /\/pull\/(\d{1,7})\b/i;
 const PR_TOKEN_RE = /\bPR[-\s#]?(\d{1,7})\b/i;
 const ISSUE_HASH_RE = /(?:^|\s)#(\d{1,7})\b/;
@@ -128,8 +131,7 @@ function slugify(text: string, maxWords = 3, maxLen = 20): string {
 	const cleaned = spaced
 		.toLowerCase()
 		.replace(/https?:\/\/\S+/g, " ")
-		.replace(/['’`]/g, "")
-		.replace(/[^a-z0-9\s-]/g, " ");
+		.replace(/[^a-z0-9\s]/g, " ");
 	const allWords = cleaned.split(/\s+/).filter(Boolean);
 	const meaningful = allWords.filter((word) => !STOP_WORDS[word]);
 	const picked = (meaningful.length > 0 ? meaningful : allWords).slice(0, maxWords);
@@ -144,7 +146,7 @@ function slugify(text: string, maxWords = 3, maxLen = 20): string {
 	return slug || "session";
 }
 
-type LockKind = "review" | "dri" | "adhoc";
+type LockKind = "review" | "ticket" | "adhoc";
 
 interface Classification {
 	label: string;
@@ -154,20 +156,23 @@ interface Classification {
 /** Decide the workspace label for a prompt. sessionName is OMP's auto title, if any. */
 export function classify(prompt: string, sessionName: string | undefined): Classification {
 	const driMatch = prompt.match(DRI_RE);
-	const dri = driMatch ? `DRI-${driMatch[1]}` : undefined;
+	const ticket = driMatch ? `DRI-${driMatch[1]}` : prompt.match(TICKET_RE)?.[1]?.toUpperCase();
 
 	if (REVIEW_INTENT_RE.test(firstLine(prompt).slice(0, 160))) {
 		const prMatch =
 			prompt.match(PR_URL_RE) ??
 			prompt.match(PR_TOKEN_RE) ??
 			prompt.match(ISSUE_HASH_RE);
-		const id = dri ?? (prMatch ? `PR-${prMatch[1]}` : undefined);
+		const id = ticket ?? (prMatch ? `PR-${prMatch[1]}` : undefined);
 		const inner = id ?? slugify(prompt.replace(STRIP_REVIEW_RE, ""));
 		return { label: `[review: ${inner}]`, lock: "review" };
 	}
 
-	if (dri) {
-		return { label: dri, lock: "dri" };
+	const issueSlug = prompt.match(ISSUE_URL_RE)?.[1];
+	if (issueSlug) {
+		// ponytail: action words locate the task within long issue slugs; use OMP's title if issue naming grows less regular.
+		const action = [...issueSlug.matchAll(ACTION_RE)].at(-1);
+		return { label: slugify(action ? issueSlug.slice(action.index! + action[0].length) : issueSlug), lock: "ticket" };
 	}
 
 	const base = sessionName?.trim() || prompt;
@@ -199,8 +204,8 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("before_agent_start", async (event, ctx) => {
 		if (!rootSession || ctx.hasUI !== true) return;
-		// review / dri / manual names are sticky; ad-hoc keeps tracking the task.
-		if (lock === "manual" || lock === "review" || lock === "dri") return;
+		// review / ticket / manual names are sticky; ad-hoc keeps tracking the task.
+		if (lock === "manual" || lock === "review" || lock === "ticket") return;
 		const result = classify(event.prompt ?? "", pi.getSessionName());
 		lock = result.lock;
 		await apply(result.label);
