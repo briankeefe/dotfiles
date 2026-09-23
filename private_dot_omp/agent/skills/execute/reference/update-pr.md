@@ -48,4 +48,8 @@ When publication is authorized:
 3. Do not automatically resolve threads. Do so only if explicitly authorized, supported by the host and justified by the approved disposition.
 4. Use repository-local reviewer conventions from `skill://execute`. Thread resolution and reviewer triggers require authorization; neither is implied by replying.
 
-Report the PR URL, fixes actually published, replies actually posted, exact verification and remaining unresolved items. Keep posted review requests, running checks and completed reviews distinct.
+If the PR remains a draft and the repository supports the `/check` review trigger, continue with
+`skill://execute/reference/review-loop.md` instead of stopping after one feedback cycle. Otherwise,
+report the PR URL, fixes actually published, replies actually posted, exact verification and
+remaining unresolved items. Keep posted review requests, running checks and completed reviews
+distinct.

@@ -25,4 +25,8 @@
 
 Update existing documentation when the contract requires it. Follow the publication authorization in `skill://execute`; an existing instruction to commit/push/publish needs no repeat confirmation.
 
-Include the ticket link, concise result, verification, relevant UI evidence and limitations in the draft PR and final response. Missing optional reviewers do not block authorized publication. Subsequent feedback uses `skill://execute/reference/update-pr.md`.
+Include the ticket link, concise result, verification, relevant UI evidence and limitations in the
+draft PR. After publishing the draft, immediately run `skill://execute/reference/review-loop.md`;
+do not return merely because the PR exists. Notify the user when the review gate completes or when
+that workflow reaches a blocker it cannot resolve. Missing optional reviewers do not block
+authorized publication.

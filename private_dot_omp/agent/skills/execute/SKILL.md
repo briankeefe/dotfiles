@@ -24,6 +24,7 @@ An explicit command wins: `local-repro <PR_URL>` reproduces, it does not post a 
 | `execute pr summary [scope]` | `reference/pr-summary.md` | Summarize your open PRs |
 | `execute pr review <PR_URL>` | `reference/pr-review.md` | Review with Conventional Comments |
 | `execute update-pr [PR_URL]` | `reference/update-pr.md` | Address actionable reviewer feedback |
+| `execute shepherd-pr [PR_URL]` | `reference/review-loop.md` | Run Cursor review/fix cycles, then mark the PR ready |
 | `execute actionable pr [scope]` | `reference/actionable-pr.md` | Find PRs with unaddressed feedback |
 | `execute e2e test [flow]` | `reference/e2e-test.md` | Exercise a flow and generate a test |
 | `execute sanity check` | `reference/sanity-check.md` | Check completed work against requirements |
@@ -86,4 +87,6 @@ Publishing needs authorization, not repeated confirmation when already granted. 
 keep the author assigned, and follow the assigned publication mechanism unless explicitly overridden.
 Reviewer identities/triggers are repository-local: report missing optional reviewers and proceed
 with authorized publication, never borrow another project's configuration. Distinguish a posted
-trigger, recorded request and completed review. Do not merge or mark ready as part of this toolkit.
+trigger, recorded request and completed review. Do not merge. The standing authorization in
+`reference/review-loop.md` permits its exact review comments, fixes, pushes, replies and final
+draft-to-ready transition only after both required approvals.
