@@ -34,10 +34,10 @@ env AWS_PROFILE=kubera node scripts/cloudcommander/dist/index.js role list --sta
 env AWS_PROFILE=kubera node scripts/cloudcommander/dist/index.js user create --stack staging --schema-name "$TENANT" --role-name "$ROLE" --email "$EMAIL"
 ```
 
-Run `user create` only if the account is absent. Keep the terminal output private; it contains the temporary password. If creation fails partway, inspect/repair the Cognito group and database row rather than rerunning it. Verify the account, membership and database role *before* sending the invitation:
+Run `user create` only if the account is absent. Keep the terminal output private; it contains the temporary password. If creation fails partway, inspect/repair the Cognito group and database row rather than rerunning it. Verify the account, membership and database role *before* sending the invitation. Cloud Commander writes a status line before its JSON, so the filter starts at the array:
 
 ```bash
-env AWS_PROFILE=kubera node scripts/cloudcommander/dist/index.js user list --stack staging --schema-name "$TENANT" --format json | jq --arg email "$EMAIL" '.[] | select(.email == $email) | {email,role,status}'
+env AWS_PROFILE=kubera node scripts/cloudcommander/dist/index.js user list --stack staging --schema-name "$TENANT" --format json | sed -n '/^\[$/,$p' | jq --arg email "$EMAIL" '.[] | select(.email == $email) | {email,role,status}'
 aws cognito-idp admin-list-groups-for-user --user-pool-id "$POOL" --username "$EMAIL" --region us-east-2 --profile kubera --query 'Groups[].GroupName'
 aws cognito-idp admin-create-user --user-pool-id "$POOL" --username "$EMAIL" --message-action RESEND --desired-delivery-mediums EMAIL --region us-east-2 --profile kubera --query 'User.{Username:Username,Status:UserStatus,Enabled:Enabled}'
 ```
