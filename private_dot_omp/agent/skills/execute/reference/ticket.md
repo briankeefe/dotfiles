@@ -21,6 +21,16 @@
 - Map every acceptance criterion to evidence and run applicable repository CI checks after edits settle. Report exact commands, outcomes and gaps rather than claiming unverified success.
 - Review correctness and scope against the request; fix blocking findings and repeat affected verification. Keep an environment needed for the user's visual review.
 
+## Feature demo video (when requested)
+
+Use the existing `playwright-demo-kit` checkout and read its `README.md` before recording. Confirm the frontend **and backend** target are safe for demo actions; do not hardcode credentials or record secrets. From the kit root, set `PLAYWRIGHT_BASE_URL` and any existing demo auth variables as needed, then select the one feature spec and run test plus render under **one** lock:
+
+```bash
+DEMO_SLUG=<ticket-or-work-slug> python3 scripts/with-recording-lock.py -- sh -c 'npx playwright test -c playwright.demo.config.ts tests/demo/<feature>.demo.spec.ts && npm run demo:render'
+```
+
+Replace both placeholders with the actual work identifier and spec path. `DEMO_SLUG=<slug> npm run demo:flow` is only for deliberately recording **all** kit specs; its render selects the newest video. Do not start capture via bare `npx playwright test`, run separate test/render steps for a feature showcase, delete the lock file, or bypass a busy lock. The macOS file lock spans the recorder child and releases when it exits; the JSON slug/time is informational, not a stale timeout. This protects recordings on this Mac only. Report the actual video path and observed result, not just a test listing.
+
 ## Deliver
 
 Update existing documentation when the contract requires it. Follow the publication authorization in `skill://execute`; an existing instruction to commit/push/publish needs no repeat confirmation.
