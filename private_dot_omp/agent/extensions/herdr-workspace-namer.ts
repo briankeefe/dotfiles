@@ -1,16 +1,16 @@
 // Auto-names the Herdr workspace after the current OMP task.
 //
-// Naming rules:
 //   - reviewing someone else's work  -> "[review: DRI-1234]" / "[review: PR-1773]" / "[review: <slug>]"
-//   - developing a ticket            -> short task slug from the issue URL
-//   - ad-hoc                         -> compact slug from OMP's generated title
+//   - developing a ticket            -> "DRI-1234-short-description"
+//   - ad-hoc                         -> compact slug from the first prompt
+// Labels are fixed per OMP session and restored when that session resumes.
 //
 // This is a hand-written companion to herdr-omp-agent-state.ts. Herdr does NOT
 // manage this file, so the integration installer/updater will not overwrite it.
 //
 // Toggle off with HERDR_NAMER_DISABLE=1. Override manually with /herdr-name <label>.
 
-import type { ExtensionAPI } from "@oh-my-pi/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@oh-my-pi/pi-coding-agent";
 import { createConnection } from "node:net";
 
 const HERDR_ENV = process.env.HERDR_ENV;
@@ -95,8 +95,8 @@ async function resolveWorkspaceId(): Promise<string | undefined> {
 // --- classification ----------------------------------------------------------
 
 const DRI_RE = /\bDRI[-\s]?(\d{1,6})\b/i;
-const TICKET_RE = /\b([A-Z][A-Z0-9]{1,9}-\d{1,6})\b/i;
-const ISSUE_URL_RE = /\/issue\/[^/\s]+\/([a-z0-9-]+)/i;
+const TICKET_RE = /\b((?:ENG|DRI)-\d{1,6})\b/i;
+const ISSUE_URL_RE = /\/issue\/([A-Z][A-Z0-9]{1,9}-\d{1,6})(?:\/([a-z0-9-]+))?/i;
 const ACTION_RE = /(?:^|-)(?:add|enable|fix|support|implement|allow|create|update|remove|improve)-/g;
 const PR_URL_RE = /\/pull\/(\d{1,7})\b/i;
 const PR_TOKEN_RE = /\bPR[-\s#]?(\d{1,7})\b/i;
@@ -156,7 +156,7 @@ interface Classification {
 /** Decide the workspace label for a prompt. sessionName is OMP's auto title, if any. */
 export function classify(prompt: string, sessionName: string | undefined): Classification {
 	const driMatch = prompt.match(DRI_RE);
-	const ticket = driMatch ? `DRI-${driMatch[1]}` : prompt.match(TICKET_RE)?.[1]?.toUpperCase();
+	const ticket = prompt.match(ISSUE_URL_RE)?.[1]?.toUpperCase() ?? (driMatch ? `DRI-${driMatch[1]}` : prompt.match(TICKET_RE)?.[1]?.toUpperCase());
 
 	if (REVIEW_INTENT_RE.test(firstLine(prompt).slice(0, 160))) {
 		const prMatch =
@@ -168,15 +168,30 @@ export function classify(prompt: string, sessionName: string | undefined): Class
 		return { label: `[review: ${inner}]`, lock: "review" };
 	}
 
-	const issueSlug = prompt.match(ISSUE_URL_RE)?.[1];
-	if (issueSlug) {
-		// ponytail: action words locate the task within long issue slugs; use OMP's title if issue naming grows less regular.
-		const action = [...issueSlug.matchAll(ACTION_RE)].at(-1);
-		return { label: slugify(action ? issueSlug.slice(action.index! + action[0].length) : issueSlug), lock: "ticket" };
+	const issue = prompt.match(ISSUE_URL_RE);
+	const id = issue?.[1]?.toUpperCase() ?? firstLine(prompt).match(TICKET_RE)?.[1]?.toUpperCase();
+	if (id) {
+		const issueSlug = issue?.[2];
+		const action = issueSlug ? [...issueSlug.matchAll(ACTION_RE)].at(-1) : undefined;
+		const description = issueSlug
+			? issueSlug.slice(action ? action.index! + action[0].length : 0)
+			: firstLine(prompt).replace(TICKET_RE, "").replace(/^\s*(?:execute\s+)?(?:add|enable|fix|support|implement|allow|create|update|remove|improve)\b/i, "");
+		const suffix = slugify(description, 3, 28);
+		return { label: suffix === "session" ? id : `${id}-${suffix}`, lock: "ticket" };
 	}
 
-	const base = sessionName?.trim() || prompt;
-	return { label: slugify(base), lock: "adhoc" };
+	return { label: slugify(prompt.trim() || sessionName || ""), lock: "adhoc" };
+}
+
+/** Keep duplicate tasks distinguishable without adding noise to every label. */
+export function uniqueLabel(
+	label: string,
+	id: string,
+	workspaces: { workspace_id: string; label: string }[],
+): string {
+	return workspaces.some((workspace) => workspace.workspace_id !== id && workspace.label === label)
+		? `${label.slice(0, MAX_LABEL_LEN - id.length - 1)}-${id}`
+		: label;
 }
 
 // --- extension ---------------------------------------------------------------
@@ -188,42 +203,66 @@ export default function (pi: ExtensionAPI) {
 	let lock: LockKind | "manual" | undefined;
 	let applied: string | undefined;
 
-	async function apply(rawLabel: string): Promise<boolean> {
-		const label = rawLabel.trim().slice(0, MAX_LABEL_LEN).trim();
-		if (!label || label === applied) return false;
+	async function apply(rawLabel: string, kind: LockKind | "manual", restore = false): Promise<boolean> {
+		let label = rawLabel.trim().slice(0, MAX_LABEL_LEN).trim();
+		if (!label) return false;
 		const id = await resolveWorkspaceId();
 		if (!id) return false;
-		await rpc("workspace.rename", { workspace_id: id, label });
+		if (!restore && kind !== "manual" && label !== applied) {
+			const response = await rpc("workspace.list", {});
+			if (response && typeof response === "object" && "result" in response) {
+				const result = response.result;
+				if (result && typeof result === "object" && "workspaces" in result && Array.isArray(result.workspaces)) {
+					label = uniqueLabel(label, id, result.workspaces);
+				}
+			}
+		}
+		if (label !== applied) {
+			const response = await rpc("workspace.rename", { workspace_id: id, label });
+			if (!response || typeof response !== "object" || !("result" in response)) return false;
+		}
 		applied = label;
+		lock = kind;
+		if (!restore) pi.appendEntry("herdr-workspace-name", { label, lock: kind });
 		return true;
 	}
 
-	pi.on("session_start", (_event, ctx) => {
-		if (ctx.hasUI === true) rootSession = true;
-	});
+	async function rehydrate(ctx: ExtensionContext) {
+		if (ctx.hasUI !== true) return;
+		rootSession = true;
+		lock = undefined;
+		applied = undefined;
+		const entries = ctx.sessionManager.getBranch();
+		for (let i = entries.length - 1; i >= 0; i--) {
+			const entry = entries[i];
+			if (entry.type !== "custom" || entry.customType !== "herdr-workspace-name") continue;
+			const data = entry.data;
+			if (!data || typeof data !== "object" || !("label" in data) || !("lock" in data)) continue;
+			if (typeof data.label !== "string" || !["ticket", "review", "adhoc", "manual"].includes(String(data.lock))) continue;
+			await apply(data.label, data.lock as LockKind | "manual", true);
+			break;
+		}
+	}
+
+	pi.on("session_start", (_event, ctx) => rehydrate(ctx));
+	pi.on("session_switch", (_event, ctx) => rehydrate(ctx));
 
 	pi.on("before_agent_start", async (event, ctx) => {
-		if (!rootSession || ctx.hasUI !== true) return;
-		// review / ticket / manual names are sticky; ad-hoc keeps tracking the task.
-		if (lock === "manual" || lock === "review" || lock === "ticket") return;
+		if (!rootSession || ctx.hasUI !== true || lock) return;
+		// Retry a persisted name if Herdr was unavailable during session_start.
+		if (ctx.sessionManager.getBranch().some((entry) => entry.type === "custom" && entry.customType === "herdr-workspace-name")) {
+			await rehydrate(ctx);
+			return;
+		}
 		const result = classify(event.prompt ?? "", pi.getSessionName());
-		lock = result.lock;
-		await apply(result.label);
+		await apply(result.label, result.lock);
 	});
-
-	pi.on("agent_end", async (_event, ctx) => {
-		if (!rootSession || ctx.hasUI !== true || lock !== "adhoc") return;
-		const generated = pi.getSessionName();
-		if (generated) await apply(slugify(generated));
-	});
-
 	pi.registerCommand("herdr-name", {
 		description: "Set or show the Herdr workspace name (usage: /herdr-name [label])",
 		handler: async (args, ctx) => {
 			const label = args.trim();
 			if (label) {
-				lock = "manual";
-				const ok = await apply(label);
+				const ok = await apply(label, "manual");
 				ctx.ui.notify(
 					ok ? `Workspace named: ${label}` : "Could not rename workspace",
 					ok ? "info" : "warning",
