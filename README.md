@@ -338,10 +338,11 @@ here at the installed version, `0.12.8`.
 The Herdr state extension uses `HERDR_SOCKET_PATH` from its parent pane.
 Run OMP inside Herdr for sidebar state and workspace naming. Ticket workspaces
 use `ENG-2629-inline-payment-editing`-style labels; a workspace ID is appended
-only when that label is already taken. Names stay fixed through compaction and
-resume, and `/herdr-name <label>` sets a persistent manual override. Foreman
-workers manage their own workspace names. Herdr may regenerate its managed
-state extension during upgrades; refresh the snapshot after upgrading.
+only when that label is already taken. Ad-hoc labels start from the prompt and
+switch to a compact OMP-generated title once available. The chosen name stays
+fixed through compaction and resume; `/herdr-name <label>` sets a persistent
+manual override. Foreman workers manage their own workspace names. Herdr may
+regenerate its managed state extension during upgrades; refresh the snapshot after upgrading.
 The completion sound extension is kept as `ding.ts.disabled`. If restoring over
 an older dotfiles install, disable or remove its existing `ding.ts` manually;
 chezmoi does not delete untracked destination files.

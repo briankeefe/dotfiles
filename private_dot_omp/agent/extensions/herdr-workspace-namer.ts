@@ -2,8 +2,8 @@
 //
 //   - reviewing someone else's work  -> "[review: DRI-1234]" / "[review: PR-1773]" / "[review: <slug>]"
 //   - developing a ticket            -> "DRI-1234-short-description"
-//   - ad-hoc                         -> compact slug from the first prompt
-// Labels are fixed per OMP session and restored when that session resumes.
+//   - ad-hoc                         -> compact OMP title once generated
+// Labels are restored when a session resumes; manual and ticket labels stay fixed.
 //
 // This is a hand-written companion to herdr-omp-agent-state.ts. Herdr does NOT
 // manage this file, so the integration installer/updater will not overwrite it.
@@ -202,6 +202,24 @@ export default function (pi: ExtensionAPI) {
 	let rootSession = false;
 	let lock: LockKind | "manual" | undefined;
 	let applied: string | undefined;
+	let awaitingTitle = false;
+	let initialTitle: string | undefined;
+	let titleTimer: NodeJS.Timeout | undefined;
+	let pendingSync: Promise<void> | undefined;
+
+	function stopWaiting() {
+		awaitingTitle = false;
+		clearInterval(titleTimer);
+		titleTimer = undefined;
+	}
+
+	async function syncTitle() {
+		if (!awaitingTitle || lock !== "adhoc") return;
+		const title = pi.getSessionName();
+		if (!title || title === initialTitle) return;
+		stopWaiting();
+		await apply(slugify(title), "adhoc");
+	}
 
 	async function apply(rawLabel: string, kind: LockKind | "manual", restore = false): Promise<boolean> {
 		let label = rawLabel.trim().slice(0, MAX_LABEL_LEN).trim();
@@ -229,6 +247,8 @@ export default function (pi: ExtensionAPI) {
 
 	async function rehydrate(ctx: ExtensionContext) {
 		if (ctx.hasUI !== true) return;
+		stopWaiting();
+		await pendingSync;
 		rootSession = true;
 		lock = undefined;
 		applied = undefined;
@@ -254,14 +274,26 @@ export default function (pi: ExtensionAPI) {
 			await rehydrate(ctx);
 			return;
 		}
-		const result = classify(event.prompt ?? "", pi.getSessionName());
-		await apply(result.label, result.lock);
+		initialTitle = pi.getSessionName();
+		const result = classify(event.prompt ?? "", initialTitle);
+		if (await apply(result.label, result.lock) && result.lock === "adhoc") {
+			awaitingTitle = true;
+			titleTimer = setInterval(() => { pendingSync = syncTitle(); }, 1000);
+			titleTimer.unref?.();
+		}
+	});
+	pi.on("agent_end", async () => {
+		await pendingSync;
+		await syncTitle();
+		stopWaiting();
 	});
 	pi.registerCommand("herdr-name", {
 		description: "Set or show the Herdr workspace name (usage: /herdr-name [label])",
 		handler: async (args, ctx) => {
 			const label = args.trim();
 			if (label) {
+				stopWaiting();
+				await pendingSync;
 				const ok = await apply(label, "manual");
 				ctx.ui.notify(
 					ok ? `Workspace named: ${label}` : "Could not rename workspace",

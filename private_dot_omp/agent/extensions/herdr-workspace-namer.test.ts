@@ -50,10 +50,14 @@ test("keeps a chosen label through later prompts, resume, and manual overrides",
 	const dir = mkdtempSync(join(tmpdir(), "herdr-namer-"));
 	const socketPath = join(dir, "socket");
 	const labels: string[] = [];
+	const renamed = Promise.withResolvers<void>();
 	const server = createServer((socket) => {
 		socket.once("data", (chunk) => {
 			const request = JSON.parse(chunk.toString());
-			if (request.method === "workspace.rename") labels.push(request.params.label);
+			if (request.method === "workspace.rename") {
+				labels.push(request.params.label);
+				if (request.params.label === "find-kubera-brew") renamed.resolve();
+			}
 			socket.end(JSON.stringify({
 				id: request.id,
 				result: request.method === "workspace.list"
@@ -73,6 +77,7 @@ test("keeps a chosen label through later prompts, resume, and manual overrides",
 		const { default: extension } = await import("./herdr-workspace-namer.ts?runtime");
 		const entries: { type: string; customType: string; data: unknown }[] = [];
 		const ctx = { hasUI: true, sessionManager: { getBranch: () => entries } };
+		let generatedTitle: string | undefined;
 		const makePi = () => {
 			type Handler = (...args: unknown[]) => unknown;
 			const handlers = new Map<string, Handler>();
@@ -80,7 +85,7 @@ test("keeps a chosen label through later prompts, resume, and manual overrides",
 				on: (name: string, handler: Handler) => handlers.set(name, handler),
 				registerCommand: (name: string, command: { handler: Handler }) => handlers.set(name, command.handler),
 				appendEntry: (customType: string, data: unknown) => entries.push({ type: "custom", customType, data }),
-				getSessionName: () => "Retitled After Compaction",
+				getSessionName: () => generatedTitle,
 			};
 			// Only the API members used by this extension are needed in the fake.
 			extension(pi as unknown as ExtensionAPI);
@@ -98,6 +103,18 @@ test("keeps a chosen label through later prompts, resume, and manual overrides",
 		const again = makePi();
 		await again.get("session_start")!({}, ctx);
 		expect(labels.at(-1)).toBe("my-custom-name");
+		entries.length = 0;
+		const adhoc = makePi();
+		await adhoc.get("session_switch")!({}, ctx);
+		await adhoc.get("before_agent_start")!({ prompt: "find the pr that brings brew into the kubera app" }, ctx);
+		generatedTitle = "Find Kubera Brew Integration PR";
+		await renamed.promise;
+		expect(labels.slice(-2)).toEqual(["find-pr-brings", "find-kubera-brew"]);
+		await adhoc.get("agent_end")!({}, ctx);
+		expect(labels.slice(-2)).toEqual(["find-pr-brings", "find-kubera-brew"]);
+		const restored = makePi();
+		await restored.get("session_start")!({}, ctx);
+		expect(labels.at(-1)).toBe("find-kubera-brew");
 	} finally {
 		[process.env.HERDR_ENV, process.env.HERDR_SOCKET_PATH, process.env.HERDR_PANE_ID, process.env.HERDR_WORKSPACE_ID] = previous;
 		await new Promise<void>((resolve) => server.close(() => resolve()));
