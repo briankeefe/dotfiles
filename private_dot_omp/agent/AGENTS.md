@@ -12,6 +12,8 @@ For implementation, use `--permission-mode auto` so the unattended one-shot can 
 
 When recording a feature video, use `playwright-demo-kit` and its OS-locked wrapper, not an unguarded Playwright capture. Set `DEMO_SLUG` to the work identifier before recording. Follow the single-spec command and target-safety guidance in `skill://execute/reference/ticket.md` and the kit's `README.md`; `npm run demo:flow` runs **all** demo specs, not just the feature being showcased. If another recording holds the lock, do not delete the lock file or bypass the wrapper. Video recording is not an automatic step for every ticket.
 
+Keep every shareable demo video in `~/Movies/Demo Videos/`, named `<work-id>-<short-description>.mp4` (add a variant suffix for distinct cuts). After rendering, copy `video-hq.mp4` there before another kit run can replace artifacts; never overwrite a different recording. Leave raw kit captures and videos embedded in published pages in place. Share the permanent Movies path, not the transient `demo-artifacts` path.
+
 # Paper design
 
 When working in Paper, read the current `paper-mcp-instructions` guide via `get_guide` before other Paper tools; follow its review checkpoints and tool-specific instructions. See [Paper MCP](https://paper.design/docs/mcp) and [Tokens](https://paper.design/docs/tokens). Paper MCP can write to the open design: verify the file and selected frame before editing, and grant write access deliberately.
