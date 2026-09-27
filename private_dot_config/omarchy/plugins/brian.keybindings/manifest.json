@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "brian.keybindings",
+  "name": "Keybindings",
+  "version": "1.0.0",
+  "author": "Brian",
+  "description": "Search the current desktop shortcuts",
+  "kinds": ["overlay"],
+  "entryPoints": {"overlay": "Panel.qml"}
+}

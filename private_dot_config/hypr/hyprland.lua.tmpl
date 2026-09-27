@@ -31,10 +31,14 @@ hl.animation({ leaf = "layersOut", enabled = false })
 o.window({ class = "^org[.]telegram[.]desktop.*$" }, { focus_on_activate = false })
 o.window({ class = "^steam$", title = "^Steam$" }, { tile = true })
 
+{{- if eq .machine "archkde" }}
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1.75 })
+{{- else }}
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 hl.monitor({ output = "DP-2", mode = "preferred", position = "0x0", scale = 1 })
 hl.monitor({ output = "DP-3", mode = "2560x1440@170", position = "1920x0", scale = 1.25 })
 hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "3968x-498", scale = 1.25, transform = 3 })
+{{- end }}
 hl.env("OMARCHY_PATH", omarchy_path)
 hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
 hl.env("XDG_SESSION_DESKTOP", "Hyprland")

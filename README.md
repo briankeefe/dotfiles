@@ -216,6 +216,23 @@ chezmoi diff
 chezmoi apply
 ```
 
+For the Omarchy-derived Hyprland session, install its runtime packages and
+upstream shell before applying:
+
+```sh
+sudo pacman -S --needed hyprland hypridle hyprlock quickshell uwsm fuzzel \
+  udiskie grim slurp wl-clipboard brightnessctl playerctl dolphin
+mkdir -p ~/.local/share/omarchy-derived
+git clone https://github.com/basecamp/omarchy.git \
+  ~/.local/share/omarchy-derived/upstream
+git -C ~/.local/share/omarchy-derived/upstream checkout \
+  83881e979b35468c3e7d60b171e319ede61a88fd
+```
+
+Set `machine = "archkde"` in `~/.config/chezmoi/chezmoi.toml` for the laptop's
+2880×1920 display scaling. KDE and its Plasma session remain installed; select
+the Hyprland session from the display manager when needed.
+
 Default Arch-safe machine data is included so first apply does not stop on
 missing template values. Override it when needed:
 

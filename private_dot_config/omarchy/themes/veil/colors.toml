@@ -1,0 +1,36 @@
+# Wallpaper: ESA/Hubble & NASA, Z. Levay (2021), real telescope observations.
+# Source: https://esahubble.org/images/potw2113a/
+mode = "dark"
+
+accent = "#82b9e8"
+selection = "#253b55"
+muted = "#93a2b8"
+
+background = "#0b101a"
+dark_background = "#080c14"
+darker_background = "#060910"
+lighter_background = "#182333"
+
+foreground = "#e2eaf3"
+dark_foreground = "#93a2b8"
+light_foreground = "#c4d2e2"
+bright_foreground = "#f0f5fa"
+
+hyprland_active_border = "rgba(82b9e8ff) rgba(b39bdbff) 45deg"
+hyprland_inactive_border = "rgba(455368aa)"
+
+red = "#ed8e88"
+yellow = "#e5c080"
+orange = "#df9c78"
+green = "#94c4ad"
+cyan = "#91ced8"
+blue = "#82b9e8"
+magenta = "#b39bdb"
+brown = "#a87d69"
+
+bright_red = "#ffb3aa"
+bright_yellow = "#f3d8a1"
+bright_green = "#b7dfc7"
+bright_cyan = "#d1edf3"
+bright_blue = "#b9d9f5"
+bright_magenta = "#d6c4f0"

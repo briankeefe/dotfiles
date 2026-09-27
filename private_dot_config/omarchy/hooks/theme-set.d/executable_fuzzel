@@ -1,0 +1,44 @@
+#!/bin/bash
+set -euo pipefail
+
+config_dir="$HOME/.config/fuzzel"
+theme_file="$config_dir/theme.ini"
+mkdir -p "$config_dir"
+tmp=$(mktemp "$config_dir/.theme.ini.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+
+rgba() {
+  local key="$1"
+  local fallback="$2"
+  local alpha="$3"
+  local color
+
+  color=$(omarchy-theme-color "$key" "$fallback")
+  color=${color#\#}
+  if [[ ! $color =~ ^[[:xdigit:]]{6}$ ]]; then
+    echo "Invalid Fuzzel theme color for $key: $color" >&2
+    exit 1
+  fi
+
+  printf '%s%s' "${color,,}" "$alpha"
+}
+
+cat >"$tmp" <<EOF
+[colors]
+background=$(rgba background '#0b0c16' f5)
+text=$(rgba bright_cyan foreground ff)
+message=$(rgba bright_cyan foreground ff)
+prompt=$(rgba bright_cyan cyan ff)
+placeholder=$(rgba dark_foreground muted ff)
+input=$(rgba bright_blue bright_foreground ff)
+match=$(rgba bright_magenta magenta ff)
+selection=$(rgba accent blue 66)
+selection-text=$(rgba bright_cyan foreground ff)
+selection-match=$(rgba bright_magenta magenta ff)
+counter=$(rgba dark_foreground muted ff)
+border=$(rgba accent blue d9)
+EOF
+
+fuzzel --check-config --config="$tmp"
+mv "$tmp" "$theme_file"
+trap - EXIT

@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+import json
+import os
+from pathlib import Path
+import subprocess
+
+
+def menu_options(formatted, bindings):
+    descriptions = {binding["description"] for binding in bindings if binding.get("description")}
+    return [line for line in formatted.splitlines()
+            if "XF86" not in line.partition("→")[0]
+            and line.partition("→")[2].strip() in descriptions]
+
+
+def main():
+    shell_root = Path.home() / ".local/share/omarchy-derived/upstream"
+    environment = dict(os.environ, OMARCHY_PATH=str(shell_root))
+    environment["PATH"] = str(shell_root / "bin") + os.pathsep + os.environ.get("PATH", "/usr/bin")
+    try:
+        bindings = json.loads(subprocess.check_output(["hyprctl", "-j", "binds"], text=True))
+        formatted = subprocess.check_output(
+            [str(shell_root / "bin/omarchy-menu-keybindings"), "--print"],
+            text=True, env=environment,
+        )
+        options = menu_options(formatted, bindings)
+        if not options:
+            raise ValueError("No described desktop keybindings were found")
+        payload = {"mode": "select", "prompt": "Search keybindings", "options": options,
+                   "width": 900, "maxHeight": 600}
+        subprocess.run(
+            ["quickshell", "ipc", "-p", str(shell_root / "shell"), "call", "shell",
+             "toggle", "brian.keybindings", json.dumps(payload)], check=True,
+        )
+    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+        subprocess.run(["notify-send", "Keybindings unavailable", str(error)], check=False)
+        raise SystemExit(str(error))
+
+
+if __name__ == "__main__":
+    main()
