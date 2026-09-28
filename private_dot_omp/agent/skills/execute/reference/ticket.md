@@ -8,6 +8,7 @@
 2. Resolve missing requirements from available evidence. Ask only if the intended outcome, scope or required dependency remains unclear; do not invent acceptance criteria or silently narrow the request.
 3. Confirm the assigned repository/worktree and intended PR base. Reuse the current environment and repository install/verification commands.
 4. Make a proportionate plan covering affected files, every acceptance criterion, risks and verification. **Proceed without another plan-approval round when implementation is authorized.** Pause only for real ambiguity, material scope/risk decisions or sensitive actions outside the existing authorization.
+5. If materially different solutions satisfy the wording but not the same user outcome, resolve that distinction before building the larger one.
 
 ## Implement, verify and review
 
@@ -17,8 +18,8 @@
 - For bugs, confirm the reported reproduction no longer fails after green. Keep a useful regression
   test when practical; otherwise remove the throwaway check and report the smoke check and its
   limitations. Do not repeat a user-reported failure manually merely to confirm it.
-- Update affected tests and exercise the actual changed surface. Capture real UI evidence when relevant; do not impose browser work or a new runner on unrelated changes.
-- Map every acceptance criterion to evidence and run applicable repository CI checks after edits settle. Report exact commands, outcomes and gaps rather than claiming unverified success.
+- Update affected tests and exercise the actual changed surface before staging. For stateful changes, check one complete journey in an isolated environment at the layer where failure would appear: edit, visible result, save, reload, and reopen or cancel where applicable; verify persisted state and affected UI totals when relevant. Add the boundary or negative case implied by the change (for example, multiple selections, pagination, missing steps, invalid drafts, or a timezone transition), not a generic matrix. If that layer is unavailable, name the gap; a mock or green build is not a substitute. Capture real UI evidence when relevant; do not impose browser work or a new runner on unrelated changes.
+- Map each acceptance criterion to its evidence level (unit, real API/database, local UI, staging, or unverified), run applicable repository CI checks after edits settle, and report exact commands, outcomes, and gaps. Do not label a criterion staged when only a bundle or deploy was observed.
 - Review correctness and scope against the request; fix blocking findings and repeat affected verification. Keep an environment needed for the user's visual review.
 
 ## Feature demo video (when requested)

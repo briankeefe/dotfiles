@@ -73,6 +73,10 @@ throwaway check after verification. Documentation-only, metadata-only and purely
 are exempt. Behavior-preserving refactors use a passing characterization check before and after
 instead of fabricating a failure.
 
+For retrospective workflow comparisons, use OMP session usage records to track uncached input
+tokens per single-ticket session alongside staging-discovered defects and user corrections. Keep
+multi-ticket sessions separate; cached reads and raw transcript size are not token-cost estimates.
+
 ## Scope and authorization
 
 `execute <ticket>` requests implementation, not another mandatory plan-approval round.
@@ -81,6 +85,12 @@ material scope/risk decisions or sensitive actions not already authorized.
 
 Use active harness tool/delegation rules, inline first. Native task subagents are not independent
 Foreman workers; retain an assigned worker's worktree/session rather than creating a replacement.
+
+When delegating, give each agent narrow ownership, already-inspected symbols and open acceptance
+cases; return a short evidence handoff instead of duplicating broad reads or full transcripts.
+In long sessions, keep a compact record of what was verified and what remains, rather than
+reloading prior tool output.
+
 Read-only commands do not start implementation or publish. Tracker updates are never automatic.
 Publishing needs authorization, not repeated confirmation when already granted. Create draft PRs,
 keep the author assigned, and follow the assigned publication mechanism unless explicitly overridden.

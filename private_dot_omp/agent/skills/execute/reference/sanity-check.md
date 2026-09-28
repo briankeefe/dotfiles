@@ -10,7 +10,7 @@ If requirements or the intended scope cannot be established from available conte
 
 ## 2. Check requirements, correctness, and scope
 
-- Account for **every acceptance criterion** as satisfied, missing, or unverified, with a source location or observed evidence. Distinguish implementation inspection from runtime proof.
+- Account for **every acceptance criterion** as satisfied, missing, or unverified, with a source location and evidence level: unit, real API/database, local UI, staging, or unverified. Distinguish implementation inspection and deployment status from runtime proof.
 - Check relevant happy paths, boundaries, failures, and preserved behavior. Review security and authorization boundaries, state ownership, data integrity, and performance-sensitive paths where affected.
 - Compare with existing repository patterns and instructions, not universal preferences about languages, frameworks, mutation, component styles, or syntax. Separate genuine defects from stylistic suggestions.
 - Identify unnecessary features, abstractions, dependencies, refactors, or unrelated edits. Do not revert user work or silently expand the approved scope.
@@ -23,6 +23,8 @@ A checklist or reviewer opinion is not runtime evidence.
 Reuse current, applicable results without repeating checks just to reconfirm reported observations. If evidence is missing or invalidated by later edits, run the smallest relevant check in a safe, isolated environment and report the exact outcome. Use documented project commands and installed CLI help, not assumed package managers or test runners.
 
 For bug fixes, check that the original failure is prevented. For UI changes, inspect the actual surface and relevant screenshots; passing logic tests alone do not prove appearance or interaction.
+
+For stateful behavior, look for one complete same-record journey through save, reload, and reopen or cancel where relevant; check the affected summary and unchanged peers. Probe the change's most likely boundary or negative case, not an exhaustive matrix. If this cannot be exercised before staging, make the gap explicit rather than promoting isolated tests to end-to-end proof.
 
 Do not force a browser, E2E test generation, or a new test suite for changes they cannot meaningfully verify. Report unavailable runtime access or missing required CI-equivalent checks as gaps, not passes.
 
