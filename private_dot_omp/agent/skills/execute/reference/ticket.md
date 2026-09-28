@@ -18,8 +18,16 @@
 - For bugs, confirm the reported reproduction no longer fails after green. Keep a useful regression
   test when practical; otherwise remove the throwaway check and report the smoke check and its
   limitations. Do not repeat a user-reported failure manually merely to confirm it.
-- Update affected tests and exercise the actual changed surface before staging. For stateful changes, check one complete journey in an isolated environment at the layer where failure would appear: edit, visible result, save, reload, and reopen or cancel where applicable; verify persisted state and affected UI totals when relevant. Add the boundary or negative case implied by the change (for example, multiple selections, pagination, missing steps, invalid drafts, or a timezone transition), not a generic matrix. If that layer is unavailable, name the gap; a mock or green build is not a substitute. Capture real UI evidence when relevant; do not impose browser work or a new runner on unrelated changes.
-- Map each acceptance criterion to its evidence level (unit, real API/database, local UI, staging, or unverified), run applicable repository CI checks after edits settle, and report exact commands, outcomes, and gaps. Do not label a criterion staged when only a bundle or deploy was observed.
+- Before publishing the draft, manually exercise **every feasible acceptance criterion** on the
+  actual changed surface, not just one representative journey or a demo recording. For stateful
+  criteria, check the same record through edit, visible result, save, reload, and reopen or cancel
+  where applicable. Include named negative and scope cases, plus the boundary implied by the change
+  (for example, multiple selections or a missing step). Tests and builds do not substitute for this.
+  If the required runtime is unavailable or a criterion fails, fix the failure or report the blocker;
+  do not publish the draft while any criterion is failing or unverified.
+- Record each criterion's observed result and environment (real API/database, local UI, staging,
+  or unverified), run applicable repository CI checks after edits settle, and report exact commands
+  and gaps. Do not label a criterion staged when only a bundle or deploy was observed.
 - Review correctness and scope against the request; fix blocking findings and repeat affected verification. Keep an environment needed for the user's visual review.
 
 ## Feature demo video (when requested)

@@ -42,6 +42,12 @@ Classify every new substantive finding against the current code:
 - **Invalid or already addressed:** reply at the finding with concise code or test evidence. Do not change code merely to appease a mistaken review.
 - **Ambiguous or conflicting:** investigate repository and ticket evidence first. Notify the user only when a product decision or unavailable prerequisite truly prevents an informed choice.
 
+Before pushing a review fix or replying that it is addressed, apply the acceptance gate in
+`skill://execute`: manually recheck the criteria and connected behavior affected by the revision.
+Before marking ready, reconcile every criterion against the current head; previous-head checks and
+Cursor approval do not substitute for the manual pass. If any applicable criterion fails or cannot
+be exercised, keep the PR draft and report the blocker rather than treating the review gate as passed.
+
 Reply to every substantive finding with its disposition. Never claim verification that was not run.
 After all fixes and replies are published, confirm the new head is remote. If fewer than two
 thermo-nuclear rounds have completed, comment exactly `/check` again, record the new head and trigger

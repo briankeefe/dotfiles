@@ -35,6 +35,15 @@ Make only approved fixes in the confirmed worktree, following existing patterns.
 
 Draft a short reply for every triaged item, including declined items. Explain observable changes or answer directly, link exact code/tests where useful, and distinguish completed verification from assumptions. Do not mark threads resolved merely because a reply was drafted.
 
+## Recheck acceptance after revisions
+
+Before treating feedback as addressed or publishing revised code or a fix reply, reconcile every
+ticket acceptance criterion against the current head. Personally re-exercise each criterion the
+revision could affect on the actual running surface, including named negative and stateful cases;
+carry forward other criteria only when their prior manual evidence still applies unchanged. Record
+observed outcomes and environment, not just passing tests or reviewer approval. If a criterion fails
+or cannot be exercised, leave the PR in draft, report the blocker, and do not claim the fix is ready.
+
 ## Publish within authorization
 
 Present the final scoped diff, verification results, every proposed reply with destination, and intended commit/push actions. Include any desired thread resolution or reviewer trigger as a separate explicit action, not an implied consequence.

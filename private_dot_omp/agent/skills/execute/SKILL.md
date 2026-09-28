@@ -77,6 +77,23 @@ For retrospective workflow comparisons, use OMP session usage records to track u
 tokens per single-ticket session alongside staging-discovered defects and user corrections. Keep
 multi-ticket sessions separate; cached reads and raw transcript size are not token-cost estimates.
 
+## Acceptance gate for publishing and revisions
+
+Before creating a draft PR, enumerate every acceptance criterion from the ticket and later decisions.
+Personally exercise each feasible criterion on the running surface where its behavior is observable;
+include the named negative, scope and persistence cases rather than treating a happy-path video as
+coverage. For stateful work, check the same record through edit, visible result, save, reload and
+reopen where applicable. Record what happened and the environment for each criterion. Automated
+tests, builds, demos, code inspection and reviewer approvals supplement but never replace this pass.
+If any criterion fails or cannot be exercised, do not publish the draft as complete: fix it or
+report the exact blocker and keep the work local until verification is possible.
+
+After PR revisions, personally re-exercise affected criteria and any connected behavior the edits
+could change; reconcile the full criterion list against the current head before claiming feedback
+addressed or marking the PR ready. Do not accept a revision, post a fix reply, or transition a PR
+based only on a green check or a previous head's evidence. Repeat on staging when the change reaches
+it; staging catches environment differences, not skipped pre-PR acceptance checks.
+
 ## Scope and authorization
 
 `execute <ticket>` requests implementation, not another mandatory plan-approval round.

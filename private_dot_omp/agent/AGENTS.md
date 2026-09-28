@@ -8,6 +8,10 @@ Before launching, gather and pass **actual** task context, not merely "look at t
 
 For implementation, use `--permission-mode auto` so the unattended one-shot can decide on edits and local verification without blanket permission bypass. If auto mode is unavailable, report that blocker rather than weakening permissions. Launch asynchronously, then wait for the **same process** to exit and read its complete stdout/stderr and exit status; an initial job ID is not the answer. Do not start a second Claude session to retrieve it. Review its reported outcome and the actual working-tree changes before relaying them; independently check any consequential claim or failing verification. If it edited shared files, coordinate ownership before launch to avoid concurrent edits in the same worktree. Report Claude's failures and uncertainty rather than presenting unverified output as fact.
 
+# Execute acceptance gate
+
+For `execute` implementation and PR-update workflows, personally exercise every feasible acceptance criterion on the changed runtime surface before publishing a draft PR or accepting PR revisions. Recheck affected criteria after each revision and the full set before declaring the PR ready. Record the observed result for each criterion; tests, reviewer approval, and demo videos do not replace manual verification. If a criterion cannot be exercised or fails, leave the PR unpublished or in draft and report the blocker rather than asserting completion. See `skill://execute` for the workflow.
+
 # Feature demo recordings
 
 When recording a feature video, use `playwright-demo-kit` and its OS-locked wrapper, not an unguarded Playwright capture. Set `DEMO_SLUG` to the work identifier before recording. Follow the single-spec command and target-safety guidance in `skill://execute/reference/ticket.md` and the kit's `README.md`; `npm run demo:flow` runs **all** demo specs, not just the feature being showcased. If another recording holds the lock, do not delete the lock file or bypass the wrapper. Video recording is not an automatic step for every ticket.
