@@ -9,6 +9,11 @@ Reviewed head: <SHA>
 Recommendation: <request changes | approve | comment>
 Findings: <N> (<B> blocking, <U> non-blocking)
 
+## Feature verification
+<environment and reviewed head>
+- <scenario>: <actions/command>; expected <result>; observed <result>.
+- <unexercised scenario, reason and effect on recommendation, if any>
+
 ## <HIGH | MEDIUM | LOW>
 1. issue (blocking): <specific defect>
    <path>:<line or range> [<head/base SHA>, <RIGHT/LEFT>]
