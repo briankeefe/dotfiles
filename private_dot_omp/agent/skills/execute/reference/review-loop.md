@@ -49,10 +49,11 @@ Cursor approval do not substitute for the manual pass. If any applicable criteri
 be exercised, keep the PR draft and report the blocker rather than treating the review gate as passed.
 
 Reply to every substantive finding with its disposition. Never claim verification that was not run.
-After all fixes and replies are published, confirm the new head is remote. If fewer than two
-thermo-nuclear rounds have completed, comment exactly `/check` again, record the new head and trigger
-timestamp, then return to **Wait and inspect**. After the second completed thermo-nuclear round, do
-not post another `/check`.
+After all fixes and replies are published, confirm the new head is remote, refresh the PR's testing
+section, and immediately send the revision testing handoff from `skill://execute` before waiting for
+another review. If fewer than two thermo-nuclear rounds have completed, comment exactly `/check`
+again, record the new head and trigger timestamp, then return to **Wait and inspect**. After the
+second completed thermo-nuclear round, do not post another `/check`.
 
 If an action fails without producing a substantive review, inspect the failure. Fix an in-scope cause; otherwise retrigger once. Repeated infrastructure failure, missing authentication, an unavailable reviewer action, or the same unsupported finding recurring without new evidence is a blocker: preserve the draft and notify the user with links and the exact reason.
 Two thermo-nuclear rounds are a hard cap even when the risk analysis has not approved or the second
@@ -76,3 +77,5 @@ Approval from one Cursor action never substitutes for the other. An old approval
 Re-read the PR head, draft state, approvals and checks immediately before transition. If the gate still holds, mark the PR ready for review using the host's supported command and verify the draft flag changed. Do not merge it.
 
 Notify the user with the PR URL, the approval evidence from both Cursor actions, fixes or pushbacks made during the loop, verification performed, and confirmation that the PR is ready for review.
+Include the current testing URL and actionable steps from `skill://execute`'s **Testing handoffs**
+contract, updated for the final head, so the ready-for-review notification is also usable for testing.

@@ -94,6 +94,34 @@ addressed or marking the PR ready. Do not accept a revision, post a fix reply, o
 based only on a green check or a previous head's evidence. Repeat on staging when the change reaches
 it; staging catches environment differences, not skipped pre-PR acceptance checks.
 
+## Testing handoffs
+
+Send a testing handoff in chat as soon as the initial draft PR is published, after each published
+PR revision, and when deployment evidence confirms the change has reached staging. Do not wait
+for the review loop to finish or for the user to ask. This notification does not pause authorized
+work or replace the agent's own acceptance verification.
+
+Each handoff MUST include:
+
+- The PR link and the actual preview/local URL for PR testing, or the staging URL for staging
+  testing. Identify the environment and current head or deployed revision; never invent a URL or
+  imply branch membership proves deployment. If no test environment is reachable, name the blocker
+  and the exact known startup/access steps instead of claiming it is ready for testing.
+- Required tenant/account role, test records, setup and feature gates, without exposing credentials.
+- Numbered, concrete actions with expected visible results covering every acceptance criterion at
+  initial PR and staging handoffs, including relevant negative, scope and save/reload/reopen cases.
+  For revisions, identify what changed and provide refreshed steps for affected criteria and
+  connected regression checks; link the still-applicable full checklist rather than silently
+  dropping unchanged criteria.
+- What the agent actually verified in that environment and any remaining gaps or access/data
+  blockers. Distinguish suggested user checks from checks already performed.
+
+Keep the current full checklist and environment prerequisites in the PR's testing section; refresh
+them after revisions and link them from chat. Include actionable steps in chat, not only a link
+to the PR body. Confirm staging deployment through project-local operational evidence, then repeat
+the acceptance gate and send the staging handoff; do not claim staging verification from a build.
+This rule adds no deployment authorization or indefinite background monitoring.
+
 ## Scope and authorization
 
 `execute <ticket>` requests implementation, not another mandatory plan-approval round.

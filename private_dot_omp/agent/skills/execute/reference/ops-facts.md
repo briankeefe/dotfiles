@@ -17,6 +17,9 @@ questions. Apply `skill://execute`; this is a discovery workflow, not a universa
 4. Inspect read-only deployment status with the configured provider tooling after checking its
    installed capabilities. Correlate the successful deployment's artifact/commit with the actual
    environment; a green build alone is not proof of rollout or current live state.
+   When this confirms a tracked change has reached staging, apply `skill://execute`'s acceptance
+   gate and immediately send its staging testing handoff with the staging URL, prerequisites,
+   concrete steps and expected results, and observed verification or blockers.
 5. Answer with source paths and observed artifact/commit/status. An operations question does not
    authorize a push, workflow dispatch, release, secret change or production mutation. Present any
    proposed action and its target/risk for explicit approval before acting.
