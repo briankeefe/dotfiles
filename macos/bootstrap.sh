@@ -88,6 +88,7 @@ done
 if [ "$configured" = false ]; then
   chezmoi --source "$SOURCE_DIR" init
 fi
+# .chezmoiignore leaves externally installed ~/.omp/agent/skills untouched.
 set -- "$HOME/.aerospace.toml" "$HOME/.config/ghostty" "$HOME/.config/herdr" \
   "$HOME/.config/borders" "$HOME/.config/aerospace" "$HOME/.omp" "$HOME/.local/bin/foreman"
 chezmoi --source "$SOURCE_DIR" diff --recursive "$@"
@@ -146,6 +147,17 @@ case "$actual" in
       if [ "$blocked" = false ]; then bash "$skills/install.sh"; fi
     fi ;;
   *) echo 'Shared skills not installed: clone/verify the agent-skills repo first.' ;;
+esac
+
+# Personal skills use their non-overwriting installer and remain opt-in.
+personal_skills="$CODE_DIR/skills"
+actual=$(git -C "$personal_skills" remote get-url origin 2>/dev/null || true)
+case "$actual" in
+  https://github.com/briankeefe/skills|https://github.com/briankeefe/skills.git|git@github.com:briankeefe/skills.git)
+    if [ -f "$personal_skills/install.sh" ] && ask 'Install personal OMP skills using the briankeefe/skills installer?'; then
+      sh "$personal_skills/install.sh"
+    fi ;;
+  *) echo 'Personal skills not installed: clone/verify the briankeefe/skills repo first.' ;;
 esac
 printf '%s\n' 'Run the doctor again from your new shell after logging in to providers.' \
   'Install Node/Python/Java versions from each repo declaration, not a global latest default.' \

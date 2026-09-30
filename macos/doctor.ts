@@ -43,6 +43,27 @@ const real = (file: string): string | null => {
 };
 const quote = (value: string) => "'" + value.replaceAll("'", "'\\''") + "'";
 
+export function checkSkillLinks(
+  kind: "shared" | "personal",
+  source: string,
+  target: string,
+): Check {
+  const skills = entries(source).filter(
+    (name) =>
+      name !== "_template" && existsSync(join(source, name, "SKILL.md")),
+  );
+  const missing = skills.filter(
+    (name) => real(join(target, name)) !== real(join(source, name)),
+  );
+  return check(
+    `skills:${kind}`,
+    skills.length > 0 && missing.length === 0,
+    skills.length && !missing.length
+      ? `native OMP skill links resolve to the ${kind} repo`
+      : `run bootstrap's ${kind}-skill setup; missing/conflicting links: ${missing.join(", ") || `${kind} repo unavailable`}`,
+  );
+}
+
 export function coerceToSemver(value: string): string | null {
   const match = value
     .trim()
@@ -435,22 +456,18 @@ function main(): number {
       ...runtimeChecks(name, directory, project.requirements, home),
     ];
   });
-  const shared = join(code, "agent-skills/skills");
-  const skills = entries(shared).filter(
-    (name) =>
-      name !== "_template" && existsSync(join(shared, name, "SKILL.md")),
-  );
-  const missingSkills = skills.filter(
-    (name) =>
-      real(join(home, ".agents/skills", name)) !== real(join(shared, name)),
-  );
-  const skillCheck = check(
-    "skills:shared",
-    skills.length > 0 && missingSkills.length === 0,
-    skills.length && !missingSkills.length
-      ? "native OMP skill links resolve to the shared repo"
-      : `run bootstrap's shared-skill setup; missing/conflicting links: ${missingSkills.join(", ") || "shared repo unavailable"}`,
-  );
+  const skillChecks = [
+    checkSkillLinks(
+      "shared",
+      join(code, "agent-skills/skills"),
+      join(home, ".agents/skills"),
+    ),
+    checkSkillLinks(
+      "personal",
+      join(code, "skills/skills"),
+      join(home, ".omp/agent/skills"),
+    ),
+  ];
   const aerospace = Bun.which("aerospace");
   const desktop = [
     check(
@@ -606,7 +623,7 @@ function main(): number {
       "macos/repos.txt must list work repos",
     ),
     ...repoChecks,
-    skillCheck,
+    ...skillChecks,
     ...desktop,
     ...auth,
     ...docker,

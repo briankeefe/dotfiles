@@ -1,8 +1,14 @@
 import { expect, test } from "bun:test";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+  symlinkSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { inspectProject, probe, versionSatisfies } from "./doctor";
+import { checkSkillLinks, inspectProject, probe, versionSatisfies } from "./doctor";
 
 function project(
   files: Record<string, string>,
@@ -96,4 +102,35 @@ test("missing and hung commands fail without aborting the readiness report", () 
   expect(
     probe(process.execPath, ["-e", "setTimeout(() => {}, 60000)"], 100).ok,
   ).toBe(false);
+});
+
+test("personal skill readiness rejects unavailable sources and missing, conflicting or broken links", () => {
+  project(
+    {
+      "source/example/SKILL.md": "# Example",
+      "wrong/SKILL.md": "# Wrong source",
+      "target/unrelated/SKILL.md": "# Unrelated",
+    },
+    (directory) => {
+      const source = join(directory, "source");
+      const target = join(directory, "target");
+      const link = join(target, "example");
+      const status = () => checkSkillLinks("personal", source, target).status;
+      expect(
+        checkSkillLinks("personal", join(directory, "unavailable"), target).status,
+      ).toBe("MISSING");
+      expect(status()).toBe("MISSING");
+      mkdirSync(link);
+      expect(status()).toBe("MISSING");
+      rmSync(link, { recursive: true });
+      symlinkSync("../wrong", link);
+      expect(status()).toBe("MISSING");
+      rmSync(link);
+      symlinkSync("../source/missing", link);
+      expect(status()).toBe("MISSING");
+      rmSync(link);
+      symlinkSync("../source/example", link);
+      expect(status()).toBe("OK");
+    },
+  );
 });

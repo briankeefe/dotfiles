@@ -9,6 +9,9 @@ macos
 .config/herdr/*.log
 .config/herdr/*.sock
 .config/herdr/session.json
+# Personal and third-party skills are installed from their own repositories.
+.omp/agent/skills
+.omp/agent/skills/**
 {{ if ne .chezmoi.os "darwin" -}}
 .aerospace.toml
 .config/borders/**

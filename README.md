@@ -38,7 +38,7 @@ sh ~/code/dotfiles/macos/bootstrap.sh
 ```
 
 After cloning, the final command is the entry point for repeat runs. It installs
-the package list and OMP/Herdr, offers work-repo cloning and shared agent skills,
+the package list and OMP/Herdr, offers repo cloning and shared/personal agent skills,
 reviews configuration changes, and offers Git, shell and desktop preferences.
 Existing work repos are not pulled or reset. It does not install project
 dependencies, run migrations, or start application servers.
@@ -57,8 +57,36 @@ does not claim those credentials work. `--code-dir PATH` checks another project
 root without changing the default `~/code` layout.
 
 `macos/repos.txt` is the explicit clone list. Review it before running bootstrap;
-each non-comment line is a GitHub `owner/repo`. Shared skills come from
-`Frostbyte-Technologies/agent-skills`, not a second copy of that repo's content.
+each non-comment line is a GitHub `owner/repo`.
+
+### Agent skills
+
+Personal OMP skills live in the public
+[`briankeefe/skills`](https://github.com/briankeefe/skills) repository, under
+`skills/<name>/SKILL.md`. That repository is the source of truth; edit skills
+there, not in this private dotfiles repo or a copied directory. Bootstrap offers
+its installer separately from the shared team skills.
+
+To install without running the rest of bootstrap:
+
+```sh
+gh repo clone briankeefe/skills ~/code/skills
+sh ~/code/skills/install.sh
+```
+
+The installer links skills into `~/.omp/agent/skills` without overwriting unrelated
+content. ChezMoi ignores that directory, so applying OMP configuration does not
+manage or remove those links. To update an existing clone and install any new skills:
+
+```sh
+git -C ~/code/skills pull --ff-only
+sh ~/code/skills/install.sh
+bun ~/code/dotfiles/macos/doctor.ts --offline
+```
+
+Shared skills still come from `Frostbyte-Technologies/agent-skills` and use its
+team installer and native `~/.agents/skills` links. Bootstrap keeps its existing
+conflict checks; personal skills do not replace the shared integration.
 
 ### Git defaults
 
