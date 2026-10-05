@@ -123,14 +123,16 @@ o.bind("ALT + TAB", "Next window", hl.dsp.window.cycle_next())
 o.bind("SUPER + mouse:272", "Move window", hl.dsp.window.drag(), { mouse = true })
 o.bind("SUPER + mouse:273", "Resize window", hl.dsp.window.resize(), { mouse = true })
 
+local focus_workspace = require("hypr.focus-workspace")
+
 for workspace = 1, 10 do
   local key = "code:" .. tostring(workspace + 9)
-  o.bind("SUPER + " .. key, "Workspace " .. workspace, hl.dsp.focus({ workspace = tostring(workspace) }))
+  o.bind("SUPER + " .. key, "Workspace " .. workspace, function() focus_workspace(tostring(workspace)) end)
   o.bind("SUPER + SHIFT + " .. key, "Move to workspace " .. workspace, hl.dsp.window.move({ workspace = tostring(workspace) }))
 end
 
-o.bind("SUPER + TAB", "Next workspace", hl.dsp.focus({ workspace = "e+1" }))
-o.bind("SUPER + SHIFT + TAB", "Previous workspace", hl.dsp.focus({ workspace = "e-1" }))
+o.bind("SUPER + TAB", "Next workspace", function() focus_workspace("e+1") end)
+o.bind("SUPER + SHIFT + TAB", "Previous workspace", function() focus_workspace("e-1") end)
 o.bind("SUPER + S", "Toggle scratchpad", hl.dsp.workspace.toggle_special("scratchpad"))
 o.bind("SUPER + SHIFT + S", "Screenshot region", home .. "/.local/bin/omarchy-derived-screenshot")
 

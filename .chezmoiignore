@@ -1,4 +1,5 @@
 README.md
+tests
 macos
 .git/
 **/.DS_Store
@@ -20,8 +21,11 @@ macos
 
 {{ if ne .chezmoi.os "linux" -}}
 .config/hypr/**
+.local/share/omarchy-derived/upstream/shell/plugins/bar/widgets/Workspaces.qml
 {{ else if ne .chezmoi.osRelease.id "arch" -}}
 .config/hypr/hyprland.lua
+.config/hypr/focus-workspace.lua
+.local/share/omarchy-derived/upstream/shell/plugins/bar/widgets/Workspaces.qml
 .config/hypr/quit-application.lua
 .config/hypr/hypridle.conf
 .config/hypr/hyprlock.conf
