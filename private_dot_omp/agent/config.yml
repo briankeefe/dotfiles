@@ -42,3 +42,8 @@ browser:
   relay: true
 defaultThinkingLevel: medium
 proseOnlyThinking: true
+# Herdr's Idle/Blocked state notifications own the sounds; avoid duplicate OMP alerts.
+completion:
+  notify: "off"
+ask:
+  notify: "off"
