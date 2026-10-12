@@ -11,6 +11,10 @@ require("default.hypr.windows")
 require("default.hypr.require_optional").module("omarchy.current.theme.hyprland")
 
 hl.config({
+  misc = {
+    -- Keep app activation requests from switching workspaces.
+    focus_on_activate = false,
+  },
   input = {
     kb_options = "",
   },
