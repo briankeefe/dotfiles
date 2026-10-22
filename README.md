@@ -192,8 +192,12 @@ exec zsh
 Keep the Homebrew installer's `brew shellenv` initialization in `~/.zprofile`.
 The tracked shell preserves Powerlevel10k, autosuggestions, syntax highlighting,
 autojump, nvm, pyenv, Java 17, local binary paths, and the OpenCode wrapper.
-It also matches the live Mac's `omp` alias: update first, launch only if the
-update succeeds. Use `command omp` to skip that update when offline.
+On Linux and Mac, the `omp` shell wrapper attempts an update at most once per
+24 hours, with a 10-second timeout, then launches the installed version even
+if updating fails. Failed attempts also count toward the daily limit.
+`omp update` runs an unrestricted manual update; `command omp` bypasses the
+wrapper. Restart existing shells with `exec zsh` to load wrapper changes.
+Regression check: `bun test tests/omp-launch.test.ts`.
 Node/Python versions and project dependencies are still installed per project.
 
 The Meslo fonts are installed, not forced into Ghostty: its current config leaves
@@ -244,12 +248,15 @@ chezmoi diff
 chezmoi apply
 ```
 
-For the Omarchy-derived Hyprland session, install its runtime packages and
-upstream shell before applying:
+The Omarchy-derived session uses Lua configuration and requires Hyprland 0.56
+or newer. Install its runtime packages and upstream shell before applying.
+Use a full Arch upgrade; installing new packages against an old system is an
+unsupported partial upgrade.
 
 ```sh
-sudo pacman -S --needed hyprland hypridle hyprlock quickshell uwsm fuzzel \
-  udiskie grim slurp wl-clipboard brightnessctl playerctl dolphin
+sudo pacman -Syu --needed chezmoi hyprland hypridle hyprlock quickshell uwsm \
+  fuzzel udiskie grim slurp wl-clipboard brightnessctl playerctl dolphin \
+  ghostty discord ttf-fantasque-nerd
 mkdir -p ~/.local/share/omarchy-derived
 git clone https://github.com/basecamp/omarchy.git \
   ~/.local/share/omarchy-derived/upstream
@@ -259,7 +266,10 @@ git -C ~/.local/share/omarchy-derived/upstream checkout \
 
 Set `machine = "archkde"` in `~/.config/chezmoi/chezmoi.toml` for the laptop's
 2880×1920 display scaling. KDE and its Plasma session remain installed; select
-the Hyprland session from the display manager when needed.
+the **Hyprland (uwsm-managed)** session from the display manager when needed.
+Back up an existing `~/.config/hypr` before applying. Verify the rendered
+configuration with `Hyprland --verify-config -c ~/.config/hypr/hyprland.lua`;
+parser success is not proof that the graphical shell works on first login.
 
 Default Arch-safe machine data is included so first apply does not stop on
 missing template values. Override it when needed:

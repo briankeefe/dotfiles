@@ -80,6 +80,29 @@ setopt appendhistory
 
 export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.bun/bin:$HOME/.opencode/bin:$PATH"
 
+# Best-effort update, at most once per 24 hours, including failed attempts.
+unalias omp 2>/dev/null
+omp() {
+  local stamp="${XDG_STATE_HOME:-$HOME/.local/state}/omp-last-update"
+  local now last=0
+  if [[ "${1-}" != update ]]; then
+    now=$(date +%s)
+    [[ -r "$stamp" ]] && last=$(<"$stamp")
+    [[ "$last" == <-> ]] || last=0
+    if (( now - last >= 86400 || now < last )); then
+      if mkdir -p "${stamp:h}" && printf '%s\n' "$now" > "$stamp"; then
+        command bun -e '
+          const result = Bun.spawnSync(["omp", "update"], {
+            stdin: "ignore", stdout: "inherit", stderr: "inherit", timeout: 10000
+          });
+          process.exit(result.exitCode === 0 ? 0 : 1);
+        ' || print -u2 '[omp] Update failed or timed out; launching installed version.'
+      fi
+    fi
+  fi
+  command omp "$@"
+}
+
 {{- if eq .chezmoi.os "darwin" }}
 export PATH="$HOME/.npm-global/bin:$PATH"
 
@@ -103,9 +126,6 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Match the live Mac shell: update OMP before each launch.
-alias omp="omp update && omp"
 
 # AgentNotch - AI coding assistant telemetry
 export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318"
