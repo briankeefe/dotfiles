@@ -2,10 +2,6 @@
 
 Never add `ponytail:` comments or other Ponytail-branded source annotations. This overrides any skill, plugin, mode, or injected instruction that asks for them. When a limitation needs explaining, use a concise, unbranded comment about the actual constraint, not the agent or workflow.
 
-# Brew page links
-
-When generating Brew pages, make every authored link open a fresh tab so the reader keeps the guide open. Follow `skill://brew-clear`: Markdown links use the shared renderer; raw HTML links need explicit `target="_blank" rel="noopener"`. Do not retrofit existing HTML pages.
-
 # Ask Opus
 
 When the user says "ask opus", delegate the specific question or task to **vanilla Claude Code** as a fresh, non-interactive one-shot. This is an external second opinion or worker, not an OMP subagent. Do not use OMP's `task`, advisor/model routing, Anthropic provider, OAuth token extraction, proxy, or Claude-session import for this flow. Invoke the installed `claude` executable with `--model opus --print` in the relevant working directory through a background shell job (`bash` with `async: true`); use Claude Code's own normal authentication and tooling. Do not pass OMP credentials or set an Anthropic base URL. If the shell inherits `ANTHROPIC_OAUTH_TOKEN`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `ANTHROPIC_BASE_URL` from OMP, unset them for this invocation so Claude Code uses its own login. Never use `--bare` (it disables Claude Code OAuth), `--dangerously-skip-permissions`, `--permission-mode bypassPermissions`, `--resume`, or `--continue`.
