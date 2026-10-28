@@ -398,6 +398,11 @@ switch to a compact OMP-generated title once available. The chosen name stays
 fixed through compaction and resume; `/herdr-name <label>` sets a persistent
 manual override. Foreman workers manage their own workspace names. Herdr may
 regenerate its managed state extension during upgrades; refresh the snapshot after upgrading.
+
+`/pulse` opens a read-only side-turn health report for the active session:
+rough progress, momentum, evidence, risk, and next action. If a concrete steer
+is warranted, it copies only that optional steer to the clipboard; it never sends it.
+
 The completion sound extension is kept as `ding.ts.disabled`. If restoring over
 an older dotfiles install, disable or remove its existing `ding.ts` manually;
 chezmoi does not delete untracked destination files.
