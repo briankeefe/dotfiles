@@ -78,6 +78,7 @@ o.bind("SUPER + Q", "Quit application", require("hypr.quit-application"), { rele
 o.bind("SUPER + W", "Close window", hl.dsp.window.close())
 o.bind("SUPER + F", "Fullscreen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 o.bind("SUPER + CTRL + 3", "One-third monitor width", home .. "/.config/hypr/scripts/resize-third-width")
+o.bind("SUPER + CTRL + 0", "Even split", hl.dsp.layout("splitratio 1 exact"))
 o.bind("SUPER + LEFT", "Focus left", hl.dsp.focus({ direction = "l" }))
 o.bind("SUPER + RIGHT", "Focus right", hl.dsp.focus({ direction = "r" }))
 o.bind("SUPER + UP", "Focus up", hl.dsp.focus({ direction = "u" }))

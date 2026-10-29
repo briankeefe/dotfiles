@@ -170,6 +170,7 @@ Captured setup:
 | AeroSpace | 8px gaps; Ghostty=1, Slack=2, DBeaver=3, Zen=4, strays=5 |
 | Window controls | Cmd-arrow focus; Cmd-Ctrl-G/S/D/Z summon; Cmd-Ctrl-R reset |
 | One-third width | Cmd-Ctrl-3 on AeroSpace; Super-Ctrl-3 on Hyprland. Keeps the focused window tiled and requests one-third of its monitor width, reflowing neighboring tiles. Requires a horizontal tiled neighbor; gaps, layout constraints and app minimum sizes can limit the result. |
+| Even split | Cmd-Ctrl-0 balances all tiles on the AeroSpace workspace. Super-Ctrl-0 resets the focused Hyprland Dwindle split to 50/50. |
 | OMP | Current model roles, Titanium theme, compact status line, Mnemopi preferences, Herdr extensions |
 
 This restores configuration, not a disk image: app logins, API keys, databases,
