@@ -176,6 +176,24 @@ Captured setup:
 This restores configuration, not a disk image: app logins, API keys, databases,
 OMP memories/history, Herdr sessions, and local project checkouts stay outside git.
 
+OMP compacts context at 272,000 tokens. Its Herdr integration ignores nested OMP
+sessions and keeps a continuing agent marked Working until it actually settles.
+
+#### OMP execute progress monitor (disabled)
+
+The `execute-churn` progress widget and background assessments are disabled.
+`execute` itself and the Herdr integrations are unchanged.
+
+The implementation and tests are preserved in
+`private_dot_omp/agent/disabled-extensions/execute-churn/`, outside OMP's extension
+discovery directory. The local copy lives in
+`~/.omp/agent/disabled-extensions/execute-churn/`.
+Restart existing OMP sessions to unload the previously registered monitor.
+
+To restore it, move the archived directory back to `agent/extensions/execute-churn/`
+in the dotfiles source, apply that extension with chezmoi, and restart OMP.
+The [archived design and verification notes](docs/omp-churn-plan.md) remain available.
+
 ### Mac: optional shell restoration
 
 The Mac shell template targets Apple Silicon Homebrew (`/opt/homebrew`), matching

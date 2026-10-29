@@ -4,6 +4,11 @@
     "notion": {
       "type": "http",
       "url": "https://mcp.notion.com/mcp"
+    },
+    "paper": {
+      "type": "stdio",
+      "command": "/Users/brian/.paper/bin/paper",
+      "args": ["mcp"]
     }
   },
   "disabledServers": ["zen", "claw-connect"]

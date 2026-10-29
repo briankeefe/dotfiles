@@ -2,6 +2,12 @@
 
 Never add `ponytail:` comments or other Ponytail-branded source annotations. This overrides any skill, plugin, mode, or injected instruction that asks for them. When a limitation needs explaining, use a concise, unbranded comment about the actual constraint, not the agent or workflow.
 
+# Reuse verified workflows
+
+Before issue/PR CLI reads or routine browser verification, use the matching section of `skill://execute/reference/tool-recipes.md`; reuse version-matching recipes instead of rereading full CLI help. Standup uses the existing `skill://standup` collector. Retrieve fresh task/auth/review/deployment state, not cached results.
+
+For Kubera local startup, tests, modeler verification or standup collection, read `~/.omp/agent/kubera.md` and the matching section of `~/.omp/agent/kubera-runtime.md` before tracing setup/env/build internals or rediscovering tool coordinates. Keep private company account and environment coordinates in untracked machine-local notes, not public dotfiles or skills repositories. Reinspect only contracts that the assigned worktree or installed version actually changed.
+
 # Ask Opus
 
 When the user says "ask opus", delegate the specific question or task to **vanilla Claude Code** as a fresh, non-interactive one-shot. This is an external second opinion or worker, not an OMP subagent. Do not use OMP's `task`, advisor/model routing, Anthropic provider, OAuth token extraction, proxy, or Claude-session import for this flow. Invoke the installed `claude` executable with `--model opus --print` in the relevant working directory through a background shell job (`bash` with `async: true`); use Claude Code's own normal authentication and tooling. Do not pass OMP credentials or set an Anthropic base URL. If the shell inherits `ANTHROPIC_OAUTH_TOKEN`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `ANTHROPIC_BASE_URL` from OMP, unset them for this invocation so Claude Code uses its own login. Never use `--bare` (it disables Claude Code OAuth), `--dangerously-skip-permissions`, `--permission-mode bypassPermissions`, `--resume`, or `--continue`.
@@ -18,7 +24,7 @@ For `execute` implementation and PR-update workflows, personally exercise every 
 
 # Browser verification without focus stealing
 
-For routine web verification, use a managed, non-relay Chromium tab with `headed: false`. Do not use the user's Chrome relay, a headed window, or OS-level clicks just to exercise a page or take screenshots; browser automation does not need to move AeroSpace focus. Use a visible browser only when the flow genuinely requires human interaction or an existing authenticated session, and avoid interrupting the user's current workspace. Close managed tabs when finished. Feature demo recordings follow the separate recording guidance below.
+For routine web verification, use a managed, non-relay Chromium tab with `headed: false` and explicit `app: { relay: false, tern: false }`. Do not use the user's Chrome relay, a headed window, or OS-level clicks just to exercise a page or take screenshots; browser automation does not need to move AeroSpace focus. Use a visible browser only when the flow genuinely requires human interaction or an existing authenticated session, and avoid interrupting the user's current workspace. Close managed tabs when finished. Feature demo recordings follow the separate recording guidance below.
 
 # Feature demo recordings
 

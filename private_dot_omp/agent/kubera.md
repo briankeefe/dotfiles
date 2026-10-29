@@ -1,5 +1,7 @@
 # Kubera app: personal navigation and internal test invitations
 
+Before local startup or verification, read [`kubera-runtime.md`](kubera-runtime.md) for the isolated worktree/tenant recipe and deployment-verification guidance; do not retrace the source unless that contract changed.
+
 This is a personal supplement, not a replacement for the app repo's `AGENTS.md` (symlink to its tracked `CLAUDE.md`). From the app repo root, read the relevant project subdoc before work in that area:
 
 | Task | Project subdoc |
@@ -51,3 +53,33 @@ aws ses send-email --from 'Kubera Health <help@kuberahealth.com>' --destination 
 ```
 
 AWS acceptance is not proof of inbox delivery. On first sign-in the user must change the temporary password. For an existing account, inspect membership and role; use `RESEND` only when the user is still in `FORCE_CHANGE_PASSWORD` and needs a new invitation.
+
+## Point estimation
+
+Use `skill://pointing` for ticket estimates and the one-at-a-time guessing exercise. Brian's convention is **1 point = half an engineer workday**, with agent-assisted implementation, human review and required acceptance verification included. This is an effort convention, not a calendar-delivery promise. Zero is a valid small operational-task estimate, not a skipped answer.
+
+Calibrate against the two most recently completed **ENG** cycles in Linear workspace `kuberahealth` before a new exercise. Fetch fresh cycle membership and point values; the historical snapshot below is a starting anchor, not a substitute for current history. Do not use manual-coding estimates plus generic QA/uncertainty surcharges.
+
+### Historical scope anchors
+
+Reviewed October 12, 2026: cycles 65 (September 22–29) and 66 (September 29–October 6), 36 Done tickets, 28 with positive estimates and eight zero-valued records excluded from the positive-estimate distribution. Median positive estimate was 2; 23 of 28 were 1–3. These are assigned scope estimates, not measured hours.
+
+| Points | Recorded scope |
+| --- | --- |
+| 1 | ENG-2632: active-rate-sheet plan filtering, selection updates and empty states |
+| 2 | ENG-2659: chat-first report responses, refinement and explicit Excel export |
+| 3 | ENG-2624: per-diem stop-loss pricing, UI/modeler propagation and targeted backfill |
+| 3 | ENG-2589: large-import validation timeouts, query cancellation and ingest concurrency |
+| 3 | ENG-2635: EDI/EMR source selection and latest non-void 837 handling |
+| 3 | ENG-2599: per-source crawler scheduling, cadence investigation and visibility |
+| 4 | ENG-2595: PVQ technical design and phase-1 fields |
+| 6–7 | ENG-2647: multi-area Kai reliability fixes; ENG-2547: hospital-rate benchmarking expansion |
+
+### Estimation decisions from Brian
+
+- Estimate existing matcher/selection reuse, not rebuilding it. Verify material frontend/backend and reuse assumptions before defending a large estimate gap.
+- Count real testing and production coordination when downtime/data integrity are at stake, not a blanket risk premium. ENG-2695 settled at 2 for careful network testing and a coordinated production rollout; ENG-2699 settled at 2 to capture testing of a frontend transport change with existing backend support.
+- A single claim can have multiple independent issues, each with its own recovery route/status; reordering means display order, not a forced recovery sequence. ENG-2709 was selected at 4.
+- Selected estimates are Brian's planning choices, not evidence that independent guesses matched. Preserve revisions and do not post points to Linear without authorization.
+- Save new sessions durably under `~/.omp/agent/pointing/kuberahealth/`; use the source session's saved ledger when resuming an existing exercise.
+

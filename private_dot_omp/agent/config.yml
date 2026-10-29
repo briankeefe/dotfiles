@@ -3,9 +3,11 @@ theme:
   dark: titanium
 setupVersion: 2
 modelRoles:
-  smol: anthropic/claude-haiku-4-5:minimal
-  advisor: anthropic/claude-opus-4-6:medium
+  smol: openai-codex/gpt-6-luna:minimal
+  advisor: openai-codex/gpt-6.1-sol:medium
   default: openai-codex/gpt-6-astra:medium
+disabledProviders:
+  - anthropic
 colorBlindMode: true
 tui:
   textSizing: true
@@ -30,8 +32,8 @@ interruptMode: immediate
 hideThinkingBlock: false
 task:
   agentModelOverrides:
-    task: anthropic/claude-opus-4-6
-    sonic: anthropic/claude-sonnet-4-5
+    task: openai-codex/gpt-6.1-sol
+    sonic: openai-codex/gpt-6-luna
 dev:
   autoqaConsent: granted
 read:
