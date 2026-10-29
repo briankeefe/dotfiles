@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+window=$(aerospace list-windows --focused --format '%{window-id} %{monitor-appkit-nsscreen-screens-id}')
+wid=${window%% *}
+screen=${window##* }
+width=$(osascript -l JavaScript -e '
+ObjC.import("AppKit");
+function run(argv) {
+    return Math.round($.NSScreen.screens.objectAtIndex(Number(argv[0]) - 1).frame.size.width / 3);
+}' "$screen")
+aerospace layout tiling --window-id "$wid"
+aerospace resize --window-id "$wid" width "$width"

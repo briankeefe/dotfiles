@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""Keep the focused window tiled at one-third monitor width."""
+
+import json
+import subprocess
+
+
+def main():
+    window = json.loads(subprocess.check_output(["hyprctl", "activewindow", "-j"], text=True))
+    if not window.get("address"):
+        return
+    target = f"address:{window['address']}"
+    subprocess.run(["hyprctl", "dispatch", "settiled", target], check=True)
+    subprocess.run([
+        "hyprctl", "dispatch", "resizewindowpixel",
+        f"exact 33.333333% {window['size'][1]},{target}",
+    ], check=True)
+
+
+if __name__ == "__main__":
+    main()
