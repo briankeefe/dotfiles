@@ -47,3 +47,5 @@ completion:
   notify: "off"
 ask:
   notify: "off"
+compaction:
+  thresholdTokens: 272000
