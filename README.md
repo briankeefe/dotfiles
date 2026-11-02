@@ -370,9 +370,15 @@ private_dot_omp/agent/mcp.json            # MCP server toggles
 private_dot_omp/agent/commands/           # custom slash commands
 private_dot_omp/agent/rules/              # always-apply rules
 private_dot_omp/agent/extensions/         # Herdr state reporting and workspace naming
-private_dot_omp/agent/skills/             # custom skills (execute toolkit)
+private_dot_omp/agent/commands/execute.md # thin router to the separately installed execute skill
+private_dot_omp/agent/AGENTS.md          # personal rules and workflow ownership pointers
 private_dot_omp/plugins/                  # plugin manifest
 ```
+
+The execute pipeline lives only in [briankeefe/skills](https://github.com/briankeefe/skills).
+Install it with that repository's `install.sh`; `~/.omp/agent/skills/execute` links to its source.
+Dotfiles supplies the command router, personal safeguards and project/machine runbooks.
+Do not copy the pipeline's stages, approach format or acceptance gates into dotfiles.
 
 Only durable, hand-authored config is tracked. Runtime state stays local and is
 never committed: `*.db*`, `blobs/`, `sessions/`, `terminal-sessions/`,

@@ -18,9 +18,9 @@ Before launching, gather and pass **actual** task context, not merely "look at t
 
 For implementation, use `--permission-mode auto` so the unattended one-shot can decide on edits and local verification without blanket permission bypass. If auto mode is unavailable, report that blocker rather than weakening permissions. Launch asynchronously, then wait for the **same process** to exit and read its complete stdout/stderr and exit status; an initial job ID is not the answer. Do not start a second Claude session to retrieve it. Review its reported outcome and the actual working-tree changes before relaying them; independently check any consequential claim or failing verification. If it edited shared files, coordinate ownership before launch to avoid concurrent edits in the same worktree. Report Claude's failures and uncertainty rather than presenting unverified output as fact.
 
-# Execute acceptance gate
+# Execute workflow ownership
 
-For `execute` implementation and PR-update workflows, personally exercise every feasible acceptance criterion on the changed runtime surface before publishing a draft PR or accepting PR revisions. Recheck affected criteria after each revision and the full set before declaring the PR ready. Record the observed result for each criterion; tests, reviewer approval, and demo videos do not replace manual verification. If a criterion cannot be exercised or fails, leave the PR unpublished or in draft and report the blocker rather than asserting completion. See `skill://execute` for the workflow.
+`skill://execute` and its references in the separate `briankeefe/skills` repository are the single source for the execute pipeline, including approach discussions, implementation, acceptance verification and PR readiness. Dotfiles owns the command shim, machine configuration, personal authorization rules and project-specific runbooks, not a second copy of the pipeline. Follow the installed skill rather than restating its stages or gates here.
 
 # Browser verification without focus stealing
 
