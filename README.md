@@ -419,6 +419,17 @@ fixed through compaction and resume; `/herdr-name <label>` sets a persistent
 manual override. Foreman workers manage their own workspace names. Herdr may
 regenerate its managed state extension during upgrades; refresh the snapshot after upgrading.
 
+`/waiting` toggles **Waiting on someone else**; `/waiting on` and `/waiting off`
+set or clear it. The `herdr-waiting.ts` companion saves the marker with the OMP
+conversation and restores it on resume or session switch. Agent activity doesn't
+clear it. Reload OMP extensions and Herdr configuration to load an installation.
+
+Herdr currently displays this as a purple metadata dot beside its native activity
+icon. Its native icon replacement and T3's blue **Will circle back** state aren't
+implemented by this companion. The managed Herdr integration retains lifecycle
+authority, including approval/input states. Outside Herdr, or inside nested OMP,
+the command saves its local marker but doesn't write another pane's metadata.
+
 `/pulse` opens a read-only side-turn health report for the active session:
 rough progress, momentum, evidence, risk, and next action. If a concrete steer
 is warranted, it copies only that optional steer to the clipboard; it never sends it.
