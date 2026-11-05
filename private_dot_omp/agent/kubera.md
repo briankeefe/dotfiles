@@ -19,6 +19,61 @@ This is a personal supplement, not a replacement for the app repo's `AGENTS.md` 
 | Policy intelligence or document ingestion | `docs/engineering/policies.md`; `docs/engineering/global-policy-payors.md`; `docs/engineering/ingestion-pipeline.md` |
 | Claims imports and operational backfills | `docs/engineering/guides/README.md` (index of runbooks) |
 
+## Automatic acceptance verification
+
+Use `skill://execute` for publication/revision/staging timing and
+`skill://execute/reference/sanity-check.md` for standalone isolation, bounded assessment,
+evidence reuse, repair limits and PR-readiness versus rollout scope. These are canonical policy,
+not another local pipeline. The steps below integrate Kubera's acceptance helper with those gates.
+
+1. Keep the original ticket, named cases, attachments and later decisions in a private source snapshot under `~/.omp/agent/acceptance/<ID>/`. Map every sourced criterion and named case to an independent expected outcome in `cases.md`; material derived cases need their evidence and impact. Use the canonical baseline rules, not new policy in this runbook.
+2. Create `cases.md` using `~/.omp/agent/bin/kubera-accept --help-record`, the executable's canonical format. Start with its fenced `acceptance` JSON header, followed by the eleven-column table. Fixture/input cells name saved artifact paths; exact input values live in those files. Check selectors are exact native reporter names. Declare expectations before implementation/execution; never rebaseline them from observed output.
+3. Independently challenge the case list and oracle before implementation for pricing/money, persistence, auth/tenant, jobs, seeds and clinical/LLM changes. The reviewer reads original sources rather than inheriting the implementation verdict. Ordinary required gaps are the agent's work, not questions for Brian. Trivial nonbehavioral changes may skip independent review, not applicable runtime verification.
+4. Select the relevant domain recipes below and complete the target preflight in `kubera-runtime.md`. Use `source/asserted` for domain/unit checks only. Stubs, diagnostic output and mocked provider responses cannot satisfy a real API/database/UI or live-generation criterion.
+   Follow `execute`'s final evidence-binding order before the helper calls below. The helper binds
+   source/index/revision identity: staging, formatting or a mutating commit hook can stale a receipt.
+   Do not prepare final bindings against a state you are about to change.
+5. Run named automated checks with `kubera-accept run <ID> <case> -- <executable> <args>`. It exports fresh `KUBERA_ACCEPT_REPORT` and `KUBERA_ACCEPT_RUNTIME` paths. Use installed Vitest/Playwright JSON reporters or the pricer's named checks report; unknown output is execution-only. Actual runtime assertions need the documented fresh per-check request/database/browser captures, not merely green unit tests plus a healthy server.
+6. For direct browser/semantic inspection, declare `/attested`, call `prepare-attestation <ID> <case>` **before** the walkthrough, then use `attest <ID> <case> --observation <private-json>`. Record the actual observer/provenance, explicit `PASS`/`FAIL`/`BLOCKED` verdict, concrete observed behavior, prepared binding ID and fresh screenshots/traces; negative verdicts need a concrete reason. This is explicit attestation, not automated assertion.
+   Check each helper exit status. On preparation/capture/attestation failure, stop that batch,
+   diagnose the exact command and repair only the affected binding/capture; never print a success
+   summary or continue submitting the same invalid attachments. A successfully recorded FAIL is
+   evidence, not a transport failure; preserve it and continue independent feasible cases.
+7. Before initial PR publication, before publishing a revision/fix reply, and before readiness, reconcile the full list and run `kubera-accept check <ID> --gate pr` (or `revision`). Re-exercise affected cases after changes. A failed/blocked/unrun case or stale/misclassified evidence keeps work local or the existing PR draft. Explanation/approval alone never converts missing proof to PASS.
+8. Use one evidence-to-claim review before readiness for risky work; reuse it when evidence and claims remain applicable. Record its findings, consumed repair rounds and any explicit extension in `cases.md` Closeout under the canonical bounded-closeout policy. This does not replace required Cursor approvals.
+9. After confirmed staging deployment during the active workflow, capture actual deployment provenance, exercise staging criteria and run the `staging` gate. Do not claim staging proof from branch membership/build success or start an unauthorized deployment/watcher.
+10. Export the handoff from the same record: `handoff <ID> --gate <gate> --private <absolute-private-file>`. Inspect it for secrets/PHI, then use it as the source for `skill://brew-test` and `execute`'s concise chat handoff. Default public output has only safe IDs/status/counts/hashes; it is not the complete testing guide.
+
+After the case table, keep two prose fields in the same `cases.md`:
+- **Non-goals:** behavior, tenants and unrelated cleanup explicitly excluded by the request.
+- **Blast radius:** affected tenants, consumers/shared paths and permitted verification or mutation boundaries.
+
+Derive these from the request and actual callers, not guesses. Preserve approved behavior decisions and their source alongside them or in existing PR replies. Reconcile proposed changes against these bounds; a shared root-cause fix can be in scope, but new behavior outside them needs a material-scope decision. No second artifact or extra validator columns.
+
+Keep **Closeout** prose in this same record: baseline/head, relevant input identities, findings,
+consumed acceptance repair rounds and sourced approvals. Recover prior rounds from task history
+under the canonical policy. No new helper schema, budget file or validator columns are needed.
+Every required row still blocks `kubera-accept`; optional observations stay outside the table.
+
+One ticket can require separate target records such as `ENG-2677-ernest` and `ENG-2677-kpc`, each with its own worktree/tenant/preflight. Maintain a complete original-ticket coverage mapping and check **all** applicable target records before a whole-ticket readiness claim; a passing subgroup is not complete-ticket acceptance.
+
+For the next approximately ten suitable tickets, save `measurement.json` beside `cases.md`: ticket/domain/start and handoff times, explicit/derived case counts, early-review gaps, acceptance-specific user prompt message references, separately classified discovered failures, and the completed observation window. Apply the counted rules and fields in `acceptance/baseline.md`; use unknown/not-reached rather than zero for unobserved stages. Historical pilots are not prospective outcomes; do not claim improvement before the new cohort is observed.
+
+### Domain recipes
+
+| Changed behavior | Required relevant probes |
+| --- | --- |
+| Stateful UI/modeler edits | Same-record edit → visible values → save → reload → reopen/cancel; negative/invalid inputs; dependent method inputs; one row with six selected and unchanged peers; wizard sync; row/category/step totals; relevant broad-edit + inline-edit combination. |
+| Tenant/auth/capabilities | Intended allowed role succeeds, denied role fails, tenant/record isolation; operation-specific permissions. Local Cognito bypass is not authenticated staging identity proof. |
+| Pricing | Named methodology plus explicit/relevant siblings (APR-DRG, CMG, LTC, ordinary MS-DRG control); baseline/outlier, fee-sheet basis, age adjustor once, transfer/interim/low-side/state thresholds where affected. Preserve raw fractional outcomes versus rounded display expectations. Check current fixture metadata against the independent reference. |
+| Jobs/modeler | Actual trigger → successful terminal state → refreshed rendered result → reload; stale-results/order/overlap cases where affected. Enqueue/start/HTTP success is not completion. |
+| Seeds/demo data | Intended Sales-role navigation; actual dependent consumer, not counts; defaults/presets reopen; DOFR/vendor/documents/Pipeline/Benchmarking where named; no customer-identifiable data. Environment/location-specific fixtures cannot inherit another target's evidence. |
+| Policy/Kai/LLM | Correct version/document/clause/link and semantically supporting quote, not substring existence alone; history/latest, status visibility, comparison scope, date uncertainty, grouping/negation/initial-vs-renewal where affected. Recorded replies prove sequencing; live generation tests detection. |
+
+Resolve repository-provided setup and ordinary missing checks autonomously within the bounded evidence pass and persisted closeout limit. Ask only for genuine scope/product ambiguity, unavailable oracle, clinical rubric/error severity or sensitive authorization. Keep genuinely rubric-dependent clinical criteria BLOCKED, without propagating that prerequisite to deterministic rows. Within a documented bounded paid trial, declare cases and pass thresholds before execution, run/checkpoint authorized cases without repeated prompting, and retain valid outputs rather than resampling until green; never add spend, models or stages beyond that authorization. Production writes/elevation remain separate.
+
+Receipts establish execution and input/artifact identity, not semantic truth or hard CI enforcement. Source/fixture/runtime changes invalidate evidence; retain applicable paid outputs only with unchanged model, runtime-resolved prompt, source/context and relevant code/data identities. The helper does not watch remote data changes; recapture/re-exercise when target records, roles, fixtures or data versions change. Do not treat a fixed observation-age limit as proof those inputs stayed unchanged.
+
 ## Invite an internal test user (staging or prod)
 
 For explicitly requested internal testing accounts, default to `super-admin` in the requested tenant so testers can exercise all features. Do not apply this default to customer accounts or elevate an existing account by inference; confirm the intended tenant and use a separate `+tenant` address when an existing identity belongs to another tenant. The user needs a Cognito account, the tenant group, and a user row with that role in the tenant database. The checked-in `scripts/cloudcommander/src/kbcc-user.ts` creates all three but **suppresses** the invitation and prints a temporary password. Do not create a Cognito account alone or send the printed password over chat.
