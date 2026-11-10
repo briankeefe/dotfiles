@@ -23,7 +23,7 @@ This is a personal supplement, not a replacement for the app repo's `AGENTS.md` 
 
 Use `skill://execute` for publication/revision/staging timing and
 `skill://execute/reference/sanity-check.md` for standalone isolation, bounded assessment,
-evidence reuse, repair limits and PR-readiness versus rollout scope. These are canonical policy,
+evidence reuse, progress-bounded repairs and PR-readiness versus rollout scope. These are canonical policy,
 not another local pipeline. The steps below integrate Kubera's acceptance helper with those gates.
 
 1. Keep the original ticket, named cases, attachments and later decisions in a private source snapshot under `~/.omp/agent/acceptance/<ID>/`. Map every sourced criterion and named case to an independent expected outcome in `cases.md`; material derived cases need their evidence and impact. Use the canonical baseline rules, not new policy in this runbook.
@@ -40,7 +40,7 @@ not another local pipeline. The steps below integrate Kubera's acceptance helper
    summary or continue submitting the same invalid attachments. A successfully recorded FAIL is
    evidence, not a transport failure; preserve it and continue independent feasible cases.
 7. Before initial PR publication, before publishing a revision/fix reply, and before readiness, reconcile the full list and run `kubera-accept check <ID> --gate pr` (or `revision`). Re-exercise affected cases after changes. A failed/blocked/unrun case or stale/misclassified evidence keeps work local or the existing PR draft. Explanation/approval alone never converts missing proof to PASS.
-8. Use one evidence-to-claim review before readiness for risky work; reuse it when evidence and claims remain applicable. Record its findings, consumed repair rounds and any explicit extension in `cases.md` Closeout under the canonical bounded-closeout policy. This does not replace required Cursor approvals.
+8. Use one evidence-to-claim review before readiness for risky work; reuse it when evidence and claims remain applicable. Record its findings, repair attempts/outcomes and sourced decisions in `cases.md` Closeout under the canonical closeout policy. This does not replace required Cursor approvals.
 9. After confirmed staging deployment during the active workflow, capture actual deployment provenance, exercise staging criteria and run the `staging` gate. Do not claim staging proof from branch membership/build success or start an unauthorized deployment/watcher.
 10. Export the handoff from the same record: `handoff <ID> --gate <gate> --private <absolute-private-file>`. Inspect it for secrets/PHI, then use it as the source for `skill://brew-test` and `execute`'s concise chat handoff. Default public output has only safe IDs/status/counts/hashes; it is not the complete testing guide.
 
@@ -51,8 +51,8 @@ After the case table, keep two prose fields in the same `cases.md`:
 Derive these from the request and actual callers, not guesses. Preserve approved behavior decisions and their source alongside them or in existing PR replies. Reconcile proposed changes against these bounds; a shared root-cause fix can be in scope, but new behavior outside them needs a material-scope decision. No second artifact or extra validator columns.
 
 Keep **Closeout** prose in this same record: baseline/head, relevant input identities, findings,
-consumed acceptance repair rounds and sourced approvals. Recover prior rounds from task history
-under the canonical policy. No new helper schema, budget file or validator columns are needed.
+repair attempts/outcomes and sourced approvals. Recover the relevant history under the canonical
+policy. No new helper schema, budget file or validator columns are needed.
 Every required row still blocks `kubera-accept`; optional observations stay outside the table.
 
 One ticket can require separate target records such as `ENG-2677-ernest` and `ENG-2677-kpc`, each with its own worktree/tenant/preflight. Maintain a complete original-ticket coverage mapping and check **all** applicable target records before a whole-ticket readiness claim; a passing subgroup is not complete-ticket acceptance.
@@ -70,7 +70,7 @@ For the next approximately ten suitable tickets, save `measurement.json` beside 
 | Seeds/demo data | Intended Sales-role navigation; actual dependent consumer, not counts; defaults/presets reopen; DOFR/vendor/documents/Pipeline/Benchmarking where named; no customer-identifiable data. Environment/location-specific fixtures cannot inherit another target's evidence. |
 | Policy/Kai/LLM | Correct version/document/clause/link and semantically supporting quote, not substring existence alone; history/latest, status visibility, comparison scope, date uncertainty, grouping/negation/initial-vs-renewal where affected. Recorded replies prove sequencing; live generation tests detection. |
 
-Resolve repository-provided setup and ordinary missing checks autonomously within the bounded evidence pass and persisted closeout limit. Ask only for genuine scope/product ambiguity, unavailable oracle, clinical rubric/error severity or sensitive authorization. Keep genuinely rubric-dependent clinical criteria BLOCKED, without propagating that prerequisite to deterministic rows. Within a documented bounded paid trial, declare cases and pass thresholds before execution, run/checkpoint authorized cases without repeated prompting, and retain valid outputs rather than resampling until green; never add spend, models or stages beyond that authorization. Production writes/elevation remain separate.
+Resolve repository-provided setup and ordinary missing checks autonomously under the canonical evidence and closeout contract. Ask only for genuine scope/product ambiguity, unavailable oracle, clinical rubric/error severity or sensitive authorization. Keep genuinely rubric-dependent clinical criteria BLOCKED, without propagating that prerequisite to deterministic rows. Within a documented bounded paid trial, declare cases and pass thresholds before execution, run/checkpoint authorized cases without repeated prompting, and retain valid outputs rather than resampling until green; never add spend, models or stages beyond that authorization. Production writes/elevation remain separate.
 
 Receipts establish execution and input/artifact identity, not semantic truth or hard CI enforcement. Source/fixture/runtime changes invalidate evidence; retain applicable paid outputs only with unchanged model, runtime-resolved prompt, source/context and relevant code/data identities. The helper does not watch remote data changes; recapture/re-exercise when target records, roles, fixtures or data versions change. Do not treat a fixed observation-age limit as proof those inputs stayed unchanged.
 
