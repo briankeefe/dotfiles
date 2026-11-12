@@ -88,6 +88,14 @@ Shared skills still come from `Frostbyte-Technologies/agent-skills` and use its
 team installer and native `~/.agents/skills` links. Bootstrap keeps its existing
 conflict checks; personal skills do not replace the shared integration.
 
+Agent execution defaults preserve the original failing input and agreed outcome instead of
+changing the check to fit the implementation. Full-contract delivery takes precedence over
+simplicity-plugin suggestions to ship a partial version. Runtime compatibility applies to
+production, browsers and tests: the same-named user rule
+`private_dot_omp/agent/rules/ts-promise-with-resolvers.md` overrides OMP's bundled preference
+without patching the installed binary or third-party plugins. Apply just these two rule files
+with chezmoi; reload rules in existing sessions. Execute acceptance policy remains in skills.
+
 ### Git defaults
 
 ```sh
