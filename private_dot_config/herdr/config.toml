@@ -18,3 +18,6 @@ previous_agent = "ctrl+alt+["
 
 [update]
 channel = "preview"
+
+[ui.sidebar.agents]
+rows = [["state_icon", { token = "$waiting", fg = "#bb9af7" }, "machine", "workspace", "tab"], ["agent"]]
