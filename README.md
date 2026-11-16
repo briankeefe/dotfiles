@@ -378,9 +378,15 @@ private_dot_omp/agent/mcp.json            # MCP server toggles
 private_dot_omp/agent/commands/           # custom slash commands
 private_dot_omp/agent/rules/              # always-apply rules
 private_dot_omp/agent/extensions/         # Herdr state reporting and workspace naming
-private_dot_omp/agent/skills/             # custom skills (execute toolkit)
+private_dot_omp/agent/commands/execute.md # thin router to the separately installed execute skill
+private_dot_omp/agent/AGENTS.md          # personal rules and workflow ownership pointers
 private_dot_omp/plugins/                  # plugin manifest
 ```
+
+The execute pipeline lives only in [briankeefe/skills](https://github.com/briankeefe/skills).
+Install it with that repository's `install.sh`; `~/.omp/agent/skills/execute` links to its source.
+Dotfiles supplies the command router, personal safeguards and project/machine runbooks.
+Do not copy the pipeline's stages, approach format or acceptance gates into dotfiles.
 
 Only durable, hand-authored config is tracked. Runtime state stays local and is
 never committed: `*.db*`, `blobs/`, `sessions/`, `terminal-sessions/`,
@@ -397,9 +403,10 @@ reviewer setup, a non-publishing worker trial, daily controls, and recovery.
 
 ### Plugins
 
-Enabled: `@baylarsadigov/omp-undo-redo`, `@dietrichgebert/ponytail`, and
-`pi-committer`. `pi-rewind` is installed but disabled. Restore their pinned
-dependencies after applying the configs:
+Enabled: `@dietrichgebert/ponytail` and `pi-committer`. `pi-rewind` and
+`@baylarsadigov/omp-undo-redo` are installed but disabled. Automatic workspace
+snapshots are off by default for new sessions; existing sessions aren't restarted.
+Restore the pinned dependencies after applying the configs:
 
 ```sh
 bun install --cwd ~/.omp/plugins --frozen-lockfile --ignore-scripts
@@ -418,6 +425,15 @@ omp plugin uninstall <package>
 on the source Mac but missing from its manifest, so it is explicitly included
 here at the installed version, `0.12.8`.
 
+Generated database copies and scratch datasets become cleanup candidates seven
+days after explicit task closeout, not simply because they are old or have no
+running process. Cleanup stays exact-path, reviewed and authorized, with no
+unattended deletion job. Preserve compact evidence and required reproduction
+fixtures. ENG-2743, all active work, live databases and unknown owners remain
+protected. The personal policy in `private_dot_omp/agent/AGENTS.md` defines the
+exceptions and acceptance-receipt safeguards; disabling snapshots doesn't remove
+existing history or authorize pruning referenced checkpoints.
+
 The Herdr state extension uses `HERDR_SOCKET_PATH` from its parent pane.
 Run OMP inside Herdr for sidebar state and workspace naming. Ticket workspaces
 use `ENG-2629-inline-payment-editing`-style labels; a workspace ID is appended
@@ -426,6 +442,18 @@ switch to a compact OMP-generated title once available. The chosen name stays
 fixed through compaction and resume; `/herdr-name <label>` sets a persistent
 manual override. Foreman workers manage their own workspace names. Herdr may
 regenerate its managed state extension during upgrades; refresh the snapshot after upgrading.
+
+`/waiting` (or `/waiting toggle`) manually toggles **Waiting on someone else**;
+`/waiting on` and `/waiting off` set or clear it, and `/waiting help` shows usage.
+The companion `herdr-waiting.ts` saves the marker in the OMP session and restores
+it on resume/switch. It stays set through agent starts and completion until
+manually cleared. OMP shows a footer label; Herdr shows a purple metadata dot
+beside its unchanged native activity icon, so approval/input states stay visible.
+Only the companion's `waiting` token is changed, not titles or lifecycle state.
+Outside Herdr (including nested OMP), the marker still persists locally and
+the command warns that sidebar integration is unavailable. Reload OMP extensions
+and reload Herdr configuration from inside the intended Herdr session to apply
+an installation; no Herdr restart is required.
 
 `/pulse` opens a read-only side-turn health report for the active session:
 rough progress, momentum, evidence, risk, and next action. If a concrete steer

@@ -1,3 +1,11 @@
+# Generated-data retention
+
+Automatic whole-workspace undo snapshots are disabled by default in user-scope OMP plugin settings. Do not re-enable `@baylarsadigov/omp-undo-redo` without explicit approval and a verified capture boundary that excludes generated databases, WAL/journal files, dumps and bulk datasets. Keep live application state outside captured source trees; preserve legitimate checked-in fixtures. Git ignores do not remove files already present in a snapshot index or referenced history.
+
+For agent-generated database copies and scratch datasets, use explicit task closeout plus seven days of grace, not file age or a missing process, to establish cleanup eligibility. At closeout, record the closeout date and exact disposable paths in the task's existing local record. After the grace period, propose a reviewed exact-path cleanup under the user's authorization; no unattended deletion job. Preserve compact acceptance records, reports, necessary reproduction fixtures and required paid outputs. Do not delete artifacts still needed by retained acceptance receipts unless that evidence is explicitly retired and its validity/readiness claims are updated.
+
+ENG-2743 is pinned until Brian explicitly releases it. Preserve all its worktrees, database copies, evidence, session/helper data and recovery history, regardless of age or naming. Also preserve other active work, live databases, application-owned backups, shared dependencies and unknown ownership. Missing or ambiguous closeout/ownership means keep. Disabling capture does not authorize deleting referenced checkpoints; that requires separate review and approval. Never restart existing sessions to apply this policy.
+
 # Source comments
 
 Never add `ponytail:` comments or other Ponytail-branded source annotations. This overrides any skill, plugin, mode, or injected instruction that asks for them. When a limitation needs explaining, use a concise, unbranded comment about the actual constraint, not the agent or workflow.
@@ -18,9 +26,9 @@ Before launching, gather and pass **actual** task context, not merely "look at t
 
 For implementation, use `--permission-mode auto` so the unattended one-shot can decide on edits and local verification without blanket permission bypass. If auto mode is unavailable, report that blocker rather than weakening permissions. Launch asynchronously, then wait for the **same process** to exit and read its complete stdout/stderr and exit status; an initial job ID is not the answer. Do not start a second Claude session to retrieve it. Review its reported outcome and the actual working-tree changes before relaying them; independently check any consequential claim or failing verification. If it edited shared files, coordinate ownership before launch to avoid concurrent edits in the same worktree. Report Claude's failures and uncertainty rather than presenting unverified output as fact.
 
-# Execute acceptance gate
+# Execute workflow ownership
 
-For `execute` implementation and PR-update workflows, personally exercise every feasible acceptance criterion on the changed runtime surface before publishing a draft PR or accepting PR revisions. Recheck affected criteria after each revision and the full set before declaring the PR ready. Record the observed result for each criterion; tests, reviewer approval, and demo videos do not replace manual verification. If a criterion cannot be exercised or fails, leave the PR unpublished or in draft and report the blocker rather than asserting completion. See `skill://execute` for the workflow.
+`skill://execute` and its references in the separate `briankeefe/skills` repository are the single source for the execute pipeline, including approach discussions, implementation, acceptance verification and PR readiness. Dotfiles owns the command shim, machine configuration, personal authorization rules and project-specific runbooks, not a second copy of the pipeline. Follow the installed skill rather than restating its stages or gates here.
 
 # Browser verification without focus stealing
 

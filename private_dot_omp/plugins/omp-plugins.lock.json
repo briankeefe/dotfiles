@@ -13,7 +13,7 @@
     "@baylarsadigov/omp-undo-redo": {
       "version": "1.5.2",
       "enabledFeatures": null,
-      "enabled": true
+      "enabled": false
     },
     "@dietrichgebert/ponytail": {
       "version": "4.9.0",

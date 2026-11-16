@@ -41,7 +41,7 @@ Do not run `dev:refresh`/`dev:down`, remove env files, stop unrelated services, 
 
 ## Deployment verification
 
-Keep AWS account IDs, profiles, regions, and deployment resource names in machine-local notes, not this public repository. Verify the intended identity with `aws sts get-caller-identity` before reading deployment state; never fall back silently to another profile or account.
+Keep AWS account IDs, profiles, regions, and deployment resource names in the untracked machine-local `~/.omp/agent/kubera-private.md`, not this public repository. Verify the intended identity with `aws sts get-caller-identity` before reading deployment state; never fall back silently to another profile or account.
 
 Use `skill://execute/reference/ops-facts.md` for execution-specific **read-only** monitoring and revision/stage evidence; project source is `docs/engineering/deploy-pipelines.md`, `src/stacks/pipeline-stack.ts`, and `src/constructs/deploy-pipeline.ts`. Reading deployment state does not authorize starting/retrying a pipeline, deploying, migrating, tagging or mutating production.
 
