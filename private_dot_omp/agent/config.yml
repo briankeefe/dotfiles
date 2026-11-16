@@ -1,22 +1,36 @@
 symbolPreset: nerd
 theme:
   dark: titanium
-setupVersion: 2
+setupVersion: 3
 modelRoles:
   smol: openai-codex/gpt-6-luna:minimal
   advisor: openai-codex/gpt-6.1-sol:medium
-  default: openai-codex/gpt-6-astra:medium
+  default: openai-codex/gpt-6.1-sol:medium
 disabledProviders:
   - anthropic
 colorBlindMode: true
 tui:
   textSizing: true
   hyperlinks: always
+  titleSpinner: braille
+  titleState: true
+  tight: false
+  mouse: false
+  codexResetFireworks: false
 statusLine:
   separator: powerline
   sessionAccent: true
   showHookStatus: false
-  preset: compact
+  preset: custom
+  compactThinkingLevel: false
+  transparent: false
+  contextLine: embedded
+  leftSegments:
+    - vim
+    - model
+    - mode
+    - git
+    - pr
 memory:
   backend: mnemopi
 mnemopi:
@@ -40,14 +54,22 @@ read:
   toolResultPreview: true
 composer:
   shape: field
+  tokenRate: false
 browser:
   relay: true
+  headless: false
 defaultThinkingLevel: medium
 proseOnlyThinking: true
-# Herdr's Idle/Blocked state notifications own the sounds; avoid duplicate OMP alerts.
+display:
+  shimmer: classic
+  pinnedAgents: collapsed
 completion:
   notify: "off"
 ask:
   notify: "off"
+codexResets:
+  autoRedeem: "yes"
 compaction:
   thresholdTokens: 272000
+update:
+  auto: false

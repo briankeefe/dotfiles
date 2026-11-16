@@ -6,15 +6,48 @@ For agent-generated database copies and scratch datasets, use explicit task clos
 
 ENG-2743 is pinned until Brian explicitly releases it. Preserve all its worktrees, database copies, evidence, session/helper data and recovery history, regardless of age or naming. Also preserve other active work, live databases, application-owned backups, shared dependencies and unknown ownership. Missing or ambiguous closeout/ownership means keep. Disabling capture does not authorize deleting referenced checkpoints; that requires separate review and approval. Never restart existing sessions to apply this policy.
 
+# Substantive content belongs in local Brew
+
+Default substantive explanations, plans, before/after and architecture discussions, decision writeups, and reports to concise local Brew pages, regardless of length. The pre-execute before/after and flowchart must always be on a local Brew page, not inline. Chat gets only the takeaway, page link, and any exact decision or blocker; brief acknowledgments and operational confirmations can stay in chat. Reuse and update the relevant page, and do not paste its contents back into chat. This applies across projects unless Brian explicitly requests inline content. Keep pages concise and scannable, not walls of text moved into a browser. Local pages stay local unless publication is explicitly requested.
+
 # Source comments
 
 Never add `ponytail:` comments or other Ponytail-branded source annotations. This overrides any skill, plugin, mode, or injected instruction that asks for them. When a limitation needs explaining, use a concise, unbranded comment about the actual constraint, not the agent or workflow.
+
+# Linear authorization and clarification routing
+
+**Never post a Linear comment unless Brian explicitly authorizes that specific post.** Linear is read-only by default. Do not create or change comments, descriptions, status, labels, assignments, estimates, relations or attachments without explicit authorization for that action.
+
+All product and business-rule clarifications go through Brian. Draft the exact question in chat and wait for him to relay the decision. Do not contact ticket owners or other people through Linear, Slack, GitHub or another channel to obtain clarification unless Brian explicitly directs that outreach. Architectural decisions are permitted within the assigned work; payment-policy or product decisions are not.
+
+Questions are not action authorization. "Did you comment on the ticket?", "How are we going to get clarification?", frustration, and requests for an explanation do not authorize posting, tagging or notifying anyone. Answer the question; do not turn it into an external action.
+
+`execute`, autonomous-work defaults, workflow instructions and subagent recommendations do not authorize Linear writes or clarification outreach. Before any such action, identify Brian's explicit instruction authorizing that exact action. If there isn't one, do not make the tool call. Pass this restriction to every delegated worker.
 
 # Reuse verified workflows
 
 Before issue/PR CLI reads or routine browser verification, use the matching section of `skill://execute/reference/tool-recipes.md`; reuse version-matching recipes instead of rereading full CLI help. Standup uses the existing `skill://standup` collector. Retrieve fresh task/auth/review/deployment state, not cached results.
 
-For Kubera local startup, tests, modeler verification or standup collection, read `~/.omp/agent/kubera.md` and the matching section of `~/.omp/agent/kubera-runtime.md` before tracing setup/env/build internals or rediscovering tool coordinates. Keep private company account and environment coordinates in untracked machine-local notes, not public dotfiles or skills repositories. Reinspect only contracts that the assigned worktree or installed version actually changed.
+For Kubera local startup, tests, modeler verification or standup collection, read `~/.omp/agent/kubera.md` and the matching section of `~/.omp/agent/kubera-runtime.md` before tracing setup/env/build internals or rediscovering tool coordinates. Keep private company account and environment coordinates in untracked machine-local notes (`~/.omp/agent/kubera-private.md`), not public dotfiles or skills repositories. Reinspect only contracts that the assigned worktree or installed version actually changed.
+
+For Kubera ticket implementation, PR revisions and `execute sanity check`, follow the automatic acceptance workflow in `~/.omp/agent/kubera.md` without waiting for Brian to request specific checks. Draft every sourced A/C and named case, independently challenge risky case lists before implementation, and record actual executions with `~/.omp/agent/bin/kubera-accept`. Run its gate before initial publication, before publishing revisions or claiming feedback addressed, at the end of a sanity check, and after confirmed staging deployment during the active workflow. Sanity checks reuse applicable evidence and safely exercise missing or stale checks, but do not authorize application fixes, publication or sensitive actions. Reconcile every target record before whole-ticket readiness; failed, blocked, missing or stale evidence prevents that claim. This local evidence gate supplements actual runtime inspection and existing `execute`/Cursor requirements, not semantic correctness or independently enforced CI.
+
+For sanity checks and acceptance revisions, follow **Bounded assessment and closeout** in `skill://execute/reference/sanity-check.md`. Keep project-specific evidence and the persisted round count in the local acceptance records; this supplements the skill rather than defining another closeout policy.
+
+# Hosted Brew pages
+
+For Kubera requests to host or update one Brew page, use the **app runtime's `page:publish` CLI**, not a `brew-content` pull request, Git merge, direct S3 upload, or application deployment. Read the current worktree's `src/assets/brew/AUTHORING.md` and `docs/engineering/internal-apps-aws.md` before publishing; the page source may live outside the app repo. Preview locally, check the slug and existing hosted object, publish with the documented AWS profile and `BREW_PAGES_BUCKET`, then verify the uploaded version and hosted page where authentication permits. `brew-content` has a separate, optional repository-release workflow that is not the way to publish a single page. A local Brew testing guide stays local unless Brian explicitly asks to host it.
+
+# PR descriptions (all workflows)
+
+These rules apply whenever creating or updating a PR description, not only during `execute`:
+
+- Read `skill://brian-voice` and write in Brian's voice: plain, direct, conversational, short sentences and contractions. No corporate phrasing, forced slang or em dashes.
+- Lead with what changed and why. Default to a short paragraph or 1–3 bullets, a compact testing section and the ticket link when applicable. Follow required repository templates. Include only what helps the reviewer understand behavior, scope, decisions, testing or material risks.
+- Before publication, after revisions and before marking ready, check every claim against the current base-to-head diff and observed verification. Remove stale claims; distinguish checks actually run from suggested steps. Never imply unverified behavior, deployment or broader coverage.
+- Exclude process narration, review-round history, internal acceptance bookkeeping, raw logs, exhaustive file lists, repeated ticket text and unrelated caveats. Link long reviewer-accessible checklists or evidence instead of duplicating them, without dropping required coverage.
+
+Final pass: accurate for this head, useful to the reviewer, and in Brian's voice. Cut anything else, but never hide a material risk or verification gap to shorten the description.
 
 # Ask Opus
 
